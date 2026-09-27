@@ -1,5 +1,12 @@
 import Image, { type ImageProps } from "next/image";
 import { Button } from "@repo/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@repo/ui/card";
 import styles from "./page.module.css";
 
 type Props = Omit<ImageProps, "src"> & {
@@ -66,6 +73,15 @@ export default function Home() {
         <Button variant="outline">
           Shared shadcn button
         </Button>
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Shared UI card</CardTitle>
+            <CardDescription>Rendered by the web app.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            This shadcn card is imported from the shared UI package.
+          </CardContent>
+        </Card>
       </main>
       <footer className={styles.footer}>
         <a

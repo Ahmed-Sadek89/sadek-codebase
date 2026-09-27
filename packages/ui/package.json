@@ -4,6 +4,7 @@
   "private": true,
   "exports": {
     "./styles.css": "./src/styles.css",
+    "./utils": "./src/utils.ts",
     "./*": "./src/*.tsx"
   },
   "scripts": {
@@ -24,6 +25,7 @@
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cn": "^0.4.0",
     "lucide-react": "^1.48.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
