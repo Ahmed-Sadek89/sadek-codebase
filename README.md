@@ -24,6 +24,21 @@ This Turborepo includes the following packages/apps:
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
+### Vercel deployments
+
+Deploy the two Next.js apps as two separate Vercel projects connected to this
+repository. Vercel creates one deployment per project, so a single project
+cannot serve both apps independently.
+
+| Vercel project | Root Directory | Framework |
+| --- | --- | --- |
+| `web` | `apps/web` | Next.js |
+| `dashboard` | `apps/dashboard` | Next.js |
+
+Leave the Build Command and Output Directory set to their defaults. Vercel
+will detect each app as Next.js and use its local `.next` directory. Both
+projects share the repository-level `pnpm-lock.yaml`.
+
 ### Utilities
 
 This Turborepo has some additional tools already setup for you:
