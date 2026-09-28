@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./styles.css": "./src/styles.css",
+    "./global.css": "./src/global.css",
     "./utils": "./src/utils.ts",
+    "./icons": "./src/icons.ts",
     "./*": "./src/*.tsx"
   },
   "scripts": {
@@ -27,8 +28,11 @@
     "clsx": "^2.1.1",
     "cn": "^0.4.0",
     "lucide-react": "^1.48.0",
+    "next-themes": "^0.4.6",
+    "radix-ui": "^1.6.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "tailwind-merge": "^3.7.0"
+    "tailwind-merge": "^3.7.0",
+    "vaul": "^1.1.2"
   }
 }

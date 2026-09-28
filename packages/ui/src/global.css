@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-poppins), Arial, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-surface: var(--surface);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-primary-muted: var(--primary-muted);
+  --color-border-strong: var(--border-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-strong: var(--accent-strong);
+  --color-warning: var(--warning);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+}
+
+@utility app-container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1440px;
+  padding: 20px 1rem;
+}
+
+:root {
+  color-scheme: light;
+  --secondary: #dde8f3;
+  --secondary-foreground: #334b68;
+  --primary-muted: #d9effa;
+  --border-strong: #ffffff;
+  --accent-soft: #e7b09c;
+  --accent-strong: #678fb8;
+  --warning: #946100;
+  --background: #f8fafc;
+  --foreground: #14213d;
+  --card: #ffffff;
+  --card-foreground: #14213d;
+  --border: #d4deea;
+  --input: #c3d0e0;
+  --ring: #087ba8;
+  --primary: #087ba8;
+  --primary-foreground: #ffffff;
+  --muted: #edf2f8;
+  --muted-foreground: #52627a;
+  --accent: #e0edf6;
+  --accent-foreground: #233b57;
+  --surface: #f0f5fa;
+  --radius: 0.5rem;
+}
+
+.dark {
+  color-scheme: dark;
+  --secondary: #1a2949;
+  --secondary-foreground: #c6d4ed;
+  --primary-muted: #0d3152;
+  --border-strong: #eaf6ff;
+  --accent-soft: #e7b09c;
+  --accent-strong: #213e69;
+  --warning: #f4b73a;
+  --input: #1b2a4b;
+  --ring: #48bdf2;
+  /* Palette sampled from the supplied portfolio reference. */
+  --background: #070f22;
+  --foreground: #f4f7ff;
+  --card: #111d3a;
+  --card-foreground: #f4f7ff;
+  --border: #1b2a4b;
+  --primary: #48bdf2;
+  --primary-foreground: #061225;
+  --muted: #0c1730;
+  --muted-foreground: #91a0bd;
+  --accent: #162544;
+  --accent-foreground: #dbe9ff;
+  --surface: #0a1429;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+  }
+}
