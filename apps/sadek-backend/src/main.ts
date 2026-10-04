@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import type { INestApplication } from '@nestjs/common';
+import type { IncomingMessage, ServerResponse } from 'node:http';
 import { AppModule } from './app.module';
 
 export async function createApp(): Promise<INestApplication> {
@@ -23,4 +24,30 @@ async function bootstrap() {
   await app.listen(Number(process.env.PORT ?? 4000));
 }
 
-void bootstrap();
+let applicationPromise: Promise<INestApplication> | undefined;
+
+async function getApplication(): Promise<INestApplication> {
+  if (!applicationPromise) {
+    applicationPromise = (async () => {
+      const app = await createApp();
+      await app.init();
+      return app;
+    })().catch((error: unknown) => {
+      applicationPromise = undefined;
+      throw error;
+    });
+  }
+  return applicationPromise;
+}
+
+export default async function handler(
+  request: IncomingMessage,
+  response: ServerResponse,
+): Promise<void> {
+  const app = await getApplication();
+  app.getHttpAdapter().getInstance()(request, response);
+}
+
+if (require.main === module) {
+  void bootstrap();
+}

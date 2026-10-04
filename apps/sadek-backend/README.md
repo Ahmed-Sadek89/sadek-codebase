@@ -62,7 +62,9 @@ $ pnpm run test:cov
 ### Vercel
 
 This app uses [Vercel's native NestJS support](https://vercel.com/docs/frameworks/backend/nestjs).
-`src/main.ts` starts the application and Vercel serves it as a single function.
+`src/main.ts` exports an async request handler for Vercel. It initializes Nest
+once per function instance and shares initialization across concurrent requests.
+Running the entry point directly starts the local HTTP server.
 Routes retain their normal paths, including `/auth/login`.
 
 Import this monorepo as a separate Vercel project with these settings:
