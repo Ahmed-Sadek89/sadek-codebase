@@ -2,6 +2,7 @@
 
 # Dependencies
 node_modules
+.migration-backups/
 s-a-d-e-k
 .pnp
 .pnp.js

@@ -1,0 +1,107 @@
+import bcrypt from "bcrypt";
+import { CategoryProject } from "../../category-projects/entities/category-project.entity";
+import { CategorySkill } from "../../category_skills/entities/category_skill.entity";
+import { Project } from "../../projects/entities/project.entity";
+import { Skill } from "../../skills/entities/skill.entity";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+
+@Entity("users")
+export class User {
+    @PrimaryGeneratedColumn({
+        type: "integer"
+    })
+    id!: number;
+
+    @Column({
+        type: "varchar",
+        nullable: true,
+        length: 50
+    })
+    firstName!: string;
+
+    @Column({
+        type: "varchar",
+        nullable: true,
+        length: 50
+    })
+    lastName!: string
+
+    @Column({
+        type: "int",
+        nullable: true,
+    })
+    age!: number
+
+    @Column({
+        type: "varchar",
+        nullable: false,
+        unique: true,
+        length: 70
+    })
+    email!: string
+
+    @Column({
+        type: "varchar",
+        length: 200,
+        select: false,
+        nullable: false
+    })
+    password!: string;
+
+    @Column({
+        type: "varchar",
+        length: 255,
+        nullable: true,
+    })
+    avatarUrl!: string
+
+    @Column({
+        type: "timestamp",
+        default: () => "CURRENT_TIMESTAMP",
+        nullable: false,
+    })
+    createdAt!: Date;
+
+    @Column({
+        type: "timestamp",
+        nullable: true,
+    })
+    lastLoginAt!: Date;
+
+    @Column({
+        type: "timestamp",
+        nullable: true,
+    })
+    lastLogoutAt!: Date;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    async hashPassword() {
+        if (!this.password || this.password.startsWith("$2")) return;
+        this.password = await bcrypt.hash(this.password, 10);
+    }
+
+    @OneToMany(
+        () => CategorySkill,
+        (categorySkill) => categorySkill.user
+    )
+    categorySkills!: CategorySkill[];
+
+    @OneToMany(
+        () => Skill,
+        (skill) => skill.user
+    )
+    skills!: Skill[];
+
+    @OneToMany(
+        () => CategoryProject,
+        (categoryProject) => categoryProject.user
+    )
+    categoryProjects!: CategoryProject[];
+
+    @OneToMany(
+        () => Project,
+        (project) => project.user
+    )
+    projects!: Project[];
+}

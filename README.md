@@ -18,26 +18,46 @@ This Turborepo includes the following packages/apps:
 
 - `dashboard`: a [Next.js](https://nextjs.org/) app
 - `web`: another [Next.js](https://nextjs.org/) app
+- `sadek-backend`: a NestJS API in `apps/sadek-backend` (port `4000` by default)
 - `@repo/ui`: a stub React component library shared by both `web` and `dashboard` applications
 - `@repo/eslint-config`: `eslint` configurations (includes `@next/eslint-plugin-next` and `eslint-config-prettier`)
 - `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
+### Backend development
+
+Use Node.js 24 or newer and install dependencies from the repository root with
+`pnpm install`. All apps share the root `pnpm-lock.yaml`.
+
+Copy `apps/sadek-backend/.env.example` to `apps/sadek-backend/.env` and configure
+the database and authentication settings before starting the API.
+
+```sh
+pnpm dev --filter=sadek-backend
+pnpm build --filter=sadek-backend
+pnpm check-types --filter=sadek-backend
+pnpm --filter sadek-backend test --runInBand
+```
+
+Running `pnpm dev` from the root starts the backend alongside the frontend apps.
+
 ### Vercel deployments
 
-Deploy the two Next.js apps as two separate Vercel projects connected to this
-repository. Vercel creates one deployment per project, so a single project
-cannot serve both apps independently.
+Deploy each app as a separate Vercel project connected to this
+repository. Each project has its own deployment and domain.
 
 | Vercel project | Root Directory | Framework |
 | --- | --- | --- |
 | `web` | `apps/web` | Next.js |
 | `dashboard` | `apps/dashboard` | Next.js |
+| `sadek-backend` | `apps/sadek-backend` | NestJS |
 
 Leave the Build Command and Output Directory set to their defaults. Vercel
-will detect each app as Next.js and use its local `.next` directory. Both
-projects share the repository-level `pnpm-lock.yaml`.
+uses the framework preset for each app. All projects share the
+repository-level `pnpm-lock.yaml`. See
+[backend deployment instructions](apps/sadek-backend/README.md#vercel) for Node.js
+and environment settings.
 
 ### Utilities
 
