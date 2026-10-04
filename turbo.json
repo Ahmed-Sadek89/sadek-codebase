@@ -10,6 +10,7 @@
     "sadek-backend#build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "env": ["PORT", "DATABASE_URL", "DB_*", "TYPEORM_*", "JWT_*"],
       "outputs": ["dist/**"]
     },
     "sadek-backend#dev": {
