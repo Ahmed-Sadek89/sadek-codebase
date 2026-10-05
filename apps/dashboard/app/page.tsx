@@ -1,64 +1,77 @@
-import Link from "next/link";
-import Image from "next/image";
+import { redirect } from "next/navigation";
 import { Button } from "@repo/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@repo/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@repo/ui/card";
+import { Input } from "@repo/ui/input";
+
+async function signIn() {
+  "use server";
+  redirect("/dashboard");
+}
 
 export default function Home() {
   return (
-    <main className="app-container grid min-h-svh place-items-center py-20">
-      <div className="flex w-full max-w-md flex-col gap-8">
-        <Image
-          src="/turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside space-y-2 text-sm text-muted-foreground">
-          <li>
-            Get started by editing{" "}
-            <code className="rounded bg-muted px-1 py-0.5 font-semibold text-foreground">
-              apps/dashboard/app/page.tsx
-            </code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-        <div className="flex gap-4 max-sm:flex-col">
-          <Link
-            className="flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground no-underline"
-            href="https://vercel.com/new"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Deploy now
-          </Link>
-          <Link
-            className="flex h-12 items-center justify-center rounded-full border border-border px-5 text-sm text-foreground no-underline"
-            href="https://turborepo.dev/docs"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </Link>
+    <main className="flex min-h-svh items-center justify-center bg-background px-5 py-12 text-foreground">
+      <div className="w-full max-w-md space-y-8">
+        <div className="flex items-center justify-center gap-3">
+          <span className="flex size-10 items-center justify-center rounded-lg bg-primary text-lg font-bold text-primary-foreground">
+            S
+          </span>
+          <span className="text-lg font-semibold tracking-tight">
+            Sadek{" "}
+            <span className="font-normal text-muted-foreground">
+              / Dashboard
+            </span>
+          </span>
         </div>
-        <Button className="bg-primary text-primary-foreground hover:bg-primary/80">
-          Shared shadcn button
-        </Button>
-        <Card>
-          <CardHeader>
-            <CardTitle>Shared UI card</CardTitle>
-            <CardDescription>Rendered by the dashboard app.</CardDescription>
+        <Card className="gap-7 border-border py-8 shadow-none">
+          <CardHeader className="gap-3 px-6 sm:px-8">
+            <p className="text-xs font-medium uppercase tracking-widest text-primary">
+              Portfolio workspace
+            </p>
+            <h1 className="text-3xl font-semibold tracking-tight">
+              Welcome back
+            </h1>
+            <CardDescription className="leading-relaxed">
+              Enter your details to sign in to your dashboard.
+            </CardDescription>
           </CardHeader>
-          <CardContent>
-            This shadcn card is imported from the shared UI package.
+          <CardContent className="px-6 sm:px-8">
+            <form action={signIn} className="space-y-5">
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm font-medium">
+                  Email address
+                </label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autoComplete="username"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium">
+                  Password
+                </label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  required
+                />
+              </div>
+              <Button type="submit" className="mt-2 h-11 w-full">
+                Sign in
+              </Button>
+            </form>
           </CardContent>
         </Card>
+        <p className="text-center text-xs text-muted-foreground">
+          Your portfolio, all in one place.
+        </p>
       </div>
     </main>
   );
