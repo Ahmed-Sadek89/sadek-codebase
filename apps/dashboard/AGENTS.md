@@ -34,7 +34,7 @@ import { ArrowRight } from "@repo/ui/icons";
 
 `@repo/ui/<component>` resolves to `packages/ui/src/<component>.tsx`. Check a package's `package.json` exports before using an import path. Add reusable UI components to `packages/ui/src` and consume them from the dashboard.
 
-`apps/dashboard/app/styles.css` imports `@repo/ui/global.css` and registers `../components` and `../../../packages/ui/src` as Tailwind sources alongside the app directory. Use only color tokens defined in `packages/ui/src/global.css`, such as `bg-background`, `text-foreground`, `bg-card`, `text-muted-foreground`, `border-border`, and `bg-primary`. Do not introduce hardcoded colors, separate page palettes, or gradients.
+`apps/dashboard/app/styles.css` imports `@repo/ui/global.css` and registers `../components`, `../ui`, and `../../../packages/ui/src` as Tailwind sources alongside the app directory. Use only color tokens defined in `packages/ui/src/global.css`, such as `bg-background`, `text-foreground`, `bg-card`, `text-muted-foreground`, `border-border`, `bg-primary`, and `text-danger` for errors. Do not introduce hardcoded colors, separate page palettes, or gradients.
 
 ## Route pages
 
@@ -92,6 +92,24 @@ apps/dashboard/components/
 - `schema/` contains HTML form field information and validation definitions for that page. Create this folder only when the page has a form; omit it entirely for pages without forms. Validate submitted data on the server when implementing authentication or data mutations.
 
 Keep page-specific code within its page folder. Move reusable UI primitives into `packages/ui/src` instead of duplicating them across page folders. Add files to each supporting folder as needed.
+
+## Dashboard shared UI structure
+
+Store components reusable across dashboard pages in `apps/dashboard/ui`. Structure each component as `ui/<parent>/<child>/index.tsx`, grouping components by purpose:
+
+```text
+apps/dashboard/ui/
+  forms/
+    base-inputs/
+      index.tsx
+```
+
+- `ui/` contains dashboard-wide reusable compositions. Keep page-specific components in `components/<page>/components`, and keep primitives shared across apps in `packages/ui/src`.
+- Each child folder's `index.tsx` exports its reusable component. Import from that folder using a relative path; no dashboard path alias is configured.
+- Compose shared shadcn primitives from `@repo/ui` and use only colors from `packages/ui/src/global.css`.
+- Keep page schemas, field definitions, validation rules, and submission hooks in their page folders. Shared UI receives labels, input props, and validation messages through props.
+- `ui/forms/base-inputs` exports `BaseInput`, which combines a label, shared `Input`, and accessible inline error. It accepts native input props and refs, including React Hook Form's `register` result, plus `label`, optional `error`, and optional `containerClassName`. The input's `className` styles the input itself.
+- The login form imports `BaseInput` from `../../../ui/forms/base-inputs`, spreads `form.register(field.name)`, and passes `errors[field.name]?.message` as `error`.
 
 ## Current routes and verification
 

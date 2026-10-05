@@ -2,4 +2,5 @@
 
 @source "./";
 @source "../components";
+@source "../ui";
 @source "../../../packages/ui/src";
