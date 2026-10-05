@@ -25,6 +25,7 @@
   --color-accent-soft: var(--accent-soft);
   --color-accent-strong: var(--accent-strong);
   --color-warning: var(--warning);
+  --color-danger: var(--danger);
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 2px);
@@ -47,6 +48,7 @@
   --accent-soft: #e7b09c;
   --accent-strong: #678fb8;
   --warning: #946100;
+  --danger: #dc2626;
   --background: #f8fafc;
   --foreground: #14213d;
   --card: #ffffff;

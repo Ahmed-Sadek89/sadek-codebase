@@ -9,10 +9,13 @@ Keep this document current as part of every dependency change:
 - When the dashboard starts importing a new workspace package from `packages/`, update this section with its package name, repository location, purpose, and supported import examples.
 - When installing and using a new npm dependency in the dashboard, update this section with its package name, purpose, and how the dashboard uses it. Include development dependencies when they are used by dashboard tooling.
 - When adding and using a dependency inside a shared package for dashboard functionality, document its purpose and the shared package that owns it.
-- Update `agent.md` in the same change that introduces the dependency or its first use. Installing a package without using it does not require documenting it as used.
+- Update this `AGENTS.md` in the same change that introduces the dependency or its first use. Installing a package without using it does not require documenting it as used.
 - When a documented dependency is removed or its usage changes, remove or revise its entry. Verify package names and import paths against the relevant `package.json` rather than guessing.
 
 - The dashboard uses Next.js App Router, React, and TypeScript.
+- `react-hook-form` manages login field registration, validation state, and submission through `useForm` and `handleSubmit` in `components/login/hooks/use-login-form.ts`.
+- `zod` defines the login validation schema and inferred form value types in `components/login/schema/login.ts`. Email must be present and valid; password must be nonempty. Password complexity rules belong to future authentication requirements.
+- `@hookform/resolvers` connects Zod to React Hook Form through `zodResolver`, imported from `@hookform/resolvers/zod`.
 - Styling uses Tailwind CSS v4 with `@tailwindcss/postcss`.
 - `packages/ui` (`@repo/ui`) provides shared shadcn components, icons, utilities, and theme styles.
 - `packages/eslint-config` (`@repo/eslint-config`) provides shared ESLint configuration.
@@ -31,23 +34,23 @@ import { ArrowRight } from "@repo/ui/icons";
 
 `@repo/ui/<component>` resolves to `packages/ui/src/<component>.tsx`. Check a package's `package.json` exports before using an import path. Add reusable UI components to `packages/ui/src` and consume them from the dashboard.
 
-`apps/dashboard/app/styles.css` imports `@repo/ui/global.css` and registers `../../../packages/ui/src` as a Tailwind source. Use only color tokens defined in `packages/ui/src/global.css`, such as `bg-background`, `text-foreground`, `bg-card`, `text-muted-foreground`, `border-border`, and `bg-primary`. Do not introduce hardcoded colors, separate page palettes, or gradients.
+`apps/dashboard/app/styles.css` imports `@repo/ui/global.css` and registers `../components` and `../../../packages/ui/src` as Tailwind sources alongside the app directory. Use only color tokens defined in `packages/ui/src/global.css`, such as `bg-background`, `text-foreground`, `bg-card`, `text-muted-foreground`, `border-border`, and `bg-primary`. Do not introduce hardcoded colors, separate page palettes, or gradients.
 
 ## Route pages
 
 Every `apps/dashboard/app/**/page.tsx`, including `apps/dashboard/app/page.tsx`, contains:
 
 1. SEO metadata for that specific page, using Next.js `Metadata` or `generateMetadata` for dynamic metadata.
-2. An import of the page's root component from `apps/dashboard/component`.
+2. An import of the page's root component from `apps/dashboard/components`.
 3. A default page export that renders that root component, passing route data when needed.
 
-Keep page UI, form logic, and hooks in the component directory. Keep `page.tsx` as a Server Component so it can export metadata; add `"use client"` only to components that need browser APIs or React client hooks. Root layout metadata supplies shared defaults, but each page should describe its own content.
+Keep page UI, form logic, and hooks in the components directory. Keep `page.tsx` as a Server Component so it can export metadata; add `"use client"` only to components that need browser APIs or React client hooks. Root layout metadata supplies shared defaults, but each page should describe its own content.
 
 Example for `apps/dashboard/app/page.tsx`:
 
 ```tsx
 import type { Metadata } from "next";
-import LoginPage from "../component/login";
+import LoginPage from "../components/login";
 
 export const metadata: Metadata = {
   title: "Sign in | Sadek Dashboard",
@@ -63,10 +66,10 @@ Use relative imports for local components unless an alias is explicitly configur
 
 ## Page component structure
 
-Use the singular directory name `apps/dashboard/component`. Each page has its own folder with this structure:
+Use the plural directory name `apps/dashboard/components`. Each page has its own folder with this structure:
 
 ```text
-apps/dashboard/component/
+apps/dashboard/components/
   login/
     index.tsx
     components/
@@ -92,7 +95,7 @@ Keep page-specific code within its page folder. Move reusable UI primitives into
 
 ## Current routes and verification
 
-- `/` is the email/password login page. Its current submit behavior redirects to `/dashboard`; real authentication is not implemented yet.
+- `/` contains login SEO metadata and renders `components/login/index.tsx`. Its `components/login-form.tsx` uses shared UI, `hooks/use-login-form.ts` manages the form, `schema/login.ts` holds fields and validation, and `utils/constants.ts` holds defaults and the destination route. React Hook Form validates through Zod before navigating to `/dashboard`; real authentication is not implemented yet.
 - `/dashboard` currently displays placeholder text.
 - Run `pnpm --filter dashboard lint` and `pnpm --filter dashboard check-types` after code changes.
 - When changing shared UI, also run `pnpm --filter @repo/ui lint` and `pnpm --filter @repo/ui check-types`.
