@@ -13,6 +13,17 @@
       "env": ["PORT", "DATABASE_URL", "DB_*", "TYPEORM_*", "JWT_*"],
       "outputs": ["dist/**"]
     },
+    "dashboard#build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "env": ["BACKEND_URL", "NEXT_PUBLIC_BACKEND_URL"],
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"]
+    },
+    "dashboard#dev": {
+      "cache": false,
+      "persistent": true,
+      "passThroughEnv": ["BACKEND_URL", "NEXT_PUBLIC_BACKEND_URL"]
+    },
     "sadek-backend#dev": {
       "cache": false,
       "persistent": true,

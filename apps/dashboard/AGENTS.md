@@ -16,6 +16,11 @@ Keep this document current as part of every dependency change:
 - `react-hook-form` manages login field registration, validation state, and submission through `useForm` and `handleSubmit` in `components/login/hooks/use-login-form.ts`.
 - `zod` defines the login validation schema and inferred form value types in `components/login/schema/login.ts`. Email must be present and valid; password must be nonempty. Password complexity rules belong to future authentication requirements.
 - `@hookform/resolvers` connects Zod to React Hook Form through `zodResolver`, imported from `@hookform/resolvers/zod`.
+- `packages/types` (`@repo/types/auth`) provides backend auth contracts used to check the login schema's output type.
+- `packages/libs` supplies `QueryProvider` from `@repo/libs/query-provider` in the root layout and `getApiErrorMessage` from `@repo/libs/axios` in the login form hook. Axios and TanStack Query are owned/configured in this shared package. Its `QueryProvider` also renders `@tanstack/react-query-devtools` only in development, initially closed; the dashboard does not configure a separate inspector.
+- `packages/hooks` provides `useLogin` from `@repo/hooks/auth`. It calls the typed auth service from `packages/services` through the Axios instance configured in libs. See `packages/AGENTS.md` for services, token handling, and the full auth hook API.
+- The shared Axios client reads `NEXT_PUBLIC_BACKEND_URL` from the dashboard environment, falling back to `/api`. Set it in `.env.local` before starting/building; `.env.example` uses `/api` for the proxy. An absolute URL sends browser requests directly to the backend, which must allow the dashboard origin through CORS. Keep `NEXT_PUBLIC_BACKEND_URL` in the dashboard's Turbo build/dev environment declarations.
+- `next.config.js` proxies `/api/auth/:path*` to the backend configured by the server-side `BACKEND_URL` variable, defaulting to `http://localhost:4000`. Copy `.env.example` to `.env.local` if changing the origin, then restart/rebuild the dashboard. Keep `BACKEND_URL` in the dashboard's Turbo task environment declarations.
 - Styling uses Tailwind CSS v4 with `@tailwindcss/postcss`.
 - `packages/ui` (`@repo/ui`) provides shared shadcn components, icons, utilities, and theme styles.
 - `packages/eslint-config` (`@repo/eslint-config`) provides shared ESLint configuration.
@@ -113,7 +118,7 @@ apps/dashboard/ui/
 
 ## Current routes and verification
 
-- `/` contains login SEO metadata and renders `components/login/index.tsx`. Its `components/login-form.tsx` uses shared UI, `hooks/use-login-form.ts` manages the form, `schema/login.ts` holds fields and validation, and `utils/constants.ts` holds defaults and the destination route. React Hook Form validates through Zod before navigating to `/dashboard`; real authentication is not implemented yet.
+- `/` contains login SEO metadata and renders `components/login/index.tsx`. Its `components/login-form.tsx` uses shared UI, `hooks/use-login-form.ts` manages the form, `schema/login.ts` holds fields and validation, and `utils/constants.ts` holds defaults and the destination route. React Hook Form validates through Zod, then `useLogin` calls the backend. Navigate to `/dashboard` only after success. Show server/network errors and allow retry after failure. The auth session lives in memory and is lost on reload.
 - `/dashboard` currently displays placeholder text.
 - Run `pnpm --filter dashboard lint` and `pnpm --filter dashboard check-types` after code changes.
 - When changing shared UI, also run `pnpm --filter @repo/ui lint` and `pnpm --filter @repo/ui check-types`.

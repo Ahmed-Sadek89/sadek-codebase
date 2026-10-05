@@ -6,9 +6,9 @@ import { useLoginForm } from "../hooks/use-login-form";
 import { loginFields } from "../schema/login";
 
 export function LoginForm() {
-  const { form, onSubmit } = useLoginForm();
-  const { errors, isSubmitting, isSubmitSuccessful } = form.formState;
-  const isPending = isSubmitting || isSubmitSuccessful;
+  const { form, onSubmit, isPending: isLoginPending } = useLoginForm();
+  const { errors, isSubmitting } = form.formState;
+  const isPending = isSubmitting || isLoginPending;
 
   return (
     <form
@@ -31,6 +31,11 @@ export function LoginForm() {
           {...form.register(field.name)}
         />
       ))}
+      {errors.root?.server?.message && (
+        <p role="alert" className="text-sm text-danger">
+          {errors.root.server.message}
+        </p>
+      )}
       <Button type="submit" disabled={isPending} className="mt-2 h-11 w-full">
         {isPending ? "Signing in…" : "Sign in"}
       </Button>

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { LoginRequest } from "@repo/types/auth";
 
 export const loginSchema = z.object({
   email: z
@@ -7,7 +8,7 @@ export const loginSchema = z.object({
     .min(1, "Enter your email address.")
     .pipe(z.email("Enter a valid email address.")),
   password: z.string().min(1, "Enter your password."),
-});
+}) satisfies z.ZodType<LoginRequest>;
 
 export type LoginValues = z.infer<typeof loginSchema>;
 

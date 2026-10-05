@@ -17,7 +17,11 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.89.0",
-    "zod": "^4.6.5"
+    "zod": "^4.6.5",
+    "@repo/libs": "workspace:*",
+    "@repo/hooks": "workspace:*",
+    "@repo/services": "workspace:*",
+    "@repo/types": "workspace:*"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
