@@ -2,6 +2,7 @@ import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { DataSourceOptions } from "typeorm";
+import * as pg from "pg";
 
 const envPath = resolve(process.cwd(), ".env");
 if (existsSync(envPath)) {
@@ -10,6 +11,8 @@ if (existsSync(envPath)) {
 
 export const dbConnection: DataSourceOptions = {
     type: "postgres",
+    // Keep the driver visible to deployment tracing and avoid dynamic resolution.
+    driver: pg,
     url: process.env.DATABASE_URL,
     host: process.env.DB_HOST ?? "",
     port: Number(process.env.DB_PORT ?? 5432),
