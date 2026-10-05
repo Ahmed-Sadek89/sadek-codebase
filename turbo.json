@@ -10,7 +10,7 @@
     "sadek-backend#build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "env": ["PORT", "DATABASE_URL", "DB_*", "TYPEORM_*", "JWT_*"],
+      "env": ["PORT", "FRONTEND_URL", "DATABASE_URL", "DB_*", "TYPEORM_*", "JWT_*"],
       "outputs": ["dist/**"]
     },
     "dashboard#build": {
@@ -27,7 +27,7 @@
     "sadek-backend#dev": {
       "cache": false,
       "persistent": true,
-      "passThroughEnv": ["PORT", "DATABASE_URL", "DB_*", "TYPEORM_*", "JWT_*"]
+      "passThroughEnv": ["PORT", "FRONTEND_URL", "DATABASE_URL", "DB_*", "TYPEORM_*", "JWT_*"]
     },
     "lint": {
       "dependsOn": ["^lint"]

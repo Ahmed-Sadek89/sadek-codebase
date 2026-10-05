@@ -1,11 +1,20 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 import type { INestApplication } from '@nestjs/common';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { AppModule } from './app.module';
 
 export async function createApp(): Promise<INestApplication> {
   const app = await NestFactory.create(AppModule);
+  const config = app.get(ConfigService);
+  app.enableCors({
+    origin: config
+      .getOrThrow<string>('FRONTEND_URL')
+      .split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean),
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // Automatically remove properties that do not have any decorators in the DTO
