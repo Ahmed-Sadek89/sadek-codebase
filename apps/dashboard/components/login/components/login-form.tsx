@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@repo/ui/button";
-import { BaseInput } from "../../../ui/forms/base-inputs";
+import { BaseInput } from "../../ui/forms/base-inputs";
 import { useLoginForm } from "../hooks/use-login-form";
 import { loginFields } from "../schema/login";
 

@@ -24,6 +24,7 @@ Keep this document current as part of every dependency change:
 - `next.config.js` proxies `/api/auth/:path*` to the backend configured by the server-side `BACKEND_URL` variable, defaulting to `http://localhost:4000`. Copy `.env.example` to `.env.local` if changing the origin, then restart/rebuild the dashboard. Keep `BACKEND_URL` in the dashboard's Turbo task environment declarations.
 - Styling uses Tailwind CSS v4 with `@tailwindcss/postcss`.
 - `packages/ui` (`@repo/ui`) provides shared shadcn components, icons, utilities, and theme styles.
+- `@repo/ui/select` (`packages/ui/src/select.tsx`, built on `radix-ui`'s `Select`) exports `Select`, `SelectTrigger`, `SelectValue`, `SelectContent`, and `SelectItem`. The auth layout header (`components/layouts/auth-pages-layouts/components/header.tsx`) uses it for the theme and language selects; both are static UI for now, with options in that layout's `utils/constants.ts`.
 - `packages/eslint-config` (`@repo/eslint-config`) provides shared ESLint configuration.
 - `packages/typescript-config` (`@repo/typescript-config`) provides shared TypeScript configuration. The dashboard extends `@repo/typescript-config/nextjs.json`.
 - pnpm manages workspace dependencies. Declare a shared package in `apps/dashboard/package.json` using its package name and `"workspace:*"` before importing it.
