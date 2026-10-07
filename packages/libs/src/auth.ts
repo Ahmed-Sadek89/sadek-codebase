@@ -29,6 +29,7 @@ declare module "next-auth/jwt" {
 export function createAuth(
   backendUrl: string,
   authService: AuthService,
+  cookiePrefix: string,
 ): NextAuthResult {
   const requestConfig = { baseURL: backendUrl.replace(/\/$/, "") };
   return NextAuth({
@@ -36,6 +37,18 @@ export function createAuth(
     basePath: "/api/session",
     pages: { signIn: "/" },
     session: { strategy: "jwt" },
+    cookies: {
+      sessionToken: { name: `${cookiePrefix}.session-token`, options: {} },
+      callbackUrl: { name: `${cookiePrefix}.callback-url`, options: {} },
+      csrfToken: { name: `${cookiePrefix}.csrf-token`, options: {} },
+      pkceCodeVerifier: {
+        name: `${cookiePrefix}.pkce.code_verifier`,
+        options: {},
+      },
+      state: { name: `${cookiePrefix}.state`, options: {} },
+      nonce: { name: `${cookiePrefix}.nonce`, options: {} },
+      webauthnChallenge: { name: `${cookiePrefix}.challenge`, options: {} },
+    },
     providers: [
       Credentials({
         credentials: { email: {}, password: {} },
