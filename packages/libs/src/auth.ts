@@ -11,7 +11,6 @@ declare module "next-auth" {
   }
   interface Session {
     accessToken?: string;
-    refreshToken?: string;
     accessTokenExpires?: number;
     refreshTokenExpires?: number;
     user: { id: string } & DefaultSession["user"];
@@ -33,6 +32,7 @@ export function createAuth(
 ): NextAuthResult {
   const requestConfig = { baseURL: backendUrl.replace(/\/$/, "") };
   return NextAuth({
+    debug: process.env.NODE_ENV === "development",
     secret: process.env.AUTH_SECRET,
     basePath: "/api/session",
     pages: { signIn: "/" },
@@ -95,7 +95,6 @@ export function createAuth(
       session({ session, token }) {
         session.user.id = token.sub!;
         session.accessToken = token.accessToken;
-        session.refreshToken = token.refreshToken;
         session.accessTokenExpires = token.accessTokenExpires;
         session.refreshTokenExpires = token.refreshTokenExpires;
         return session;

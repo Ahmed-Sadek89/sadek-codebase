@@ -31,6 +31,9 @@ export function tokenExpiresAt(token: string): number {
     throw new Error("Token has no valid expiry");
   return payload.exp! * 1000;
 }
+/** Refresh slightly early so in-flight requests do not carry an expired token. */
+const ACCESS_TOKEN_REFRESH_MARGIN_MS = 30_000;
+
 export interface BackendTokens {
   accessToken?: string;
   refreshToken?: string;
@@ -48,24 +51,22 @@ export async function refreshTokens<T extends BackendTokens>(
     !token.refreshToken ||
     !token.refreshTokenExpires ||
     now >= token.refreshTokenExpires
-  ) {
-    console.log("NO REFRESH TOKEN OR REFRESH TOKEN EXPIRED", token);
+  )
     return null;
-  }
   if (
     !token.accessToken ||
     typeof token.accessTokenExpires !== "number" ||
     !Number.isFinite(token.accessTokenExpires)
   )
     return null;
-  // Invoke the refresh request only after the current access token expires.
-  if (now < token.accessTokenExpires) return token;
+  // Invoke the refresh request only when the current access token is about to expire.
+  if (now < token.accessTokenExpires - ACCESS_TOKEN_REFRESH_MARGIN_MS)
+    return token;
   try {
     const result = await authService.refresh(
       { refreshToken: token.refreshToken },
       requestConfig,
     );
-    console.log("TOKEN REFRESHED", result);
     const accessToken = result.access_token;
     const accessTokenExpires = tokenExpiresAt(accessToken);
     if (

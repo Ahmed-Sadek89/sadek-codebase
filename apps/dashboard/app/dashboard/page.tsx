@@ -6,6 +6,6 @@ export const metadata: Metadata = {
   description: "Manage your portfolio.",
 };
 
-export default  function DashboardPage() {
+export default function DashboardPage() {
   return <Dashboard />;
 }

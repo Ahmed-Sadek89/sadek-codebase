@@ -134,3 +134,9 @@ apps/dashboard/ui/
 - Configure `AUTH_SECRET` (strong random secret), `AUTH_URL` (dashboard URL with `/api/session`), and `BACKEND_URL`. Set `AUTH_TRUST_HOST=true` only with a trusted deployment proxy. These server variables are passed through dashboard Turbo tasks.
 
 - The dashboard passes `"sadek-dashboard"` as the `cookiePrefix` argument to `createAuth`; shared NextAuth cookie names use that prefix, including `sadek-dashboard.session-token`. Cookie options inherit NextAuth defaults, including HttpOnly, SameSite, path, secure handling, and temporary-cookie lifetimes. Changing names requires signing in again.
+
+- Route redirects are implemented only in `proxy.ts`, using the NextAuth `auth` wrapper. The matcher covers `/` and `/dashboard/:path*`. Dashboard routes without an access token redirect to `/`; authenticated requests to `/` redirect to `/dashboard`. Logout redirects to `/`. On the client, `components/dashboard/hooks/use-required-session.ts` calls `useSession({ required: true })` and does a full navigation to `/` when the session ends mid-visit (e.g. a failed token refresh on the next session poll).
+
+- Successful login passes `/dashboard` as NextAuth `redirectTo`, then uses a full navigation to `/dashboard` so the proxy evaluates the freshly issued session cookie. `libs/auth.ts` exports both `handlers` and `auth` from the same configuration.
+
+- The client session exposes only the access token and expiries; the refresh token stays in the encrypted session cookie. Access tokens refresh 30 seconds before expiry. Server-side auth reads `BACKEND_URL`, falling back to `NEXT_PUBLIC_BACKEND_URL`.
