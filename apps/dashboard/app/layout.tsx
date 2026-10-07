@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import { QueryProvider } from "@repo/libs/query-provider";
+import { QueryProvider } from "@repo/provider/query-provider";
+import { SessionProvider } from "@repo/provider/session-provider";
 import "./styles.css";
 
 const poppins = Poppins({
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={poppins.variable}>
-        <QueryProvider>{children}</QueryProvider>
+        <SessionProvider>
+          <QueryProvider>{children}</QueryProvider>
+        </SessionProvider>
       </body>
     </html>
   );

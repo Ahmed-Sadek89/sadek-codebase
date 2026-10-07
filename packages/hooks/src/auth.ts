@@ -54,7 +54,7 @@ export function useLogin() {
   const client = useQueryClient();
   return useMutation<LoginResponse, Error, LoginRequest>({
     mutationKey: authKeys.login,
-    mutationFn: authService.login,
+    mutationFn: (request) => authService.login(request),
     onSuccess: (session) => {
       // Discard any cached data belonging to a previous user.
       removeUserQueries(client);

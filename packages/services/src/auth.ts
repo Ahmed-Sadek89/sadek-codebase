@@ -19,18 +19,26 @@ export const authEndpoints = {
 } as const;
 
 export const authService = {
-  async login(request: LoginRequest): Promise<LoginResponse> {
+  async login(
+    request: LoginRequest,
+    config?: { baseURL: string },
+  ): Promise<LoginResponse> {
     const { data } = await apiClient.post<LoginResponse>(
       authEndpoints.login,
       request,
+      config,
     );
     return data;
   },
-  async refresh({ refreshToken }: RefreshRequest): Promise<RefreshResponse> {
+  async refresh(
+    { refreshToken }: RefreshRequest,
+    config?: { baseURL: string },
+  ): Promise<RefreshResponse> {
     const { data } = await apiClient.post<RefreshResponse>(
       authEndpoints.refresh,
       undefined,
       {
+        ...config,
         headers: { Authorization: `Bearer ${refreshToken}` },
       },
     );
@@ -49,11 +57,15 @@ export const authService = {
     );
     return data;
   },
-  async logout({ accessToken }: LogoutRequest): Promise<LogoutResponse> {
+  async logout(
+    { accessToken }: LogoutRequest,
+    config?: { baseURL: string },
+  ): Promise<LogoutResponse> {
     const { data } = await apiClient.post<LogoutResponse>(
       authEndpoints.logout,
       undefined,
       {
+        ...config,
         headers: { Authorization: `Bearer ${accessToken}` },
       },
     );

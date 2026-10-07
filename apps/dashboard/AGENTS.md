@@ -17,8 +17,9 @@ Keep this document current as part of every dependency change:
 - `zod` defines the login validation schema and inferred form value types in `components/login/schema/login.ts`. Email must be present and valid; password must be nonempty. Password complexity rules belong to future authentication requirements.
 - `@hookform/resolvers` connects Zod to React Hook Form through `zodResolver`, imported from `@hookform/resolvers/zod`.
 - `packages/types` (`@repo/types/auth`) provides backend auth contracts used to check the login schema's output type.
-- `packages/libs` supplies `QueryProvider` from `@repo/libs/query-provider` in the root layout and `getApiErrorMessage` from `@repo/libs/axios` in the login form hook. Axios and TanStack Query are owned/configured in this shared package. Its `QueryProvider` also renders `@tanstack/react-query-devtools` only in development, initially closed; the dashboard does not configure a separate inspector.
-- `packages/hooks` provides `useLogin` from `@repo/hooks/auth`. It calls the typed auth service from `packages/services` through the Axios instance configured in libs. See `packages/AGENTS.md` for services, token handling, and the full auth hook API.
+- `packages/provider` supplies `QueryProvider` from `@repo/provider/query-provider` in the root layout; `packages/libs` supplies `getApiErrorMessage` from `@repo/libs/axios` in the login form hook. Libs owns Axios and TanStack Query configuration. The provider package owns `@tanstack/react-query-devtools`; `QueryProvider` also renders `@tanstack/react-query-devtools` only in development, initially closed; the dashboard does not configure a separate inspector.
+- Dashboard root layout imports `SessionProvider` from `@repo/provider/session-provider` (`packages/provider`), which owns the shared NextAuth client session wrapper and polling configuration.
+- Dashboard authentication imports `createAuth` from `@repo/libs/auth` and client session APIs from `next-auth/react`; it no longer uses the shared in-memory auth hooks.
 - The shared Axios client reads `NEXT_PUBLIC_BACKEND_URL` from the dashboard environment, falling back to `/api`. Set it in `.env.local` before starting/building; `.env.example` uses `/api` for the proxy. An absolute URL sends browser requests directly to the backend, which must allow the dashboard origin through CORS. Keep `NEXT_PUBLIC_BACKEND_URL` in the dashboard's Turbo build/dev environment declarations.
 - `next.config.js` proxies `/api/auth/:path*` to the backend configured by the server-side `BACKEND_URL` variable, defaulting to `http://localhost:4000`. Copy `.env.example` to `.env.local` if changing the origin, then restart/rebuild the dashboard. Keep `BACKEND_URL` in the dashboard's Turbo task environment declarations.
 - Styling uses Tailwind CSS v4 with `@tailwindcss/postcss`.
@@ -118,8 +119,16 @@ apps/dashboard/ui/
 
 ## Current routes and verification
 
-- `/` contains login SEO metadata and renders `components/login/index.tsx`. Its `components/login-form.tsx` uses shared UI, `hooks/use-login-form.ts` manages the form, `schema/login.ts` holds fields and validation, and `utils/constants.ts` holds defaults and the destination route. React Hook Form validates through Zod, then `useLogin` calls the backend. Navigate to `/dashboard` only after success. Show server/network errors and allow retry after failure. The auth session lives in memory and is lost on reload.
-- `/dashboard` currently displays placeholder text.
+- `/` contains login SEO metadata and renders `components/login/index.tsx`. Its `components/login-form.tsx` uses shared UI, `hooks/use-login-form.ts` manages the form, `schema/login.ts` holds fields and validation, and `utils/constants.ts` holds defaults and the destination route. React Hook Form validates through Zod, then NextAuth Credentials calls the backend on the server. Navigate to `/dashboard` only after success. Show server/network errors and allow retry after failure. The auth session persists in an encrypted HttpOnly NextAuth cookie.
+- `/dashboard` requires a valid NextAuth session and offers sign out.
 - Run `pnpm --filter dashboard lint` and `pnpm --filter dashboard check-types` after code changes.
 - When changing shared UI, also run `pnpm --filter @repo/ui lint` and `pnpm --filter @repo/ui check-types`.
 - Run `pnpm --filter dashboard dev` to start the dashboard on port 3001.
+
+## Dashboard NextAuth authentication
+
+- `next-auth` v5 (currently beta) is owned by `@repo/libs` and dashboard. `@repo/libs/auth` exports `createAuth(backendUrl, authService)` for server-only use; dashboard `auth.ts` exports handlers, auth, signIn, and signOut. Libs delegates login, refresh, and logout to `@repo/services/auth`, passing the server backend URL per request. Libs owns the Axios client at `@repo/libs/axios`. The dashboard passes `authService` into `createAuth`; libs uses a typed service interface and does not import services, keeping the package graph acyclic.
+- Dashboard login now uses `signIn("credentials")` from `next-auth/react`, replacing its use of the in-memory login hook. Other shared query hooks retain their existing independent behavior.
+- NextAuth uses `/api/session`, leaving `/api/auth` for the backend proxy. SessionProvider polls every 30 seconds and refetches on focus; session checks refresh expired access tokens. JWT `exp` claims control access and refresh expiry. Refresh preserves the original refresh token because the backend returns only access_token. Expired refresh tokens and failed refresh discard the entire auth JWT and both backend tokens on the next session check. The refresh token is never included in browser session JSON.
+- Logout calls the backend with a valid access token where possible and clears the local session even on backend failure. Dashboard has server and client session guards and a sign-out button.
+- Configure `AUTH_SECRET` (strong random secret), `AUTH_URL` (dashboard URL with `/api/session`), and `BACKEND_URL`. Set `AUTH_TRUST_HOST=true` only with a trusted deployment proxy. These server variables are passed through dashboard Turbo tasks.

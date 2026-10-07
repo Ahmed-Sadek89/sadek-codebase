@@ -20,7 +20,7 @@
     "eslint": "10.9.1"
   },
   "dependencies": {
-    "@repo/libs": "workspace:*",
-    "@repo/types": "workspace:*"
+    "@repo/types": "workspace:*",
+    "@repo/libs": "workspace:*"
   }
 }

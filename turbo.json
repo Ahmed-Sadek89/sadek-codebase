@@ -3,37 +3,92 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "!.next/dev/**"
+      ]
     },
     "sadek-backend#build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "env": ["PORT", "FRONTEND_URL", "DATABASE_URL", "DB_*", "TYPEORM_*", "JWT_*"],
-      "outputs": ["dist/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "env": [
+        "PORT",
+        "FRONTEND_URL",
+        "DATABASE_URL",
+        "DB_*",
+        "TYPEORM_*",
+        "JWT_*"
+      ],
+      "outputs": [
+        "dist/**"
+      ]
     },
     "dashboard#build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "env": ["BACKEND_URL", "NEXT_PUBLIC_BACKEND_URL"],
-      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "env": [
+        "BACKEND_URL",
+        "NEXT_PUBLIC_BACKEND_URL",
+        "AUTH_SECRET",
+        "AUTH_URL",
+        "AUTH_TRUST_HOST"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "!.next/dev/**"
+      ]
     },
     "dashboard#dev": {
       "cache": false,
       "persistent": true,
-      "passThroughEnv": ["BACKEND_URL", "NEXT_PUBLIC_BACKEND_URL"]
+      "passThroughEnv": [
+        "BACKEND_URL",
+        "NEXT_PUBLIC_BACKEND_URL",
+        "AUTH_SECRET",
+        "AUTH_URL",
+        "AUTH_TRUST_HOST"
+      ]
     },
     "sadek-backend#dev": {
       "cache": false,
       "persistent": true,
-      "passThroughEnv": ["PORT", "FRONTEND_URL", "DATABASE_URL", "DB_*", "TYPEORM_*", "JWT_*"]
+      "passThroughEnv": [
+        "PORT",
+        "FRONTEND_URL",
+        "DATABASE_URL",
+        "DB_*",
+        "TYPEORM_*",
+        "JWT_*"
+      ]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": [
+        "^lint"
+      ]
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": [
+        "^check-types"
+      ]
     },
     "dev": {
       "cache": false,

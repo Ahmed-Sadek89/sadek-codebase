@@ -109,3 +109,28 @@ test("API errors handle Nest messages and do not expose network request details"
     "Unable to reach the server. Please try again.",
   );
 });
+
+test("server auth requests override the backend URL without changing shared defaults", async () => {
+  const originalBaseURL = apiClient.defaults.baseURL;
+  const config = { baseURL: "http://backend.example" };
+  const seen: string[] = [];
+  apiClient.defaults.adapter = async (request) => {
+    assert.equal(request.baseURL, config.baseURL);
+    seen.push(request.url!);
+    return {
+      data: {},
+      status: 200,
+      statusText: "OK",
+      headers: {},
+      config: request,
+    };
+  };
+  await authService.login(
+    { email: "test@example.com", password: "password" },
+    config,
+  );
+  await authService.refresh({ refreshToken: "refresh" }, config);
+  await authService.logout({ accessToken: "access" }, config);
+  assert.deepEqual(seen, ["/auth/login", "/auth/refresh", "/auth/logout"]);
+  assert.equal(apiClient.defaults.baseURL, originalBaseURL);
+});

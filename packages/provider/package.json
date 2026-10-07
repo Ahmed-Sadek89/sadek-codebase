@@ -1,0 +1,32 @@
+{
+  "name": "@repo/provider",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./session-provider": "./src/session-provider.tsx",
+    "./query-provider": "./src/query-provider.tsx"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next-auth": "5.0.0-beta.32",
+    "react": "19.2.8",
+    "@repo/libs": "workspace:*",
+    "@tanstack/react-query": "^5.104.1",
+    "@tanstack/react-query-devtools": "^5.104.1"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "19.2.18",
+    "eslint": "10.9.1",
+    "typescript": "7.0.2",
+    "@types/node": "26.4.1"
+  },
+  "peerDependencies": {
+    "next": "16.3.4"
+  }
+}
