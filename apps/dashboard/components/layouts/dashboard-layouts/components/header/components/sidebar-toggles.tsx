@@ -2,24 +2,21 @@
 
 import { Button } from "@repo/ui/button";
 import { Menu, PanelLeft } from "@repo/ui/icons";
+import { useSidebar } from "@repo/ui/sidebar";
 
 const iconButtonClassName = "size-9 p-0";
 
-// Sidebar state is not implemented yet; wire these handlers once it exists.
-export function SidebarToggles({
-  onToggleSidebar,
-  onOpenMobileSidebar,
-}: {
-  onToggleSidebar?: () => void;
-  onOpenMobileSidebar?: () => void;
-}) {
+export function SidebarToggles() {
+  const { open, openMobile, setOpen, setOpenMobile } = useSidebar();
+
   return (
     <>
       <Button
         type="button"
         variant="ghost"
-        onClick={onToggleSidebar}
-        aria-label="Toggle sidebar"
+        onClick={() => setOpen(!open)}
+        aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
+        aria-expanded={open}
         className={`hidden lg:inline-flex ${iconButtonClassName}`}
       >
         <PanelLeft className="size-5" aria-hidden />
@@ -27,8 +24,9 @@ export function SidebarToggles({
       <Button
         type="button"
         variant="ghost"
-        onClick={onOpenMobileSidebar}
+        onClick={() => setOpenMobile(true)}
         aria-label="Open sidebar"
+        aria-expanded={openMobile}
         className={`lg:hidden ${iconButtonClassName}`}
       >
         <Menu className="size-5" aria-hidden />

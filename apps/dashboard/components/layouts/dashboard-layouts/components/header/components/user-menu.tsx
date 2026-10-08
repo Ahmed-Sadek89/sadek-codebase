@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/avatar";
 import {
   DropdownMenu,
@@ -13,15 +13,13 @@ import {
   DropdownMenuTrigger,
 } from "@repo/ui/dropdown-menu";
 import { LogOut, User } from "@repo/ui/icons";
+import { useCurrentUser } from "../../../../../../hooks/use-current-user";
 import { SIGNED_OUT_REDIRECT_PATH } from "../../../../../../utils/constants";
 import { ConfirmAction } from "../../../../../ui/confirm-action";
 import { PROFILE_PATH } from "../utils/constants";
 
 export function UserMenu() {
-  const { data: session } = useSession();
-  const email = session?.user?.email ?? "";
-  const name = session?.user?.name ?? email;
-  const initial = (name.charAt(0) || "U").toUpperCase();
+  const { email, image, initial } = useCurrentUser();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   return (
@@ -32,9 +30,7 @@ export function UserMenu() {
           className="rounded-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
           <Avatar className="size-9">
-            {session?.user?.image && (
-              <AvatarImage src={session.user.image} alt="" />
-            )}
+            {image && <AvatarImage src={image} alt="" />}
             <AvatarFallback className="bg-primary font-semibold text-primary-foreground">
               {initial}
             </AvatarFallback>
