@@ -14,7 +14,7 @@ import { DEFAULT_LANGUAGE, LANGUAGE_OPTIONS } from "../../../utils/constants";
 export function LanguageSelect() {
   return (
     <Select defaultValue={DEFAULT_LANGUAGE}>
-      <SelectTrigger aria-label="Select language" className="w-36 border-0">
+      <SelectTrigger aria-label="Select language" className="md:w-36 border-0">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -29,7 +29,7 @@ export function LanguageSelect() {
               priority
               className="h-3.75 w-5 shrink-0 rounded-xs object-cover ring-1 ring-border"
             />
-            <span>{label}</span>
+            <span className="hidden md:block">{label}</span>
           </SelectItem>
         ))}
       </SelectContent>

@@ -99,7 +99,7 @@ function SelectItem({
         </SelectPrimitive.ItemIndicator>
       </span>
       <SelectPrimitive.ItemText>
-        <span className="flex flex-nowrap items-center gap-2 whitespace-nowrap">
+        <span className="flex flex-nowrap items-center gap-2">
           {children}
         </span>
       </SelectPrimitive.ItemText>

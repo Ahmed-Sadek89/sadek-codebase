@@ -1,11 +1,11 @@
 import React from 'react'
+import DashboardLayoutWrapper from '../../components/layouts/dashboard-layouts'
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     return (
-        <>
-            <h1>wrapper</h1>
+        <DashboardLayoutWrapper>
             {children}
-        </>
+        </DashboardLayoutWrapper>
     )
 }
 

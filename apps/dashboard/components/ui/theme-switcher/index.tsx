@@ -11,7 +11,7 @@ import {
 import { useTheme } from "@repo/provider/theme-provider";
 import { DEFAULT_THEME, THEME_OPTIONS } from "../../../utils/constants";
 
-const subscribe = () => () => {};
+const subscribe = () => () => { };
 
 export function ThemeSelect() {
   const { theme, setTheme } = useTheme();
@@ -28,14 +28,14 @@ export function ThemeSelect() {
       onValueChange={setTheme}
       disabled={!mounted}
     >
-      <SelectTrigger aria-label="Select theme" className="w-32 border-0">
+      <SelectTrigger aria-label="Select theme" className="md:w-32 border-0">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
         {THEME_OPTIONS.map(({ value, label, icon: Icon }) => (
           <SelectItem key={value} value={value}>
             <Icon className="text-muted-foreground" />
-            <span>{label}</span>
+            <span className="hidden md:block">{label}</span>
           </SelectItem>
         ))}
       </SelectContent>
