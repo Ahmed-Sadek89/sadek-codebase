@@ -123,6 +123,7 @@ apps/dashboard/ui/
 
 - `/` contains login SEO metadata and renders `components/login/index.tsx`. Its `components/login-form.tsx` uses shared UI, `hooks/use-login-form.ts` manages the form, `schema/login.ts` holds fields and validation, and `utils/constants.ts` holds defaults and the destination route. React Hook Form validates through Zod, then NextAuth Credentials calls the backend on the server. Navigate to `/dashboard` only after success. Show server/network errors and allow retry after failure. The auth session persists in an encrypted HttpOnly NextAuth cookie.
 - `/dashboard` requires a valid NextAuth session and offers sign out.
+- `app/not-found.tsx` renders `components/not-found/index.tsx` for unmatched URLs and `notFound()` calls. It renders inside the root layout (theme, fonts, providers) and links to `/`, which the proxy forwards to `/dashboard` for signed-in users.
 - Run `pnpm --filter dashboard lint` and `pnpm --filter dashboard check-types` after code changes.
 - When changing shared UI, also run `pnpm --filter @repo/ui lint` and `pnpm --filter @repo/ui check-types`.
 - Run `pnpm --filter dashboard dev` to start the dashboard on port 3001.

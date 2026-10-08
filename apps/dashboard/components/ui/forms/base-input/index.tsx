@@ -2,6 +2,7 @@
 
 import { useId, type ComponentProps } from "react";
 import { Input } from "@repo/ui/input";
+import { Label } from "@repo/ui/label";
 import { cn } from "@repo/ui/utils";
 
 export type BaseInputProps = ComponentProps<typeof Input> & {
@@ -28,9 +29,7 @@ export function BaseInput({
 
   return (
     <div className={cn("flex flex-col gap-y-2", containerClassName)}>
-      <label htmlFor={inputId} className="text-sm font-medium">
-        {label}
-      </label>
+      <Label htmlFor={inputId}>{label}</Label>
       <Input
         {...props}
         id={inputId}
