@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { Moon, Sun } from "@repo/ui/icons";
 import { Switch } from "@repo/ui/switch";
-import { useTheme } from "@repo/ui/theme-provider";
+import { useTheme } from "@repo/provider/theme-provider";
 
 const subscribe = () => () => {};
 

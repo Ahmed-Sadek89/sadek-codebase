@@ -232,6 +232,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@repo/provider':
+        specifier: workspace:*
+        version: link:../../packages/provider
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -400,6 +403,9 @@ importers:
       next-auth:
         specifier: 5.0.0-beta.32
         version: 5.0.0-beta.32(next@16.3.4(@babel/core@8.0.1)(@types/node@26.4.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+      next-themes:
+        specifier: ^0.4.6
+        version: 0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
         specifier: 19.2.8
         version: 19.2.8
@@ -482,9 +488,6 @@ importers:
       lucide-react:
         specifier: ^1.48.0
         version: 1.48.0(react@19.2.8)
-      next-themes:
-        specifier: ^0.4.6
-        version: 0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       radix-ui:
         specifier: ^1.6.7
         version: 1.6.7(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)

@@ -56,11 +56,11 @@ The source of truth is `apps/sadek-backend/src/auth`: controller, DTOs, service,
 
 ## External packages used
 
-- `provider`: `@tanstack/react-query-devtools` supplies the query inspector inside `QueryProvider`, rendered only when `process.env.NODE_ENV === "development"` and initially closed. Keep it inside the shared provider and use the standard package entry point; do not enable its production entry point.
+- `provider`: `@tanstack/react-query-devtools` supplies the query inspector inside `QueryProvider`, rendered only when `process.env.NODE_ENV === "development"` and initially closed. Keep it inside the shared provider and use the standard package entry point; do not enable its production entry point. `next-themes` powers `ThemeProvider` and `useTheme`.
 - `libs`: `axios` provides the HTTP client; `@tanstack/react-query` provides QueryClient, the provider, and query/mutation hooks; `react` provides the React runtime.
 - `hooks`: `react` is the client runtime; TanStack Query is consumed through `@repo/libs/query`, not a separately configured client.
 - `types` has no runtime dependencies; services uses libs and shared API types.
-- `ui`: `react` and `react-dom` provide rendering; `radix-ui` supplies accessible primitives; `vaul` supplies drawers; `next-themes` provides themes; `lucide-react` supplies icons; `class-variance-authority` supplies variants; `clsx` and `tailwind-merge` implement class merging. `cn` is also declared in the package manifest. Tailwind CSS provides token-based styling through `global.css`.
+- `ui`: `react` and `react-dom` provide rendering; `radix-ui` supplies accessible primitives; `vaul` supplies drawers; `lucide-react` supplies icons; `class-variance-authority` supplies variants; `clsx` and `tailwind-merge` implement class merging. `cn` is also declared in the package manifest. Tailwind CSS provides token-based styling through `global.css`.
 - `eslint-config`: `@eslint/js`, `eslint`, `eslint-config-prettier`, `eslint-plugin-only-warn`, `eslint-plugin-react-hooks`, `eslint-plugin-turbo`, `@next/eslint-plugin-next`, and `globals` supply shared lint rules and environments. `@babel/core`, `@babel/eslint-parser`, and `@babel/preset-typescript` parse TypeScript.
 - Shared package tooling uses `typescript`, `eslint`, `@types/node`, and React type packages where needed. `typescript-config` has no runtime dependencies.
 - Dashboard form dependencies (`react-hook-form`, `zod`, and `@hookform/resolvers`) are documented in `apps/dashboard/AGENTS.md`; they are app dependencies, not dependencies of these new shared packages.
@@ -88,5 +88,6 @@ The source of truth is `apps/sadek-backend/src/auth`: controller, DTOs, service,
 - The package uses `next-auth` and React, with Next.js supplied by its consuming app as a peer dependency. It uses the shared ESLint and TypeScript configurations and exports TypeScript source.
 
 - `@repo/provider/query-provider` exports `QueryProvider`, using `getQueryClient` from `@repo/libs/query`. Provider owns the TanStack Query provider and development-only devtools dependencies; libs retains QueryClient configuration and hooks.
+- `@repo/provider/theme-provider` exports `ThemeProvider` and `useTheme`. `ThemeProvider` wraps `next-themes` with `attribute="class"` and `disableTransitionOnChange` defaults, toggling the `.dark` class that switches the color tokens in `@repo/ui/global.css`; apps pass `defaultTheme` and `enableSystem`. Both `apps/web` and `apps/dashboard` use it.
 
 - The dashboard passes `"sadek-dashboard"` as the `cookiePrefix` argument to `createAuth`; shared NextAuth cookie names use that prefix, including `sadek-dashboard.session-token`. Cookie options inherit NextAuth defaults, including HttpOnly, SameSite, path, secure handling, and temporary-cookie lifetimes. Changing names requires signing in again.

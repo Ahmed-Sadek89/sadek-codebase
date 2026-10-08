@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import {
   Select,
   SelectContent,
@@ -7,11 +8,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/select";
-import { DEFAULT_THEME, THEME_OPTIONS } from "./utils/constants";
+import { useTheme } from "@repo/provider/theme-provider";
+import { DEFAULT_THEME, THEME_OPTIONS } from "../../../utils/constants";
+
+const subscribe = () => () => {};
 
 export function ThemeSelect() {
+  const { theme, setTheme } = useTheme();
+  // The stored theme is only known in the browser; render the default until mounted.
+  const mounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
+
   return (
-    <Select defaultValue={DEFAULT_THEME}>
+    <Select
+      value={mounted ? (theme ?? DEFAULT_THEME) : DEFAULT_THEME}
+      onValueChange={setTheme}
+      disabled={!mounted}
+    >
       <SelectTrigger aria-label="Select theme" className="w-32 border-0">
         <SelectValue />
       </SelectTrigger>

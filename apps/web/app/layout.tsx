@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import { ThemeProvider } from "@repo/ui/theme-provider";
+import { ThemeProvider } from "@repo/provider/theme-provider";
 import "./styles.css";
 
 const poppins = Poppins({
@@ -23,12 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable} min-w-[320px]`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
+        <ThemeProvider defaultTheme="dark" enableSystem={false}>
           {children}
         </ThemeProvider>
       </body>

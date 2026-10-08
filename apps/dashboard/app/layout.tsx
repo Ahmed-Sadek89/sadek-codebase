@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { QueryProvider } from "@repo/provider/query-provider";
 import { SessionProvider } from "@repo/provider/session-provider";
+import { ThemeProvider } from "@repo/provider/theme-provider";
 import "./styles.css";
+import { DEFAULT_THEME } from "../utils/constants";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -21,11 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body className={poppins.variable}>
-        <SessionProvider>
-          <QueryProvider>{children}</QueryProvider>
-        </SessionProvider>
+        <ThemeProvider defaultTheme={DEFAULT_THEME} enableSystem>
+          <SessionProvider>
+            <QueryProvider>{children}</QueryProvider>
+          </SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
