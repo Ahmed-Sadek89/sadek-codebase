@@ -1,0 +1,3 @@
+- next-intl
+- service/hooks for skills projects and its categories
+- BE: search for good cloud and integrate DONE

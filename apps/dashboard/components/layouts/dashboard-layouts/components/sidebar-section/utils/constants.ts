@@ -2,6 +2,7 @@ import {
   FolderKanban,
   LayoutDashboard,
   Sparkles,
+  TubeLotion,
   UserRound,
   type LucideIcon,
 } from "@repo/ui/icons";
@@ -55,6 +56,12 @@ export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
     label: "Account",
     items: [
       { title: "Profile", href: "/dashboard/profile", icon: UserRound },
+    ],
+  },
+  {
+    label: "TEST",
+    items: [
+      { title: "testing page", href: "/dashboard/testing", icon: TubeLotion },
     ],
   },
 ];
