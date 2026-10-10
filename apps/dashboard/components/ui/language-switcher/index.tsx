@@ -1,6 +1,8 @@
 "use client";
 
+import { useTransition } from "react";
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -8,13 +10,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/select";
-import { DEFAULT_LANGUAGE, LANGUAGE_OPTIONS } from "../../../utils/constants";
+import { usePathname, useRouter } from "../../../i18n/navigation";
+import { isLocale } from "../../../i18n/config";
+import { LANGUAGE_OPTIONS } from "../../../utils/constants";
 
-// Static UI for now: the selection does not change the locale yet.
 export function LanguageSelect() {
+  const t = useTranslations();
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isPending, startTransition] = useTransition();
+
   return (
-    <Select defaultValue={DEFAULT_LANGUAGE}>
-      <SelectTrigger aria-label="Select language" className="sm:w-36 border-0">
+    <Select
+      value={locale}
+      // Same page, new locale prefix: /en/dashboard -> /ar/dashboard.
+      onValueChange={(next) => {
+        if (!isLocale(next)) return;
+        startTransition(() => router.replace(pathname, { locale: next }));
+      }}
+      disabled={isPending}
+    >
+      <SelectTrigger
+        aria-label={t("languageSelectLabel")}
+        className="sm:w-36 border-0"
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

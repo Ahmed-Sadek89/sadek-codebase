@@ -2,8 +2,10 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ImageUploader() {
+  const t = useTranslations();
   const [loading, setLoading] = useState(false);
   const [key, setKey] = useState("");
   const [id, setId] = useState("");
@@ -86,12 +88,12 @@ export default function ImageUploader() {
         }}
       />
 
-      {loading && <p>Uploading...</p>}
+      {loading && <p>{t("uploadUploading")}</p>}
       {key && (
         <p>
-          Uploaded key: {key}{" "}
+          {t("uploadUploadedKey")} {key}{" "}
           <button type="button" disabled={loading} onClick={() => void removeImage()}>
-            Remove
+            {t("uploadRemove")}
           </button>
         </p>
       )}

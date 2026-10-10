@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@repo/ui/button";
 import {
   Dialog,
@@ -25,6 +26,7 @@ export function ConfirmAction({
   open,
   onOpenChange,
 }: ConfirmActionProps) {
+  const t = useTranslations();
   const [isPending, setIsPending] = useState(false);
 
   const handleConfirm = async () => {
@@ -47,13 +49,13 @@ export function ConfirmAction({
         className="duration-200 ease-out data-[state=closed]:slide-out-to-bottom-2 data-[state=open]:slide-in-from-bottom-4 motion-reduce:animate-none sm:max-w-md"
       >
         <DialogHeader>
-          <DialogTitle>Are you sure?</DialogTitle>
+          <DialogTitle>{t("confirmTitle")}</DialogTitle>
           <DialogDescription>{question}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
             <Button type="button"  disabled={isPending}>
-              Cancel
+              {t("confirmCancel")}
             </Button>
           </DialogClose>
           <Button
@@ -63,7 +65,7 @@ export function ConfirmAction({
             disabled={isPending}
             aria-busy={isPending}
           >
-            {isPending ? "Please wait…" : "Confirm"}
+            {isPending ? t("confirmPending") : t("confirmConfirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

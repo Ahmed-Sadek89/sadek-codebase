@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState, type ComponentProps } from "react";
+import { useTranslations } from "next-intl";
 import { Label } from "@repo/ui/label";
 import {
   InputGroup,
@@ -30,6 +31,7 @@ export function PasswordInput({
   "aria-invalid": invalid,
   ...props
 }: PasswordInputProps) {
+  const t = useTranslations();
   const [isVisible, setIsVisible] = useState(false);
   const generatedId = useId();
   const inputId = id ?? generatedId;
@@ -56,7 +58,7 @@ export function PasswordInput({
             size="icon-xs"
             disabled={disabled}
             onClick={() => setIsVisible((prev) => !prev)}
-            aria-label={isVisible ? "Hide password" : "Show password"}
+            aria-label={isVisible ? t("passwordHide") : t("passwordShow")}
             aria-pressed={isVisible}
             aria-controls={inputId}
             className="text-muted-foreground hover:bg-transparent"

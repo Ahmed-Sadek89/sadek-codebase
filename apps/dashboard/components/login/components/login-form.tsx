@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Button } from "@repo/ui/button";
 import { useLoginForm } from "../hooks/use-login-form";
 import { loginFields } from "../schema/login";
@@ -7,6 +8,7 @@ import { BaseInput } from "../../ui/forms/base-input";
 import { PasswordInput } from "../../ui/forms/password-input";
 
 export function LoginForm() {
+  const t = useTranslations();
   const { form, onSubmit, isPending: isLoginPending } = useLoginForm();
   const { errors, isSubmitting } = form.formState;
   const isPending = isSubmitting || isLoginPending;
@@ -21,9 +23,9 @@ export function LoginForm() {
       <BaseInput
         key={loginFields[0].name}
         id={loginFields[0].name}
-        label={loginFields[0].label}
+        label={t(loginFields[0].labelKey)}
         type={loginFields[0].type}
-        placeholder={loginFields[0].placeholder}
+        placeholder={t(loginFields[0].placeholderKey)}
         autoComplete={loginFields[0].autoComplete}
         required
         disabled={isPending}
@@ -33,8 +35,8 @@ export function LoginForm() {
       <PasswordInput
         key={loginFields[1].name}
         id={loginFields[1].name}
-        label={loginFields[1].label}
-        placeholder={loginFields[1].placeholder}
+        label={t(loginFields[1].labelKey)}
+        placeholder={t(loginFields[1].placeholderKey)}
         autoComplete={loginFields[1].autoComplete}
         required
         disabled={isPending}
@@ -47,7 +49,7 @@ export function LoginForm() {
         </p>
       )}
       <Button type="submit" disabled={isPending} className="mt-2 h-11 w-full">
-        {isPending ? "Signing in…" : "Sign in"}
+        {isPending ? t("loginSubmitting") : t("loginSubmit")}
       </Button>
     </form>
   );

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "../../../../../../i18n/navigation";
 import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/avatar";
 import {
   DropdownMenu,
@@ -19,6 +20,7 @@ import { ConfirmAction } from "../../../../../ui/confirm-action";
 import { PROFILE_PATH } from "../utils/constants";
 
 export function UserMenu() {
+  const t = useTranslations();
   const { email, image, initial } = useCurrentUser();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
@@ -26,7 +28,7 @@ export function UserMenu() {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger
-          aria-label="Open user menu"
+          aria-label={t("userMenuOpen")}
           className="rounded-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
           <Avatar className="size-9">
@@ -48,7 +50,7 @@ export function UserMenu() {
           <DropdownMenuItem asChild>
             <Link href={PROFILE_PATH}>
               <User />
-              Profile
+              {t("profile")}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -57,12 +59,12 @@ export function UserMenu() {
             onSelect={() => setIsLogoutOpen(true)}
           >
             <LogOut />
-            Logout
+            {t("logout")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <ConfirmAction
-        question="You will be signed out of your dashboard."
+        question={t("logoutQuestion")}
         onConfirm={() => signOut({ redirectTo: SIGNED_OUT_REDIRECT_PATH })}
         open={isLogoutOpen}
         onOpenChange={setIsLogoutOpen}

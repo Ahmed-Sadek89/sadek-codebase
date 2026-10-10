@@ -20,7 +20,7 @@ const SidebarSection = () => {
     >
       <SidebarContent>
         {SIDEBAR_NAV_GROUPS.map((group) => (
-          <NavGroup key={group.label} group={group} />
+          <NavGroup key={group.labelKey} group={group} />
         ))}
       </SidebarContent>
       <SidebarSeparator className="mx-0" />

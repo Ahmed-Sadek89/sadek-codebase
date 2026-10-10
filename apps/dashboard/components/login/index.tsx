@@ -1,8 +1,11 @@
+import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardDescription, CardHeader } from "@repo/ui/card";
 import { LoginForm } from "./components/login-form";
-import Link from "next/link";
+import { Link } from "../../i18n/navigation";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const t = await getTranslations();
+
   return (
     <main className="flex min-h-svh items-center justify-center bg-background px-5 py-12 text-foreground">
       <div className="w-full max-w-md space-y-8">
@@ -15,20 +18,20 @@ export default function LoginPage() {
               <span className="text-lg font-semibold tracking-tight">
                 Sadek{" "}
                 <span className="font-normal text-muted-foreground">
-                  / Dashboard
+                  / {t("brandDashboard")}
                 </span>
               </span>
             </div>
             <div>
               <p className="text-xs font-medium uppercase tracking-widest text-primary">
-                Portfolio workspace
+                {t("loginEyebrow")}
               </p>
               <h1 className="text-3xl font-semibold tracking-tight">
-                Welcome back
+                {t("loginTitle")}
               </h1>
             </div>
             <CardDescription className="leading-relaxed">
-              Enter your details to sign in to your dashboard.
+              {t("loginDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="px-6 sm:px-8">
@@ -37,22 +40,23 @@ export default function LoginPage() {
               <Link
                 href="/register"
                 className="text-xs font-medium text-primary hover:underline"
-                aria-label="Create an account"
+                aria-label={t("loginSignUpAria")}
               >
-                Don&apos;t have an account? <span className="underline">Sign up</span>
+                {t("loginNoAccount")}{" "}
+                <span className="underline">{t("loginSignUp")}</span>
               </Link>
               <Link
                 href="/forgot-password"
                 className="text-xs font-medium text-primary hover:underline"
-                aria-label="Recover your password"
+                aria-label={t("loginForgotPasswordAria")}
               >
-                Forgot your password?
+                {t("loginForgotPassword")}
               </Link>
             </div>
           </CardContent>
         </Card>
         <p className="text-center text-xs text-muted-foreground">
-          Your portfolio, all in one place.
+          {t("loginTagline")}
         </p>
       </div>
     </main>

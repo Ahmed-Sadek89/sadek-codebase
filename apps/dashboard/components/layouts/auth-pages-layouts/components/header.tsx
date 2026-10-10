@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "../../../../i18n/navigation";
 import { ThemeSelect } from "../../../ui/theme-switcher";
 import { LanguageSelect } from "../../../ui/language-switcher";
 

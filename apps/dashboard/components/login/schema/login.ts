@@ -1,30 +1,35 @@
 import { z } from "zod";
 import type { LoginRequest } from "@repo/types/auth";
+import type { MessageKey } from "../../../i18n/types";
 
-export const loginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .min(1, "Enter your email address.")
-    .pipe(z.email("Enter a valid email address.")),
-  password: z.string().min(1, "Enter your password."),
-}) satisfies z.ZodType<LoginRequest>;
+type Translate = (key: MessageKey) => string;
 
-export type LoginValues = z.infer<typeof loginSchema>;
+// Built per render so validation messages follow the active locale.
+export const createLoginSchema = (t: Translate) =>
+  z.object({
+    email: z
+      .string()
+      .trim()
+      .min(1, t("loginEmailRequired"))
+      .pipe(z.email(t("loginEmailInvalid"))),
+    password: z.string().min(1, t("loginPasswordRequired")),
+  }) satisfies z.ZodType<LoginRequest>;
+
+export type LoginValues = z.infer<ReturnType<typeof createLoginSchema>>;
 
 export const loginFields = [
   {
     name: "email",
-    label: "Email address",
+    labelKey: "loginEmailLabel",
     type: "email",
-    placeholder: "you@example.com",
+    placeholderKey: "loginEmailPlaceholder",
     autoComplete: "username",
   },
   {
     name: "password",
-    label: "Password",
+    labelKey: "loginPasswordLabel",
     type: "password",
-    placeholder: "Enter your password",
+    placeholderKey: "loginPasswordPlaceholder",
     autoComplete: "current-password",
   },
 ] as const;

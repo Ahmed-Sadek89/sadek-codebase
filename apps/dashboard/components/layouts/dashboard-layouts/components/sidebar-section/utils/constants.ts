@@ -6,9 +6,10 @@ import {
   UserRound,
   type LucideIcon,
 } from "@repo/ui/icons";
+import type { MessageKey } from "../../../../../../i18n/types";
 
 export type SidebarLink = {
-  title: string;
+  titleKey: MessageKey;
   href: string;
 };
 
@@ -19,49 +20,49 @@ export type SidebarNavItem = SidebarLink & {
 };
 
 export type SidebarNavGroup = {
-  label: string;
+  labelKey: MessageKey;
   items: SidebarNavItem[];
 };
 
 export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
   {
-    label: "Overview",
-    items: [{ title: "Dashboard", href: "/dashboard", icon: LayoutDashboard }],
+    labelKey: "navOverview",
+    items: [{ titleKey: "navDashboard", href: "/dashboard", icon: LayoutDashboard }],
   },
   {
-    label: "Portfolio",
+    labelKey: "navPortfolio",
     items: [
       {
-        title: "Skills",
+        titleKey: "navSkills",
         href: "/dashboard/skills",
         icon: Sparkles,
         items: [
-          { title: "All skills", href: "/dashboard/skills" },
-          { title: "Categories", href: "/dashboard/skills/category" },
+          { titleKey: "navAllSkills", href: "/dashboard/skills" },
+          { titleKey: "navCategories", href: "/dashboard/skills/category" },
         ],
       },
       {
-        title: "Projects",
+        titleKey: "navProjects",
         href: "/dashboard/projects",
         icon: FolderKanban,
         items: [
-          { title: "All projects", href: "/dashboard/projects" },
-          { title: "Categories", href: "/dashboard/projects/category" },
+          { titleKey: "navAllProjects", href: "/dashboard/projects" },
+          { titleKey: "navCategories", href: "/dashboard/projects/category" },
         ],
       }
 
     ],
   },
   {
-    label: "Account",
+    labelKey: "navAccount",
     items: [
-      { title: "Profile", href: "/dashboard/profile", icon: UserRound },
+      { titleKey: "navProfile", href: "/dashboard/profile", icon: UserRound },
     ],
   },
   {
-    label: "TEST",
+    labelKey: "navTest",
     items: [
-      { title: "testing page", href: "/dashboard/testing", icon: TubeLotion },
+      { titleKey: "navTestingPage", href: "/dashboard/testing", icon: TubeLotion },
     ],
   },
 ];
