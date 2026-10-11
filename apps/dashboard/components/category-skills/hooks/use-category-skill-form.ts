@@ -2,9 +2,9 @@
 
 import { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
-import { getApiErrorMessage } from "@repo/libs/axios";
+import { showToast, toastApiError } from "@repo/libs/toast";
 import {
   useCreateCategorySkill,
   useUpdateCategorySkill,
@@ -15,6 +15,7 @@ import {
   type CategorySkillFormInput,
   type CategorySkillFormValues,
 } from "../schema";
+import { getDirection } from "../../../i18n/config";
 import { CATEGORY_SKILL_FORM_DEFAULT_VALUES } from "../utils/constants";
 
 type UseCategorySkillFormOptions = {
@@ -29,6 +30,7 @@ export function useCategorySkillForm({
   onSuccess,
 }: UseCategorySkillFormOptions = {}) {
   const t = useTranslations();
+  const dir = getDirection(useLocale());
   const schema = useMemo(() => createCategorySkillSchema(t), [t]);
   const form = useForm<CategorySkillFormInput, unknown, CategorySkillFormValues>(
     {
@@ -42,14 +44,17 @@ export function useCategorySkillForm({
   const updateCategorySkill = useUpdateCategorySkill();
 
   const onSubmit = form.handleSubmit(async (values) => {
-    form.clearErrors("root");
     try {
-      if (category)
+      if (category) {
         await updateCategorySkill.mutateAsync({ id: category.id, data: values });
-      else await createCategorySkill.mutateAsync(values);
+        showToast({ status: "success", title: t("categorySkillUpdated"), dir });
+      } else {
+        await createCategorySkill.mutateAsync(values);
+        showToast({ status: "success", title: t("categorySkillCreated"), dir });
+      }
       onSuccess?.();
     } catch (error) {
-      form.setError("root.server", { message: getApiErrorMessage(error) });
+      toastApiError(error, { dir });
     }
   });
 

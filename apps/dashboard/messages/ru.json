@@ -127,5 +127,7 @@
   "categorySkillFormDescriptionArMax": "Описание на арабском не может быть длиннее 100 символов.",
   "categorySkillFormEditTitle": "Редактировать категорию навыков",
   "categorySkillFormEditDescription": "Обновите названия, описания и видимость этой категории.",
-  "categorySkillFormEditSubmit": "Сохранить изменения"
+  "categorySkillFormEditSubmit": "Сохранить изменения",
+  "categorySkillCreated": "Категория успешно создана",
+  "categorySkillUpdated": "Категория успешно обновлена"
 }

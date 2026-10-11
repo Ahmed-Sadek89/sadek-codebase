@@ -127,5 +127,7 @@
   "categorySkillFormDescriptionArMax": "The Arabic description can't be longer than 100 characters.",
   "categorySkillFormEditTitle": "Edit skill category",
   "categorySkillFormEditDescription": "Update this category's names, descriptions and visibility.",
-  "categorySkillFormEditSubmit": "Save changes"
+  "categorySkillFormEditSubmit": "Save changes",
+  "categorySkillCreated": "Category created successfully",
+  "categorySkillUpdated": "Category updated successfully"
 }

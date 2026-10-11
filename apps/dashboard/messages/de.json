@@ -127,5 +127,7 @@
   "categorySkillFormDescriptionArMax": "Die arabische Beschreibung darf höchstens 100 Zeichen lang sein.",
   "categorySkillFormEditTitle": "Skill-Kategorie bearbeiten",
   "categorySkillFormEditDescription": "Aktualisiere Namen, Beschreibungen und Sichtbarkeit dieser Kategorie.",
-  "categorySkillFormEditSubmit": "Änderungen speichern"
+  "categorySkillFormEditSubmit": "Änderungen speichern",
+  "categorySkillCreated": "Kategorie erfolgreich erstellt",
+  "categorySkillUpdated": "Kategorie erfolgreich aktualisiert"
 }

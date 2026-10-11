@@ -127,5 +127,7 @@
   "categorySkillFormDescriptionArMax": "لا يمكن أن يتجاوز الوصف بالعربية 100 حرف.",
   "categorySkillFormEditTitle": "تعديل فئة المهارات",
   "categorySkillFormEditDescription": "حدّث أسماء هذه الفئة وأوصافها وظهورها.",
-  "categorySkillFormEditSubmit": "حفظ التغييرات"
+  "categorySkillFormEditSubmit": "حفظ التغييرات",
+  "categorySkillCreated": "تم إنشاء الفئة بنجاح",
+  "categorySkillUpdated": "تم تحديث الفئة بنجاح"
 }

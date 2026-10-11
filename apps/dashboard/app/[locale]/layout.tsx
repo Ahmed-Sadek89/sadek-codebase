@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { QueryProvider } from "@repo/provider/query-provider";
 import { SessionProvider } from "@repo/provider/session-provider";
 import { ThemeProvider } from "@repo/provider/theme-provider";
+import { ToastProvider } from "@repo/provider/toast-provider";
 import { DirectionProvider } from "@repo/ui/direction";
 import "../styles.css";
 import { DEFAULT_THEME } from "../../utils/constants";
@@ -47,6 +48,7 @@ export default async function RootLayout({
               <SessionProvider>
                 <QueryProvider>{children}</QueryProvider>
               </SessionProvider>
+              <ToastProvider dir={dir} />
             </ThemeProvider>
           </DirectionProvider>
         </NextIntlClientProvider>
