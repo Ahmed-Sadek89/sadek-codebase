@@ -27,6 +27,8 @@
   --color-accent-strong: var(--accent-strong);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-info: var(--info);
   /* shadcn sidebar tokens, mapped onto the palette above. */
   --color-sidebar: var(--card);
   --color-sidebar-foreground: var(--card-foreground);
@@ -51,6 +53,8 @@
 
 :root {
   color-scheme: light;
+  --success: #28a745;
+  --info: #0891b2;
   --secondary: #dde8f3;
   --secondary-foreground: #334b68;
   --primary-muted: #d9effa;
@@ -85,6 +89,9 @@
   --accent-soft: #e7b09c;
   --accent-strong: #213e69;
   --warning: #f4b73a;
+  --danger: #f87171;
+  --success: #4ade80;
+  --info: #22d3ee;
   --input: #1b2a4b;
   --ring: #48bdf2;
   /* Palette sampled from the supplied portfolio reference. */
@@ -94,7 +101,7 @@
   --card-foreground: #f4f7ff;
   --border: #1b2a4b;
   --primary: #48bdf2;
-  --primary-foreground: #061225;
+  --primary-foreground: #fff;
   --muted: #0c1730;
   --muted-foreground: #91a0bd;
   --accent: #162544;
