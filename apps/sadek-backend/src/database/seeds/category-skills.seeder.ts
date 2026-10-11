@@ -23,10 +23,10 @@ export default class CategorySkillsSeeder implements Seeder {
     let seededCategories = 0;
     for (const user of users) {
       const existing = await categoryRepo.count({ where: { user: { id: user.id } } });
-      if (existing > 0) continue;
+      if (existing > 0)  await categoryRepo.deleteAll();
 
       const categories = CATEGORY_SKILLS_SEED.map((seed) =>
-        categoryRepo.create({ ...seed, user: { id: user.id } }),
+        categoryRepo.create({ ...seed, user: { id: 1 } }),
       );
       await categoryRepo.save(categories);
       seededUsers += 1;

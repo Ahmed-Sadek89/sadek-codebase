@@ -9,6 +9,8 @@ export default getRequestConfig(async ({ locale: explicitLocale }) => {
 
   return {
     locale,
+    // One fixed zone so dates format identically on the server and in the browser.
+    timeZone: "UTC",
     messages: (await import(`../messages/${locale}.json`)).default,
   };
 });

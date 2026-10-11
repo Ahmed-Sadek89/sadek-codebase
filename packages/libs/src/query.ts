@@ -16,8 +16,15 @@ export function getQueryClient() {
   return (browserQueryClient ??= createQueryClient());
 }
 
-export { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+export {
+  dehydrate,
+  HydrationBoundary,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 export type {
+  DehydratedState,
   QueryClient,
   QueryKey,
   UseMutationOptions,

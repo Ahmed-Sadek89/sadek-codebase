@@ -20,6 +20,8 @@
     "@repo/services": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/ui": "workspace:*",
+    "@repo/utils": "workspace:*",
+    "@tanstack/react-table": "^9.2.8",
     "next": "16.3.4",
     "next-auth": "5.0.0-beta.32",
     "next-intl": "^4.14.9",
