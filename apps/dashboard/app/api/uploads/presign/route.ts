@@ -4,15 +4,20 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { randomUUID } from "node:crypto";
 import { allowedImageTypes, s3, UPLOADS_PREFIX } from "../../../../libs/s3";
+import { UPLOAD_MAX_SIZE } from "../../../../libs/upload-types";
+import { auth } from "../../../../libs/auth";
 
 export const runtime = "nodejs";
 
-const MAX_SIZE = 2 * 1024 * 1024;
+const MAX_SIZE = UPLOAD_MAX_SIZE;
 
 export async function POST(req: NextRequest) {
     try {
-        // TODO: Verify session and upload permission here.
-        // Never expose this endpoint without authentication.
+        // Only signed-in dashboard users may upload.
+        const session = await auth();
+        if (!session?.accessToken) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
 
         const body = await req.json().catch(() => null);
         const { type, size } = body ?? {};

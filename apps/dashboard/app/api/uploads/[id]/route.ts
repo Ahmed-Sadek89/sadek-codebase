@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { allowedImageTypes, s3, UPLOADS_PREFIX } from "../../../../libs/s3";
+import { auth } from "../../../../libs/auth";
 
 export const runtime = "nodejs";
 
@@ -13,8 +14,11 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        // TODO: Verify session and delete permission here.
-        // Never expose this endpoint without authentication.
+        // Only signed-in dashboard users may delete uploads.
+        const session = await auth();
+        if (!session?.accessToken) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
 
         const { id } = await params;
 
@@ -32,7 +36,8 @@ export async function DELETE(
             new DeleteObjectsCommand({
                 Bucket: process.env.AWS_S3_BUCKET!,
                 Delete: {
-                    Objects: Object.values(allowedImageTypes).map((ext) => ({
+                    // Several MIME types share an extension (e.g. .ico), so dedupe.
+                    Objects: [...new Set(Object.values(allowedImageTypes))].map((ext) => ({
                         Key: `${UPLOADS_PREFIX}/${id.toLowerCase()}.${ext}`,
                     })),
                     Quiet: true,

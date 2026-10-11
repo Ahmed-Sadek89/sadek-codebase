@@ -9,6 +9,7 @@ import { Eye, type LucideIcon } from "@repo/ui/icons";
 import { AppDialog } from "../../ui/dialog";
 import { BaseInput } from "../../ui/forms/base-input";
 import { BaseSwitch } from "../../ui/forms/base-switch";
+import { BaseUpload } from "../../ui/forms/base-upload";
 import { useSkillForm } from "../hooks/use-skill-form";
 import { toSkillFormInput } from "../utils/constants";
 import { SKILL_NAME_MAX } from "../schema";
@@ -66,17 +67,22 @@ export function SkillsForm({
         className="space-y-5"
         aria-busy={isSubmitting}
       >
-        <BaseInput
-          id="avatar_url"
-          type="url"
-          inputMode="url"
-          label={t("skillFormAvatarUrlLabel")}
-          placeholder="https://"
-          dir="ltr"
-          disabled={isSubmitting}
-          error={errors.avatar_url?.message}
-          containerClassName="sm:col-span-2"
-          {...form.register("avatar_url")}
+        <Controller
+          control={form.control}
+          name="avatar_url"
+          render={({ field, fieldState }) => (
+            <BaseUpload
+              id={field.name}
+              label={t("skillFormAvatarLabel")}
+              uploadType="image"
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              validate={() => form.trigger("avatar_url")}
+              disabled={isSubmitting}
+              error={fieldState.error?.message}
+            />
+          )}
         />
         <div className="grid gap-4 sm:grid-cols-2">
           <BaseInput

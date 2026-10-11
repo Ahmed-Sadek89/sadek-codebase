@@ -31,7 +31,13 @@ export function useSkillForm({ skill = null, onSuccess }: UseSkillFormOptions = 
   const createSkill = useCreateSkill();
   const updateSkill = useUpdateSkill();
 
-  const onSubmit = form.handleSubmit(async (values) => {
+  const onSubmit = form.handleSubmit(async ({ avatar_url, ...rest }) => {
+    // Nothing uploads a picked icon yet, so only a saved URL is sent.
+    const values = {
+      ...rest,
+      avatar_url: typeof avatar_url === "string" ? avatar_url : undefined,
+    };
+
     try {
       if (skill) {
         await updateSkill.mutateAsync({ id: skill.id, data: values });
