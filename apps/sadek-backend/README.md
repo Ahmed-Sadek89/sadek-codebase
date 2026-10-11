@@ -95,6 +95,16 @@ There are currently no migrations in this project. A deployment alone will not f
 `relation "users" does not exist`; restore the schema or introduce and run migrations
 before testing login. The seed command inserts data and does not replace migrations.
 
+Seed commands:
+
+- `pnpm seed` runs every seeder in order: 50 fake users (skipped when any user
+  exists), then the default skill categories.
+- `pnpm seed:category-skills` runs only the skill-categories seeder. It gives every
+  user who has no skill categories yet the 8 defaults in
+  `src/database/seeds/data/category-skills.data.ts` (Arabic and English names and
+  descriptions, one inactive). Users who already have categories are skipped, so it
+  is safe to re-run. It needs existing users.
+
 After deployment, check `GET /` and then `POST /auth/login` on the deployment URL.
 A successful build does not verify database connectivity or authentication.
 
