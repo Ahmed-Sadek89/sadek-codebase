@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "@repo/ui/dialog";
 import { LucideIcon } from "@repo/ui/icons";
+import { cn } from "@repo/ui/utils";
 
 export type AppDialogProps = {
   open: boolean;
@@ -35,7 +36,12 @@ export function AppDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className={className}
+        // Below lg (phones and tablets) a tall dialog scrolls inside the
+        // viewport instead of overflowing it; lg and up keep the natural height.
+        className={cn(
+          "max-h-[85dvh] overflow-y-auto lg:max-h-none lg:overflow-y-visible",
+          className,
+        )}
         onInteractOutside={(event) => event.preventDefault()}
       >
         <DialogHeader>

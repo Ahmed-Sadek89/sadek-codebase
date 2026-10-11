@@ -9,6 +9,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@repo/ui/popover";
 import { Check, ChevronsUpDown, Loader2, Search, X } from "@repo/ui/icons";
 import { cn } from "@repo/ui/utils";
+import { OptionsSkeleton } from "../../skeleton/options-skeleton";
 import { localized } from "../../../../utils/format";
 import {
   CATEGORY_FILTER_LIMIT,
@@ -26,8 +27,9 @@ export type CategorySkillsFilterProps = {
 /**
  * Searchable single select over the user's skill categories: loads
  * CATEGORY_FILTER_LIMIT (10) at a time from GET /category-skills/private,
- * searched on the server (debounced). The selected name comes from
- * GET /category-skills/:id, so it shows even when the id came from the URL.
+ * searched on the server (debounced), and only once the menu is opened. The
+ * selected name comes from GET /category-skills/:id, so it shows even when
+ * the id came from the URL.
  */
 export function CategorySkillsFilter({
   value,
@@ -48,10 +50,13 @@ export function CategorySkillsFilter({
     return () => clearTimeout(timeout);
   }, [search]);
 
-  const { data, isFetching } = useCategorySkills({
-    limit: CATEGORY_FILTER_LIMIT,
-    ...(debouncedSearch && { search: debouncedSearch }),
-  });
+  const { data, isFetching } = useCategorySkills(
+    {
+      limit: CATEGORY_FILTER_LIMIT,
+      ...(debouncedSearch && { search: debouncedSearch }),
+    },
+    { enabled: open },
+  );
   const { data: selected, isPending: isSelectedPending } = useCategorySkill(
     value ?? undefined,
   );
@@ -144,9 +149,11 @@ export function CategorySkillsFilter({
                 muted
               />
             </li>
-            {options.length === 0 ? (
+            {options.length === 0 && isFetching ? (
+              <OptionsSkeleton />
+            ) : options.length === 0 ? (
               <li className="px-2 py-6 text-center text-sm text-muted-foreground">
-                {isFetching ? t("multiSelectLoading") : t("multiSelectEmpty")}
+                {t("multiSelectEmpty")}
               </li>
             ) : (
               options.map((category) => (

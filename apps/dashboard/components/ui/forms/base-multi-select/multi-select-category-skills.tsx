@@ -24,6 +24,7 @@ export type MultiSelectCategorySkillsProps = {
 /**
  * Picks the skill's categories from the user's own, searched on the server
  * (GET /category-skills/private?search=, debounced) a page of MAX_LIMIT at a time.
+ * Nothing is fetched until the list is opened.
  */
 export function MultiSelectCategorySkills({
   value,
@@ -35,6 +36,7 @@ export function MultiSelectCategorySkills({
 }: MultiSelectCategorySkillsProps) {
   const t = useTranslations();
   const locale = useLocale();
+  const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
@@ -46,10 +48,13 @@ export function MultiSelectCategorySkills({
     return () => clearTimeout(timeout);
   }, [search]);
 
-  const { data, isFetching } = useCategorySkills({
-    limit: MAX_LIMIT,
-    ...(debouncedSearch && { search: debouncedSearch }),
-  });
+  const { data, isFetching } = useCategorySkills(
+    {
+      limit: MAX_LIMIT,
+      ...(debouncedSearch && { search: debouncedSearch }),
+    },
+    { enabled: open },
+  );
 
   return (
     <BaseMultiSelect<NamedRef>
@@ -68,6 +73,7 @@ export function MultiSelectCategorySkills({
       onSearchChange={setSearch}
       searchMaxLength={SEARCH_MAX_LENGTH}
       isLoading={isFetching}
+      onOpenChange={setOpen}
       error={error}
       disabled={disabled}
     />

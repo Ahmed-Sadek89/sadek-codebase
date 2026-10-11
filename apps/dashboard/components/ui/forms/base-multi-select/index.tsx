@@ -6,6 +6,7 @@ import { Label } from "@repo/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@repo/ui/popover";
 import { Check, ChevronsUpDown, Loader2, Search, X } from "@repo/ui/icons";
 import { cn } from "@repo/ui/utils";
+import { OptionsSkeleton } from "../../skeleton/options-skeleton";
 
 export type BaseMultiSelectProps<T> = {
   label: string;
@@ -20,7 +21,10 @@ export type BaseMultiSelectProps<T> = {
   search?: string;
   onSearchChange?: (search: string) => void;
   searchMaxLength?: number;
+  /** Shows skeleton rows while there are no options yet, a spinner after. */
   isLoading?: boolean;
+  /** Called when the list opens or closes, e.g. to fetch options only once open. */
+  onOpenChange?: (open: boolean) => void;
   placeholder?: string;
   error?: string;
   disabled?: boolean;
@@ -45,6 +49,7 @@ export function BaseMultiSelect<T>({
   onSearchChange,
   searchMaxLength,
   isLoading = false,
+  onOpenChange,
   placeholder,
   error,
   disabled,
@@ -75,6 +80,7 @@ export function BaseMultiSelect<T>({
         open={open}
         onOpenChange={(next) => {
           setOpen(next);
+          onOpenChange?.(next);
           if (!next) onBlur?.();
         }}
       >
@@ -140,9 +146,11 @@ export function BaseMultiSelect<T>({
             aria-busy={isLoading}
             className="max-h-64 overflow-y-auto p-1"
           >
-            {options.length === 0 ? (
+            {options.length === 0 && isLoading ? (
+              <OptionsSkeleton />
+            ) : options.length === 0 ? (
               <li className="px-2 py-6 text-center text-sm text-muted-foreground">
-                {isLoading ? t("multiSelectLoading") : t("multiSelectEmpty")}
+                {t("multiSelectEmpty")}
               </li>
             ) : (
               options.map((option) => {

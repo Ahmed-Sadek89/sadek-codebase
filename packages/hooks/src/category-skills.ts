@@ -10,11 +10,18 @@ import type {
 import { queryKeys } from "@repo/utils/query-keys";
 import { useGuardedMutation, useGuardedQuery } from "./api";
 
-/** GET /category-skills/private: the signed-in user's categories, paginated. */
-export function useCategorySkills(query: CategorySkillsQuery = {}) {
+/**
+ * GET /category-skills/private: the signed-in user's categories, paginated.
+ * `enabled: false` holds the request back (e.g. until a select opens).
+ */
+export function useCategorySkills(
+  query: CategorySkillsQuery = {},
+  { enabled = true }: { enabled?: boolean } = {},
+) {
   return useGuardedQuery({
     queryKey: queryKeys.categorySkills.list(query),
     queryFn: (auth) => categorySkillsService.findAll(query, auth),
+    enabled,
     // Keep the current rows on screen while a new search loads.
     placeholderData: keepPreviousData,
   });
