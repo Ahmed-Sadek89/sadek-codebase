@@ -1,6 +1,11 @@
 import type { MessageResponse } from "./auth";
 import type { CategoryProjectDetails } from "./category-projects";
-import type { IsoDateString, NamedRef } from "./common";
+import type {
+  IsoDateString,
+  NamedRef,
+  PaginatedResponse,
+  PaginationQuery,
+} from "./common";
 
 /** Fields shared by every project response. */
 interface ProjectBase {
@@ -54,11 +59,16 @@ export type CreateProjectResponse = Omit<
   repoUrl?: string | null;
 };
 
-/**
- * GET /projects: NOT paginated. The backend returns all of the signed-in
- * user's projects, newest first, and ignores query params.
- */
-export type ProjectsResponse = Project[];
+/** GET /projects; `order` sorts by `createdAt` (default DESC, newest first). */
+export interface ProjectsQuery extends PaginationQuery {
+  /** Matches nameAr or nameEn (case-insensitive). Max 20 characters. */
+  search?: string;
+  isActive?: boolean;
+  /** Only projects linked to this project category. */
+  categoryId?: number;
+}
+
+export type ProjectsResponse = PaginatedResponse<Project>;
 
 /** PATCH /projects/:id: any subset of the create fields. */
 export type UpdateProjectRequest = Partial<CreateProjectRequest>;

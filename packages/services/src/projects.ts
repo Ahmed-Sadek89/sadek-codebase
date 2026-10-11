@@ -5,6 +5,7 @@ import type {
   CreateProjectResponse,
   DeleteProjectResponse,
   ProjectDetails,
+  ProjectsQuery,
   ProjectsResponse,
   UpdateProjectRequest,
   UpdateProjectResponse,
@@ -29,11 +30,13 @@ export const projectsService = {
     );
     return data;
   },
-  /** Not paginated: the backend returns every project of the signed-in user. */
-  async findAll(auth: AuthorizedRequest): Promise<ProjectsResponse> {
+  async findAll(
+    query: ProjectsQuery,
+    auth: AuthorizedRequest,
+  ): Promise<ProjectsResponse> {
     const { data } = await apiClient.get<ProjectsResponse>(
       projectsEndpoints.collection,
-      { headers: authHeaders(auth) },
+      { params: query, headers: authHeaders(auth) },
     );
     return data;
   },

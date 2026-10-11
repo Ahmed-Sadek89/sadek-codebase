@@ -1,4 +1,4 @@
-import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { ToBoolean } from '../../common/transformers/to-boolean';
 
@@ -14,4 +14,10 @@ export class FilterProjectDto extends PaginationQueryDto {
   @ToBoolean()
   @IsBoolean()
   isActive?: boolean;
+
+  /** Only projects linked to this project category. */
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  categoryId?: number;
 }

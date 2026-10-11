@@ -1,5 +1,6 @@
 import type { CategoryProjectsQuery } from "@repo/types/category-projects";
 import type { CategorySkillsQuery } from "@repo/types/category-skills";
+import type { ProjectsQuery } from "@repo/types/projects";
 import type { SkillsQuery } from "@repo/types/skills";
 
 /**
@@ -43,8 +44,9 @@ export const queryKeys = {
   },
   projects: {
     all: ["projects"] as const,
-    // GET /projects takes no query: one list per user.
-    list: () => [...queryKeys.projects.all, "list"] as const,
+    lists: () => [...queryKeys.projects.all, "list"] as const,
+    list: (query: ProjectsQuery) =>
+      [...queryKeys.projects.lists(), query] as const,
     details: () => [...queryKeys.projects.all, "detail"] as const,
     detail: (id: number) => [...queryKeys.projects.details(), id] as const,
   },

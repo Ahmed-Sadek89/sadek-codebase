@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Query, ParseIntPipe } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -26,23 +26,23 @@ export class ProjectsController {
     @Query() filterProjectsDto: FilterProjectDto,
     @Request() req: RequestUserDto
   ) {
-    return await this.projectsService.findAll(req.user.userId, filterProjectsDto.order);
+    return await this.projectsService.findAll(filterProjectsDto, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.projectsService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number, @Request() req: RequestUserDto) {
+    return await this.projectsService.findOne(id, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateProjectDto: UpdateProjectDto,
     @Request() req: RequestUserDto
   ) {
-    await this.projectsService.update(+id, updateProjectDto, req.user.userId);
+    await this.projectsService.update(id, updateProjectDto, req.user.userId);
     return {
       message: 'project updated successfully',
     };
@@ -50,8 +50,8 @@ export class ProjectsController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.projectsService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number, @Request() req: RequestUserDto) {
+    await this.projectsService.remove(id, req.user.userId);
     return {
       message: 'project removed successfully',
     };
