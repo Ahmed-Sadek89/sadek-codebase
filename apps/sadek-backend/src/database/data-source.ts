@@ -10,6 +10,9 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import userFactory from './factories/user.factory';
 import MainSeeder from './seeds/main-seeder';
 import CategorySkillsSeeder from './seeds/category-skills.seeder';
+import SkillsSeeder from './seeds/skills.seeder';
+import CategoryProjectsSeeder from './seeds/category-projects.seeder';
+import ProjectsSeeder from './seeds/projects.seeder';
 
 const options: SeederOptions & DataSourceOptions = {
     ...dbConnectionOptions,
@@ -17,8 +20,15 @@ const options: SeederOptions & DataSourceOptions = {
     // cannot build metadata for User (which relates to all of them).
     entities: [User, CategorySkill, Skill, CategoryProject, Project],
     factories: [userFactory],
-    // Order matters: users first, then the categories that belong to them.
-    seeds: [MainSeeder, CategorySkillsSeeder],
+    // Order matters: users own everything; both category tables come before
+    // the skills and projects that link to random category ids.
+    seeds: [
+        MainSeeder,
+        CategorySkillsSeeder,
+        CategoryProjectsSeeder,
+        SkillsSeeder,
+        ProjectsSeeder,
+    ],
 }
 
 export const AppDataSource = new DataSource(options);

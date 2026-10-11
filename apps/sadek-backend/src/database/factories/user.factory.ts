@@ -10,7 +10,14 @@ export default setSeederFactory(User, () => {
     user.firstName = faker.person.firstName().slice(0, 10);
     user.lastName = faker.person.lastName().slice(0, 10);
     user.age = faker.number.int({min: 20, max: 80})
-    user.email = faker.internet.email().toLowerCase().slice(0, 50);
+    // A random suffix keeps the unique emails from colliding across 100 users.
+    user.email = faker.internet
+        .email({
+            firstName: user.firstName,
+            lastName: `${user.lastName}.${faker.string.alphanumeric(6)}`,
+        })
+        .toLowerCase()
+        .slice(0, 70);
     user.password = SEED_PASSWORD;
     user.avatarUrl = faker.image.avatar();
     return user;
