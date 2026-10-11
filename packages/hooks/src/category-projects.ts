@@ -1,6 +1,6 @@
 "use client";
 
-import { useQueryClient } from "@repo/libs/query";
+import { keepPreviousData, useQueryClient } from "@repo/libs/query";
 import { categoryProjectsService } from "@repo/services/category-projects";
 import type {
   CategoryProjectsQuery,
@@ -10,11 +10,20 @@ import type {
 import { queryKeys } from "@repo/utils/query-keys";
 import { useGuardedMutation, useGuardedQuery } from "./api";
 
-/** GET /category-projects: the signed-in user's categories, paginated. */
-export function useCategoryProjects(query: CategoryProjectsQuery = {}) {
+/**
+ * GET /category-projects: the signed-in user's categories, paginated.
+ * `enabled: false` holds the request back (e.g. until a select opens).
+ */
+export function useCategoryProjects(
+  query: CategoryProjectsQuery = {},
+  { enabled = true }: { enabled?: boolean } = {},
+) {
   return useGuardedQuery({
     queryKey: queryKeys.categoryProjects.list(query),
     queryFn: (auth) => categoryProjectsService.findAll(query, auth),
+    enabled,
+    // Keep the current rows on screen while a new search loads.
+    placeholderData: keepPreviousData,
   });
 }
 

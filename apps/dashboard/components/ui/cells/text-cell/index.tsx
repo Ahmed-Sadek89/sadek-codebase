@@ -5,6 +5,11 @@ export type TextCellProps = {
   weight?: "normal" | "medium" | "semibold";
   tone?: "default" | "muted";
   size?: "sm" | "base";
+  /**
+   * Longest text shown, in characters; longer text is cut and ends with "…".
+   * The full text stays in the hover title.
+   */
+  maxLength?: number;
   /** Shown when `value` is empty; defaults to an em dash. */
   fallback?: string;
   className?: string;
@@ -22,10 +27,17 @@ export function TextCell({
   weight = "normal",
   tone = "default",
   size = "base",
+  maxLength,
   fallback = "—",
   className,
 }: TextCellProps) {
   const text = value === null || value === undefined ? "" : String(value);
+  // Array.from counts characters, not UTF-16 units, so emoji aren't split.
+  const chars = Array.from(text);
+  const shown =
+    maxLength !== undefined && chars.length > maxLength
+      ? `${chars.slice(0, maxLength).join("").trimEnd()}…`
+      : text;
 
   return (
     <p
@@ -39,7 +51,7 @@ export function TextCell({
       )}
       title={text || undefined}
     >
-      {text || fallback}
+      {shown || fallback}
     </p>
   );
 }

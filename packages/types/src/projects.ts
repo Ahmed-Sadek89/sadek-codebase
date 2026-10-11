@@ -70,8 +70,17 @@ export interface ProjectsQuery extends PaginationQuery {
 
 export type ProjectsResponse = PaginatedResponse<Project>;
 
-/** PATCH /projects/:id: any subset of the create fields. */
-export type UpdateProjectRequest = Partial<CreateProjectRequest>;
+/**
+ * PATCH /projects/:id: any subset of the create fields. `null` clears an
+ * optional URL (omitting it keeps the current one).
+ */
+export type UpdateProjectRequest = Partial<
+  Omit<CreateProjectRequest, "mainImageUrl" | "liveUrl" | "repoUrl">
+> & {
+  mainImageUrl?: string | null;
+  liveUrl?: string | null;
+  repoUrl?: string | null;
+};
 
 export type UpdateProjectResponse = MessageResponse;
 

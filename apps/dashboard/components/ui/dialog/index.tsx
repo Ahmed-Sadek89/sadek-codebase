@@ -1,13 +1,15 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@repo/ui/dialog";
-import { LucideIcon } from "@repo/ui/icons";
+import { LucideIcon, X } from "@repo/ui/icons";
 import { cn } from "@repo/ui/utils";
 
 export type AppDialogProps = {
@@ -23,7 +25,10 @@ export type AppDialogProps = {
   className?: string;
 };
 
-/** Controlled dialog that stays open on outside clicks; Escape and the X button still close it. */
+/**
+ * Controlled dialog that stays open on outside clicks; Escape and the X button
+ * still close it. The header (with the X) stays pinned while the body scrolls.
+ */
 export function AppDialog({
   open,
   onOpenChange,
@@ -33,6 +38,7 @@ export function AppDialog({
   children,
   className,
 }: AppDialogProps) {
+  const t = useTranslations();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -43,10 +49,21 @@ export function AppDialog({
           className,
         )}
         onInteractOutside={(event) => event.preventDefault()}
+        // The built-in X would scroll away; the header renders its own.
+        showCloseButton={false}
       >
-        <DialogHeader>
+        {/* Negative margins + matching padding stretch it over the panel's
+            p-6, so scrolled content never shows above or beside it. */}
+        <DialogHeader className="sticky -top-6 z-10 -mx-6  rounded-t-lg border-b border-border bg-card px-6 pt-6 pb-4">
+          <DialogClose
+            className="absolute end-4 top-6 cursor-pointer rounded-xs opacity-70 ring-offset-background transition-opacity outline-none hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            aria-label={t("dialogClose")}
+            title={t("dialogClose")}
+          >
+            <X className="size-4" aria-hidden />
+          </DialogClose>
           <DialogTitle asChild>
-            <div className="flex items-start gap-3 text-start">
+            <div className="flex items-start gap-3 pe-6 text-start">
               <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <Icon className="size-5" aria-hidden />
               </span>
@@ -64,7 +81,7 @@ export function AppDialog({
             </div>
           </DialogTitle>
         </DialogHeader>
-        <div className="pt-10 pb-5">
+        <div className="pt-4 pb-5">
           {children}
         </div>
       </DialogContent>
