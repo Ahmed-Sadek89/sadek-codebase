@@ -1,6 +1,10 @@
 "use client";
 
-import { useQueryClient, type QueryClient } from "@repo/libs/query";
+import {
+  keepPreviousData,
+  useQueryClient,
+  type QueryClient,
+} from "@repo/libs/query";
 import { skillsService } from "@repo/services/skills";
 import type {
   CreateSkillRequest,
@@ -23,6 +27,8 @@ export function useSkills(query: SkillsQuery = {}) {
   return useGuardedQuery({
     queryKey: queryKeys.skills.list(query),
     queryFn: (auth) => skillsService.findAll(query, auth),
+    // Keep the current rows on screen while a new search loads.
+    placeholderData: keepPreviousData,
   });
 }
 

@@ -51,6 +51,9 @@ export default function ServerErrorPage({
           <p className="leading-relaxed text-muted-foreground">
             {t("serverErrorDescription")}
           </p>
+          <p className="leading-relaxed text-muted-foreground">
+            {error.message}
+          </p>
           {error.digest && (
             <p className="text-xs text-muted-foreground">
               {t("serverErrorReference", { digest: error.digest })}

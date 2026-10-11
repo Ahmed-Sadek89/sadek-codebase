@@ -45,7 +45,7 @@ export const PAGE_PARAM = "page";
 export const LIMIT_PARAM = "limit";
 
 /** Backend list DTOs reject `limit` above 30 (400). */
-export const MAX_LIMIT = 30;
+export const MAX_LIMIT = 10;
 
 /** Choices in the table's rows-per-page select. */
 export const PAGE_SIZE_OPTIONS = [5, 10, 15, 20] as const;

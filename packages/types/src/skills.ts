@@ -46,7 +46,7 @@ export type SavedSkill = Omit<Skill, "avatar_url"> & {
 
 export type CreateSkillResponse = SavedSkill;
 
-/** GET /skills; `order` is accepted but ignored (always newest first). */
+/** GET /skills; `order` sorts by `createdAt` (default DESC, newest first). */
 export interface SkillsQuery extends PaginationQuery {
   /** Matches nameAr or nameEn (case-insensitive). Max 20 characters. */
   search?: string;
