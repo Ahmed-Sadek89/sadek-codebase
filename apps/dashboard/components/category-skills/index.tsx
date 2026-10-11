@@ -1,25 +1,31 @@
 "use client";
 
 import { useMemo } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useCategorySkills } from "@repo/hooks/category-skills";
 import { DynamicTable } from "../ui/dynamic-table";
-import { createCategorySkillsColumns } from "./utils/columns";
-import { CATEGORY_SKILLS_QUERY } from "./utils/constants";
+import useColumns from "./hooks/use-columns";
+import { readListQueryParams } from "../../utils/list-query";
+import { getCategorySkillsQuery } from "./utils/constants";
 
 /** All category-skills page content. Data is prefetched in the route's page.tsx. */
 export default function CategorySkillsPage() {
   const t = useTranslations();
-  const format = useFormatter();
+  // ?search=&page=&limit= (any combination); the search box writes ?search=.
+  const searchParams = useSearchParams();
   // Same query as the server prefetch, so the hydrated cache is reused.
-  const { data, isPending, isError, refetch } = useCategorySkills(
-    CATEGORY_SKILLS_QUERY,
+  // useSearchParams returns a new object only when the URL changes.
+  const query = useMemo(
+    () =>
+      getCategorySkillsQuery(
+        readListQueryParams((name) => searchParams.get(name)),
+      ),
+    [searchParams],
   );
-  // Stable columns: TanStack Table rebuilds its models when they change.
-  const columns = useMemo(
-    () => createCategorySkillsColumns(t, format),
-    [t, format],
-  );
+  const { data, isPending, isFetching, isError, refetch } =
+    useCategorySkills(query);
+  const columns = useColumns({busy: false});
 
   return (
     <main className="space-y-6">
@@ -32,6 +38,10 @@ export default function CategorySkillsPage() {
         isLoading={isPending}
         isError={isError}
         onRetry={() => void refetch()}
+        onReload={() => void refetch()}
+        isRefreshing={isFetching}
+        pagination={data}
+        showCreate={true}
       />
     </main>
   );

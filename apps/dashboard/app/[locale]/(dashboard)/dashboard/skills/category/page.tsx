@@ -7,7 +7,11 @@ import { queryKeys } from "@repo/utils/query-keys";
 import { auth } from "../../../../../../libs/auth";
 import CategorySkillsPage from "../../../../../../components/category-skills";
 import { TableContentSkeleton } from "../../../../../../components/ui/skeleton/table-content-skeleton";
-import { CATEGORY_SKILLS_QUERY } from "../../../../../../components/category-skills/utils/constants";
+import { getCategorySkillsQuery } from "../../../../../../components/category-skills/utils/constants";
+import {
+  readListQueryParams,
+  recordParamReader,
+} from "../../../../../../utils/list-query";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations();
@@ -17,15 +21,21 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: PageProps<"/[locale]/dashboard/skills/category">) {
+  // ?search=&page=&limit= (any combination). The client builds the same
+  // query from useSearchParams, so the prefetch key matches.
+  const query = getCategorySkillsQuery(
+    readListQueryParams(recordParamReader(await searchParams)),
+  );
   const queryClient = getQueryClient();
   const accessToken = (await auth())?.accessToken;
 
   if (accessToken) {
     await queryClient.query({
-      queryKey: queryKeys.categorySkills.list(CATEGORY_SKILLS_QUERY),
-      queryFn: () =>
-        categorySkillsService.findAll(CATEGORY_SKILLS_QUERY, { accessToken }),
+      queryKey: queryKeys.categorySkills.list(query),
+      queryFn: () => categorySkillsService.findAll(query, { accessToken }),
     });
   }
 

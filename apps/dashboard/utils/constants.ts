@@ -21,3 +21,22 @@ export const DEFAULT_THEME = "system";
 /** Cell style shared by data tables and TableContentSkeleton. */
 export const TABLE_CELL_CLASS_NAME =
   "border-b border-border px-4 py-3 text-start align-top";
+
+/** URL query param written by the table search input. */
+export const SEARCH_PARAM = "search";
+
+/** Delay between the last keystroke and updating the URL. */
+export const SEARCH_DEBOUNCE_MS = 400;
+
+/** Backend list DTOs reject `search` longer than 20 characters (400). */
+export const SEARCH_MAX_LENGTH = 20;
+
+/** URL query params for the requested page and page size. */
+export const PAGE_PARAM = "page";
+export const LIMIT_PARAM = "limit";
+
+/** Backend list DTOs reject `limit` above 30 (400). */
+export const MAX_LIMIT = 30;
+
+/** Choices in the table's rows-per-page select. */
+export const PAGE_SIZE_OPTIONS = [5, 10, 15, 20] as const;

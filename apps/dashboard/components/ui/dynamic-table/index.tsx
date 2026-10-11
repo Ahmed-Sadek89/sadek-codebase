@@ -1,67 +1,35 @@
 "use client";
 
-import { useId, type TdHTMLAttributes } from "react";
+import { useId } from "react";
 import { useTranslations } from "next-intl";
-import {
-  createColumnHelper,
-  metaHelper,
-  tableFeatures,
-  useTable,
-  type ColumnDef,
-  type RowData,
-} from "@tanstack/react-table";
+import { useTable, type RowData } from "@tanstack/react-table";
 import { Button } from "@repo/ui/button";
 import { CircleAlert, RotateCw } from "@repo/ui/icons";
 import { Skeleton } from "@repo/ui/skeleton";
 import { cn } from "@repo/ui/utils";
+import { DynamicTableHeader } from "./components/table-header";
+import { TablePagination } from "./components/table-pagination";
+import { TableRowsSelect } from "./components/table-rows-select";
+import { dynamicTableFeatures } from "./features";
+import type {
+  DynamicColumnDef,
+  DynamicTableProps,
+  StickySide,
+} from "./types/types";
 import { TABLE_CELL_CLASS_NAME } from "../../../utils/constants";
 
-/** Per-column options, set through `meta` in a column definition. */
-export type DynamicTableColumnMeta = {
-  /** Extra attributes for the column's body cells, e.g. `{ lang: "ar", dir: "rtl" }`. */
-  cellProps?: TdHTMLAttributes<HTMLTableCellElement>;
-};
+export { dynamicTableFeatures, type DynamicTableFeatures } from "./features";
+export type * from "./types/types";
 
-// Core features only (no sorting/filtering/pagination); typed column meta.
-export const dynamicTableFeatures = tableFeatures({
-  columnMeta: metaHelper<DynamicTableColumnMeta>(),
-});
-
-export type DynamicTableFeatures = typeof dynamicTableFeatures;
-
-/** Columns for `DynamicTable`: each one sets a header name and how its cells render. */
-// `any` mirrors TanStack's own helper.columns() return type: each column keeps its value type.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type DynamicTableColumns<TData extends RowData> = Array<
-  ColumnDef<DynamicTableFeatures, TData, any>
->;
-
-/** Column helper bound to DynamicTable's features; build columns with it. */
-export function createDynamicTableColumnHelper<TData extends RowData>() {
-  return createColumnHelper<DynamicTableFeatures, TData>();
+/** Reads `sticky` from a column definition (TanStack keeps the original object). */
+function stickySide(columnDef: unknown): StickySide | undefined {
+  return (columnDef as Pick<DynamicColumnDef<RowData>, "sticky">).sticky;
 }
 
-export type DynamicTableProps<TData extends RowData> = {
-  /** Heading shown above the table; also the table's accessible name. */
-  title: string;
-  /** Optional short text under the title; also the table's accessible description. */
-  description?: string;
-  /** Header names and cell renderers. Keep the array stable (module scope or useMemo). */
-  columns: DynamicTableColumns<TData>;
-  /** Rows to render; `undefined` while loading. */
-  data: TData[] | undefined;
-  /** Stable row key; defaults to the row index. */
-  getRowId?: (row: TData, index: number) => string;
-  /** First load: shows skeleton rows under the real headers. */
-  isLoading?: boolean;
-  /** Request failed: an error panel, or a banner above rows already shown. */
-  isError?: boolean;
-  /** Shows a "Try again" button in the error UI, e.g. a query's `refetch`. */
-  onRetry?: () => void;
-  /** Overrides for the built-in translated state messages. */
-  loadingMessage?: string;
-  errorMessage?: string;
-  emptyMessage?: string;
+// Opaque backgrounds so scrolled cells do not show through a pinned column.
+const STICKY_CLASS: Record<StickySide, string> = {
+  start: "sticky start-0 z-10 border-e border-border",
+  end: "sticky end-0 z-10 border-s border-border",
 };
 
 // A shared fallback keeps the data reference stable while there are no rows.
@@ -69,8 +37,9 @@ const NO_ROWS: never[] = [];
 const SKELETON_ROWS = 5;
 
 /**
- * Generic data table on TanStack Table v9: a title, an optional short
- * description, then one header cell per column and one body row per item.
+ * Generic data table on TanStack Table v9, laid out as a card: a header
+ * (title, count badge, description, search, refresh), one header cell per
+ * column and one body row per item, then a pagination footer.
  *
  * States: loading (no rows yet) shows skeleton rows; an error with no rows
  * shows an error panel; an error while rows are shown keeps them and adds a
@@ -86,6 +55,12 @@ export function DynamicTable<TData extends RowData>({
   isLoading = false,
   isError = false,
   onRetry,
+  showSearch = true,
+  showReload = true,
+  onReload,
+  isRefreshing = false,
+  showCreate = false,
+  pagination,
   loadingMessage,
   errorMessage,
   emptyMessage,
@@ -159,14 +134,20 @@ export function DynamicTable<TData extends RowData>({
     }
 
     return rows.map((row) => (
-      <tr key={row.id}>
+      <tr key={row.id} className="group transition-colors hover:bg-muted/40">
         {row.getAllCells().map((cell) => {
           const cellProps = cell.column.columnDef.meta?.cellProps;
+          const sticky = stickySide(cell.column.columnDef);
           return (
             <td
               key={cell.id}
               {...cellProps}
-              className={cn(TABLE_CELL_CLASS_NAME, cellProps?.className)}
+              className={cn(
+                TABLE_CELL_CLASS_NAME,
+                sticky &&
+                cn(STICKY_CLASS[sticky], "bg-card group-hover:bg-muted"),
+                cellProps?.className,
+              )}
             >
               <table.FlexRender cell={cell} />
             </td>
@@ -176,37 +157,37 @@ export function DynamicTable<TData extends RowData>({
     ));
   };
 
+  const showFooter = pagination && pagination.total > 0 && !showSkeleton;
+
   return (
-    <section className="space-y-4">
-      <div className="space-y-1">
-        <h2 id={titleId} className="text-lg font-semibold">
-          {title}
-        </h2>
-        {description && (
-          <p id={descriptionId} className="text-sm text-muted-foreground">
-            {description}
-          </p>
-        )}
-      </div>
+    <section className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm">
+      <DynamicTableHeader
+        titleId={titleId}
+        descriptionId={descriptionId}
+        title={title}
+        description={description}
+        total={showSkeleton ? undefined : pagination?.total}
+        showSearch={showSearch}
+        onReload={showReload ? onReload : undefined}
+        isRefreshing={isRefreshing}
+        showCreate={showCreate}
+      />
       {isError && hasRows && (
         // A refetch failed: keep the rows already shown and say so above them.
         <div
           role="alert"
-          className="flex flex-wrap items-center gap-3 rounded-lg border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger"
+          className="flex flex-wrap items-center gap-3 border-b border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger sm:px-5"
         >
           <CircleAlert className="size-4 shrink-0" aria-hidden />
           <p className="flex-1">{errorText}</p>
           {retryButton}
         </div>
       )}
-      <div
-        className="overflow-x-auto rounded-lg border border-border"
-        aria-busy={showSkeleton}
-      >
+      <div className="overflow-x-auto" aria-busy={showSkeleton}>
         <table
           aria-labelledby={titleId}
           aria-describedby={description ? descriptionId : undefined}
-          className="w-full min-w-3xl border-collapse text-sm"
+          className="w-full min-w-3xl border-collapse text-sm [&_tbody_tr:last-child_td]:border-b-0"
         >
           {showSkeleton && (
             <caption className="sr-only">
@@ -221,7 +202,15 @@ export function DynamicTable<TData extends RowData>({
                     key={header.id}
                     scope="col"
                     colSpan={header.colSpan}
-                    className={cn(TABLE_CELL_CLASS_NAME, "font-medium")}
+                    className={cn(
+                      TABLE_CELL_CLASS_NAME,
+                      "text-xs font-medium uppercase tracking-wide text-muted-foreground",
+                      stickySide(header.column.columnDef) &&
+                      cn(
+                        STICKY_CLASS[stickySide(header.column.columnDef)!],
+                        "bg-muted",
+                      ),
+                    )}
                   >
                     {header.isPlaceholder ? null : (
                       <table.FlexRender header={header} />
@@ -234,6 +223,32 @@ export function DynamicTable<TData extends RowData>({
           <tbody>{renderBody()}</tbody>
         </table>
       </div>
+      {showFooter && (
+        <footer className="flex flex-col-reverse items-center gap-3 border-t border-border px-4 py-3 sm:flex-row sm:justify-between sm:px-5">
+          <div className="flex flex-wrap items-center gap-4">
+            <TableRowsSelect limit={pagination.limit} />
+            <p className="text-sm text-muted-foreground" aria-live="polite">
+              {t("tableRange", {
+                from: Math.min(
+                  (pagination.page - 1) * pagination.limit + 1,
+                  pagination.total,
+                ),
+                to: Math.min(
+                  pagination.page * pagination.limit,
+                  pagination.total,
+                ),
+                total: pagination.total,
+              })}
+            </p>
+          </div>
+          {pagination.totalPage > 1 && (
+            <TablePagination
+              page={pagination.page}
+              totalPage={pagination.totalPage}
+            />
+          )}
+        </footer>
+      )}
     </section>
   );
 }
