@@ -70,5 +70,6 @@ export type DynamicTableProps<TData extends RowData> = {
   errorMessage?: string;
   emptyMessage?: string;
   showCreate?: boolean
+  makeCreateAction?: () => void
 
 };

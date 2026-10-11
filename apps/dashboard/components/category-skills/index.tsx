@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCategorySkills } from "@repo/hooks/category-skills";
@@ -8,10 +8,28 @@ import { DynamicTable } from "../ui/dynamic-table";
 import useColumns from "./hooks/use-columns";
 import { readListQueryParams } from "../../utils/list-query";
 import { getCategorySkillsQuery } from "./utils/constants";
+import { CategorySkillsForm } from "./components/category-skills-form";
+import { FolderPlus, Pencil } from "@repo/ui/icons";
+import type { CategorySkill } from "@repo/types/category-skills";
 
 /** All category-skills page content. Data is prefetched in the route's page.tsx. */
 export default function CategorySkillsPage() {
   const t = useTranslations();
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
+  // The row being edited; null while creating.
+  const [selectedCategory, setSelectedCategory] = useState<CategorySkill | null>(null);
+  const handleOpenDialog = useCallback((open: boolean) => {
+    setIsOpenDialog(open);
+  }, []);
+  const handleCreate = useCallback(() => {
+    setSelectedCategory(null);
+    setIsOpenDialog(true);
+  }, []);
+  const handleEdit = useCallback((category: CategorySkill) => {
+    setSelectedCategory(category);
+    setIsOpenDialog(true);
+  }, []);
+  const isEditing = selectedCategory !== null;
   // ?search=&page=&limit= (any combination); the search box writes ?search=.
   const searchParams = useSearchParams();
   // Same query as the server prefetch, so the hydrated cache is reused.
@@ -25,7 +43,11 @@ export default function CategorySkillsPage() {
   );
   const { data, isPending, isFetching, isError, refetch } =
     useCategorySkills(query);
-  const columns = useColumns({busy: false});
+  const columns = useColumns({
+    canUpdate: true,
+    canDelete: true,
+    onEdit: handleEdit,
+  });
 
   return (
     <main className="space-y-6">
@@ -42,6 +64,24 @@ export default function CategorySkillsPage() {
         isRefreshing={isFetching}
         pagination={data}
         showCreate={true}
+        makeCreateAction={handleCreate}
+      />
+      <CategorySkillsForm
+        isOpenDialog={isOpenDialog}
+        handleOpenDialog={handleOpenDialog}
+        title={
+          isEditing
+            ? t("categorySkillFormEditTitle")
+            : t("categorySkillFormTitle")
+        }
+        description={
+          isEditing
+            ? t("categorySkillFormEditDescription")
+            : t("categorySkillFormDescription")
+        }
+        Icon={isEditing ? Pencil : FolderPlus}
+        role={isEditing ? "edit" : "create"}
+        defaultValues={selectedCategory}
       />
     </main>
   );

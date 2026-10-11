@@ -40,7 +40,14 @@ export function SearchInput({
   const t = useTranslations();
   const searchParams = useSearchParams();
   // Start from the URL so a shared or reloaded link keeps its search.
-  const [value, setValue] = useState(() => searchParams.get(paramName) ?? "");
+  const urlValue = searchParams.get(paramName) ?? "";
+  const [value, setValue] = useState(urlValue);
+
+  // Follow changes made elsewhere (e.g. "Reset filters"); typing does not
+  // trigger this because the URL only changes once the debounce fires.
+  useEffect(() => {
+    setValue((prev) => (prev.trim() === urlValue ? prev : urlValue));
+  }, [urlValue]);
 
   useEffect(() => {
     const next = value.trim();

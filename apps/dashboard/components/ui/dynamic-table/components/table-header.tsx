@@ -1,10 +1,13 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@repo/ui/button";
-import { Plus, RotateCw } from "@repo/ui/icons";
+import { FunnelX, Plus, RotateCw } from "@repo/ui/icons";
 import { cn } from "@repo/ui/utils";
 import { SearchInput } from "../../filters/search-input";
+import { updateUrlParams } from "../../../../utils/url-params";
+import { PAGE_PARAM, SEARCH_PARAM } from "../../../../utils/constants";
 
 export type DynamicTableHeaderProps = {
   /** Ids the table uses for `aria-labelledby` / `aria-describedby`. */
@@ -18,10 +21,14 @@ export type DynamicTableHeaderProps = {
   /** Renders the refresh button when set. */
   onReload?: () => void;
   isRefreshing: boolean;
-  showCreate?: boolean
+  showCreate?: boolean;
+  makeCreateAction?: () => void
 };
 
-/** Card header: title, count badge, description; search and refresh on the side. */
+/**
+ * Card header: title, count badge, description; on the side search, reset
+ * filters (only while a filter is active), refresh and create.
+ */
 export function DynamicTableHeader({
   titleId,
   descriptionId,
@@ -31,10 +38,17 @@ export function DynamicTableHeader({
   showSearch,
   onReload,
   isRefreshing,
-  showCreate = false
+  showCreate = false,
+  makeCreateAction = () => { }
 }: DynamicTableHeaderProps) {
   const t = useTranslations();
-  const hasActions = showSearch || onReload;
+  const searchParams = useSearchParams();
+  const hasFilters = Boolean(searchParams.get(SEARCH_PARAM));
+  const hasActions = showSearch || onReload || showCreate;
+
+  // Clears the filters and goes back to the first page; `limit` stays.
+  const resetFilters = () =>
+    updateUrlParams({ [SEARCH_PARAM]: null, [PAGE_PARAM]: null });
 
   return (
     <header className="flex flex-col gap-4 border-b border-border p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between">
@@ -57,46 +71,61 @@ export function DynamicTableHeader({
         )}
       </div>
       {hasActions && (
-        <div className="flex w-full items-center gap-2 lg:w-auto">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:flex-nowrap lg:w-auto">
           {showSearch && (
             <SearchInput className="w-full flex-1 sm:max-w-none lg:w-64 lg:flex-none" />
           )}
-          {onReload && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={onReload}
-              disabled={isRefreshing}
-              aria-busy={isRefreshing}
-              aria-label={t("tableReload")}
-              title={t("tableReload")}
-              className="shrink-0 gap-2"
-            >
-              <RotateCw
-                className={cn("size-4", isRefreshing && "animate-spin")}
-                aria-hidden
-              />
-              <span className="hidden sm:inline">{t("tableReload")}</span>
-            </Button>
-          )}
-          {
-            showCreate &&
-            <Button
-              type="button"
-              variant="default"
-              size="sm"
-              aria-label={t("create")}
-              title={t("create")}
-              className="shrink-0 gap-1"
-            >
-              <Plus
-                className={cn("size-4")}
-                aria-hidden
-              />
-              <span className="hidden sm:inline">{t("create")}</span>
-            </Button>
-          }
+          <div className="flex shrink-0 items-center gap-2">
+            {hasFilters && (
+              <Button
+                type="button"
+                variant="warning"
+                size="sm"
+                onClick={resetFilters}
+                aria-label={t("tableResetFilters")}
+                title={t("tableResetFilters")}
+                className="gap-2"
+              >
+                <FunnelX className="size-4" aria-hidden />
+                <span className="hidden sm:inline">
+                  {t("tableResetFilters")}
+                </span>
+              </Button>
+            )}
+            {onReload && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onReload}
+                disabled={isRefreshing}
+                aria-busy={isRefreshing}
+                aria-label={t("tableReload")}
+                title={t("tableReload")}
+                className="gap-2"
+              >
+                <RotateCw
+                  className={cn("size-4", isRefreshing && "animate-spin")}
+                  aria-hidden
+                />
+                <span className="hidden sm:inline">{t("tableReload")}</span>
+              </Button>
+            )}
+            {showCreate && (
+              <Button
+                type="button"
+                variant="success"
+                size="sm"
+                aria-label={t("create")}
+                title={t("create")}
+                className="gap-2"
+                onClick={makeCreateAction}
+              >
+                <Plus className="size-4" aria-hidden />
+                <span className="hidden sm:inline">{t("create")}</span>
+              </Button>
+            )}
+          </div>
         </div>
       )}
     </header>

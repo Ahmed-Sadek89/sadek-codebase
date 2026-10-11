@@ -13,7 +13,7 @@ const DashboardLayoutWrapper = ({ children }: { children: React.ReactNode }) => 
             <HeaderSection />
             <div className='flex flex-1'>
                 <SidebarSection />
-                <SidebarInset className='app-container lg:px-6 lg:py-4'>
+                <SidebarInset className='app-container min-w-0 lg:px-6 lg:py-4'>
                     {children}
                 </SidebarInset>
             </div>

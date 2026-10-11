@@ -4,6 +4,7 @@ import { useId } from "react";
 import { useTranslations } from "next-intl";
 import { useTable, type RowData } from "@tanstack/react-table";
 import { Button } from "@repo/ui/button";
+import { Card, CardContent } from "@repo/ui/card";
 import { CircleAlert, RotateCw } from "@repo/ui/icons";
 import { Skeleton } from "@repo/ui/skeleton";
 import { cn } from "@repo/ui/utils";
@@ -64,6 +65,7 @@ export function DynamicTable<TData extends RowData>({
   loadingMessage,
   errorMessage,
   emptyMessage,
+  makeCreateAction = () => { }
 }: DynamicTableProps<TData>) {
   const t = useTranslations();
   const titleId = useId();
@@ -160,7 +162,7 @@ export function DynamicTable<TData extends RowData>({
   const showFooter = pagination && pagination.total > 0 && !showSkeleton;
 
   return (
-    <section className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm">
+    <Card className="w-full min-w-0 gap-0 overflow-hidden py-0">
       <DynamicTableHeader
         titleId={titleId}
         descriptionId={descriptionId}
@@ -171,6 +173,7 @@ export function DynamicTable<TData extends RowData>({
         onReload={showReload ? onReload : undefined}
         isRefreshing={isRefreshing}
         showCreate={showCreate}
+        makeCreateAction={makeCreateAction}
       />
       {isError && hasRows && (
         // A refetch failed: keep the rows already shown and say so above them.
@@ -183,7 +186,7 @@ export function DynamicTable<TData extends RowData>({
           {retryButton}
         </div>
       )}
-      <div className="overflow-x-auto" aria-busy={showSkeleton}>
+      <CardContent className="overflow-x-auto px-0" aria-busy={showSkeleton}>
         <table
           aria-labelledby={titleId}
           aria-describedby={description ? descriptionId : undefined}
@@ -222,7 +225,7 @@ export function DynamicTable<TData extends RowData>({
           </thead>
           <tbody>{renderBody()}</tbody>
         </table>
-      </div>
+      </CardContent>
       {showFooter && (
         <footer className="flex flex-col-reverse items-center gap-3 border-t border-border px-4 py-3 sm:flex-row sm:justify-between sm:px-5">
           <div className="flex flex-wrap items-center gap-4">
@@ -249,6 +252,6 @@ export function DynamicTable<TData extends RowData>({
           )}
         </footer>
       )}
-    </section>
+    </Card>
   );
 }
