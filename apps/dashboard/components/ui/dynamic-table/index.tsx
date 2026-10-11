@@ -18,6 +18,7 @@ import { DynamicTableHeader } from "./components/table-header";
 import { TablePagination } from "./components/table-pagination";
 import { TableRowsSelect } from "./components/table-rows-select";
 import { TableStaticFilters } from "./components/table-static-filters";
+import { TableDynamicFilters } from "./components/table-dynamic-filters";
 import { dynamicTableFeatures } from "./features";
 import type {
   DynamicColumnDef,
@@ -28,7 +29,6 @@ import { TABLE_CELL_CLASS_NAME } from "../../../utils/constants";
 
 export { dynamicTableFeatures, type DynamicTableFeatures } from "./features";
 export type * from "./types/types";
-export { useStaticFilter } from "./hooks/use-static-filter";
 
 /** Reads `sticky` from a column definition (TanStack keeps the original object). */
 function stickySide(columnDef: unknown): StickySide | undefined {
@@ -75,6 +75,7 @@ export function DynamicTable<TData extends RowData>({
   emptyMessage,
   makeCreateAction = () => { },
   staticFilter,
+  dynamicFilter,
 }: DynamicTableProps<TData>) {
   const t = useTranslations();
   const titleId = useId();
@@ -192,6 +193,9 @@ export function DynamicTable<TData extends RowData>({
       />
       {staticFilter && staticFilter.length > 0 && (
         <TableStaticFilters filters={staticFilter} />
+      )}
+      {dynamicFilter && dynamicFilter.length > 0 && (
+        <TableDynamicFilters filters={dynamicFilter} />
       )}
       {isError && hasRows && (
         // A refetch failed: keep the rows already shown and say so above them.

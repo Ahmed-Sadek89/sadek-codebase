@@ -1,4 +1,4 @@
-import type { TdHTMLAttributes } from "react";
+import type { ReactNode, TdHTMLAttributes } from "react";
 import type { LucideIcon } from "@repo/ui/icons";
 import type { ColumnDef, DeepKeys, RowData } from "@tanstack/react-table";
 import type { DynamicTableFeatures } from "../features";
@@ -40,7 +40,7 @@ export type StaticFilterOption = {
 
 /**
  * A fixed set of chips under the table header, bound to one URL query param
- * (see `useStaticFilter`). At most one chip is selected; none means the
+ * (e.g. a page's `useStaticFilter`). At most one chip is selected; none means the
  * backend default.
  */
 export type StaticFilter = {
@@ -54,6 +54,21 @@ export type StaticFilter = {
   value: string | null;
   /** Selects an option; null (or the selected one again) clears the param. */
   onChange: (value: string | null) => void;
+};
+
+/**
+ * A filter input (e.g. a searchable select) shown in the row under the static
+ * filters; it reads and writes its own URL query param (e.g. the skills
+ * page's `useDynamicFilter`).
+ */
+export type DynamicFilter = {
+  /** URL query param the input writes; also the React key. */
+  paramName: string;
+  /** Label shown before the input. */
+  label: string;
+  icon?: LucideIcon;
+  /** The input element, already bound to its value and onChange. */
+  content: ReactNode;
 };
 
 /** Paging info from a paginated response (`PaginatedResponse` minus `data`). */
@@ -105,5 +120,7 @@ export type DynamicTableProps<TData extends RowData> = {
   makeCreateAction?: () => void
   /** Chip filters shown under the header, e.g. from `useStaticFilter()`. */
   staticFilter?: StaticFilter[];
+  /** Filter inputs shown under the static filters, e.g. from `useDynamicFilter()`. */
+  dynamicFilter?: DynamicFilter[];
 
 };

@@ -56,7 +56,7 @@ export function DynamicTableHeader({
     });
 
   return (
-    <header className="flex flex-col gap-4 border-b border-border p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between">
+    <header className="flex flex-col gap-4 border-b border-border p-4 sm:p-5 xl:flex-row xl:items-center xl:justify-between">
       <div className="min-w-0 space-y-1">
         <div className="flex items-center gap-2">
           <h2 id={titleId} className="truncate text-lg font-semibold">

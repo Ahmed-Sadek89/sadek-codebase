@@ -179,5 +179,8 @@
   "skillDeleteQuestion": "Delete the “{name}” skill? This can't be undone.",
   "skillDeleted": "Skill deleted successfully",
   "skillDetailsTitle": "Skill details",
-  "skillDetailsDescription": "Everything saved for this skill."
+  "skillDetailsDescription": "Everything saved for this skill.",
+  "tableCategoryFilterLabel": "Category",
+  "categoryFilterAll": "All categories",
+  "categoryFilterClear": "Clear category filter"
 }

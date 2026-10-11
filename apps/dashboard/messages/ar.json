@@ -179,5 +179,8 @@
   "skillDeleteQuestion": "هل تريد حذف المهارة “{name}”؟ لا يمكن التراجع عن هذا الإجراء.",
   "skillDeleted": "تم حذف المهارة بنجاح",
   "skillDetailsTitle": "تفاصيل المهارة",
-  "skillDetailsDescription": "كل ما تم حفظه لهذه المهارة."
+  "skillDetailsDescription": "كل ما تم حفظه لهذه المهارة.",
+  "tableCategoryFilterLabel": "التصنيف",
+  "categoryFilterAll": "كل التصنيفات",
+  "categoryFilterClear": "مسح فلتر التصنيف"
 }

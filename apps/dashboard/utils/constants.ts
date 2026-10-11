@@ -31,8 +31,19 @@ export const ORDER_PARAM = "order";
 /** URL query param for the active-status filter (`true` | `false`), sent as `isActive`. */
 export const IS_ACTIVE_PARAM = "isActive";
 
+/** URL query param for the skill-category filter (a category id), sent as `categoryId`. */
+export const CATEGORY_ID_PARAM = "categoryId";
+
+/** Options a table's category filter loads per search. */
+export const CATEGORY_FILTER_LIMIT = 10;
+
 /** Params cleared by the table's "Reset filters" button. */
-export const FILTER_PARAMS = [SEARCH_PARAM, ORDER_PARAM, IS_ACTIVE_PARAM];
+export const FILTER_PARAMS = [
+  SEARCH_PARAM,
+  ORDER_PARAM,
+  IS_ACTIVE_PARAM,
+  CATEGORY_ID_PARAM,
+];
 
 /** Delay between the last keystroke and updating the URL. */
 export const SEARCH_DEBOUNCE_MS = 400;

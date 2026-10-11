@@ -8,10 +8,7 @@ import { auth } from "../../../../../libs/auth";
 import SkillsPage from "../../../../../components/skills";
 import { TableContentSkeleton } from "../../../../../components/ui/skeleton/table-content-skeleton";
 import { getSkillsQuery } from "../../../../../components/skills/utils/constants";
-import {
-  readListQueryParams,
-  recordParamReader,
-} from "../../../../../utils/list-query";
+import { recordParamReader } from "../../../../../utils/list-query";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations();
@@ -24,11 +21,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page({
   searchParams,
 }: PageProps<"/[locale]/dashboard/skills">) {
-  // ?search=&page=&limit=&order=&isActive= (any combination). The client
+  // ?search=&page=&limit=&order=&isActive=&categoryId= (any combination). The client
   // builds the same query from useSearchParams, so the prefetch key matches.
-  const query = getSkillsQuery(
-    readListQueryParams(recordParamReader(await searchParams)),
-  );
+  const query = getSkillsQuery(recordParamReader(await searchParams));
   const queryClient = getQueryClient();
   const accessToken = (await auth())?.accessToken;
 

@@ -179,5 +179,8 @@
   "skillDeleteQuestion": "Die Fähigkeit „{name}“ löschen? Dies kann nicht rückgängig gemacht werden.",
   "skillDeleted": "Fähigkeit erfolgreich gelöscht",
   "skillDetailsTitle": "Fähigkeitsdetails",
-  "skillDetailsDescription": "Alles, was zu dieser Fähigkeit gespeichert ist."
+  "skillDetailsDescription": "Alles, was zu dieser Fähigkeit gespeichert ist.",
+  "tableCategoryFilterLabel": "Kategorie",
+  "categoryFilterAll": "Alle Kategorien",
+  "categoryFilterClear": "Kategoriefilter entfernen"
 }

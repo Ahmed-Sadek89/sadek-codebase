@@ -12,18 +12,18 @@ import {
   Layers,
   ListFilter,
 } from "@repo/ui/icons";
-import { updateUrlParams } from "../../../../utils/url-params";
-import { readIsActive, readSortOrder } from "../../../../utils/list-query";
+import { updateUrlParams } from "../../../utils/url-params";
+import { readIsActive, readSortOrder } from "../../../utils/list-query";
 import {
   IS_ACTIVE_PARAM,
   ORDER_PARAM,
   PAGE_PARAM,
-} from "../../../../utils/constants";
-import type { StaticFilter } from "../types/types";
+} from "../../../utils/constants";
+import type { StaticFilter } from "../../ui/dynamic-table/types/types";
 
 /**
- * The table's static (chip) filters, bound to the URL; `readListQueryParams`
- * sends them to the list endpoint:
+ * The skills table's static (chip) filters, bound to the URL;
+ * `readListQueryParams` sends them to GET /skills:
  * - Sort: `?order=asc|desc` → `order`
  * - Status: `?isActive=true|false` → `isActive` (unset = all)
  * Pass the result to `<DynamicTable staticFilter={...} />`.

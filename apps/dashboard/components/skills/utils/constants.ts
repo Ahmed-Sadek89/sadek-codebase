@@ -1,17 +1,29 @@
 import type { Skill, SkillsQuery } from "@repo/types/skills";
-import type { ListQueryParams } from "../../../utils/list-query";
+import {
+  readListQueryParams,
+  readPositiveInt,
+  type ParamReader,
+} from "../../../utils/list-query";
+import { CATEGORY_ID_PARAM } from "../../../utils/constants";
 import type { SkillFormInput } from "../schema";
 
 /** Page size when the URL has no `?limit=`. */
 export const SKILLS_LIMIT = 10;
 
 /**
- * The list query for the URL's `search`, `page`, `limit`, `order`, and
- * `isActive` (any combination). Shared by the server prefetch and the client
- * hook so both build the same query key.
+ * The list query for the URL's `search`, `page`, `limit`, `order`,
+ * `isActive`, and `categoryId` (any combination). Shared by the server
+ * prefetch and the client hook so both build the same query key.
+ * `categoryId` is read here, not in readListQueryParams, because only
+ * GET /skills accepts it (other list endpoints reject unknown params).
  */
-export function getSkillsQuery(params: ListQueryParams): SkillsQuery {
-  return { limit: SKILLS_LIMIT, ...params };
+export function getSkillsQuery(get: ParamReader): SkillsQuery {
+  const categoryId = readPositiveInt(get(CATEGORY_ID_PARAM));
+  return {
+    limit: SKILLS_LIMIT,
+    ...readListQueryParams(get),
+    ...(categoryId !== undefined && { categoryId }),
+  };
 }
 
 export const SKILL_FORM_DEFAULT_VALUES = {

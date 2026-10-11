@@ -179,5 +179,8 @@
   "skillDeleteQuestion": "Удалить навык «{name}»? Это действие нельзя отменить.",
   "skillDeleted": "Навык успешно удалён",
   "skillDetailsTitle": "Сведения о навыке",
-  "skillDetailsDescription": "Все сохранённые данные этого навыка."
+  "skillDetailsDescription": "Все сохранённые данные этого навыка.",
+  "tableCategoryFilterLabel": "Категория",
+  "categoryFilterAll": "Все категории",
+  "categoryFilterClear": "Сбросить фильтр категории"
 }

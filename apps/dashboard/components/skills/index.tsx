@@ -6,10 +6,11 @@ import { useTranslations } from "next-intl";
 import { useSkills } from "@repo/hooks/skills";
 import type { Skill } from "@repo/types/skills";
 import { Pencil, Sparkles } from "@repo/ui/icons";
-import { DynamicTable, useStaticFilter } from "../ui/dynamic-table";
+import { DynamicTable } from "../ui/dynamic-table";
 import { ConfirmAction } from "../ui/confirm-action";
-import { readListQueryParams } from "../../utils/list-query";
 import useColumns from "./hooks/use-columns";
+import { useStaticFilter } from "./hooks/use-static-filter";
+import { useDynamicFilter } from "./hooks/use-dynamic-filter";
 import { useDeleteSkillAction } from "./hooks/use-delete-skill";
 import { SkillsForm } from "./components/skills-form";
 import { SkillDetailsDialog } from "./components/skill-details-dialog";
@@ -40,16 +41,17 @@ export default function SkillsPage() {
     setViewedSkill(skill);
     setIsDetailsOpen(true);
   }, []);
-  // ?search=&page=&limit=&order=&isActive= (any combination).
+  // ?search=&page=&limit=&order=&isActive=&categoryId= (any combination).
   const searchParams = useSearchParams();
   // Same query as the server prefetch, so the hydrated cache is reused.
   const query = useMemo(
     () =>
-      getSkillsQuery(readListQueryParams((name) => searchParams.get(name))),
+      getSkillsQuery((name) => searchParams.get(name)),
     [searchParams],
   );
   const { data, isPending, isFetching, isError, refetch } = useSkills(query);
   const staticFilter = useStaticFilter();
+  const dynamicFilter = useDynamicFilter();
   const deleteAction = useDeleteSkillAction();
   const columns = useColumns({
     busy: deleteAction.isDeleting,
@@ -78,6 +80,7 @@ export default function SkillsPage() {
         showCreate={true}
         makeCreateAction={handleCreate}
         staticFilter={staticFilter}
+        dynamicFilter={dynamicFilter}
       />
       <SkillsForm
         isOpenDialog={isOpenDialog}

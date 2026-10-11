@@ -28,7 +28,10 @@ export function recordParamReader(
   };
 }
 
-function readPositiveInt(raw: string | null | undefined): number | undefined {
+/** A positive integer param (e.g. an id or page); anything else is undefined. */
+export function readPositiveInt(
+  raw: string | null | undefined,
+): number | undefined {
   if (!raw || !/^\d+$/.test(raw)) return undefined;
   const value = Number(raw);
   return value >= 1 ? value : undefined;
