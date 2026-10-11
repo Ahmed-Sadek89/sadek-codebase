@@ -133,5 +133,10 @@
   "categorySkillDeleteQuestion": "Delete the “{name}” category? This can't be undone.",
   "categorySkillDeleted": "Category deleted successfully",
   "tableColCategoryEn": "Category (English)",
-  "tableColCategoryAr": "Category (Arabic)"
+  "tableColCategoryAr": "Category (Arabic)",
+  "tableSortLabel": "Sort",
+  "tableSortAsc": "Ascending",
+  "tableSortDesc": "Descending",
+  "tableStatusLabel": "Status",
+  "tableStatusAll": "All"
 }

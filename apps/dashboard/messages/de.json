@@ -133,5 +133,10 @@
   "categorySkillDeleteQuestion": "Die Kategorie „{name}“ löschen? Dies kann nicht rückgängig gemacht werden.",
   "categorySkillDeleted": "Kategorie erfolgreich gelöscht",
   "tableColCategoryEn": "Kategorie (Englisch)",
-  "tableColCategoryAr": "Kategorie (Arabisch)"
+  "tableColCategoryAr": "Kategorie (Arabisch)",
+  "tableSortLabel": "Sortierung",
+  "tableSortAsc": "Aufsteigend",
+  "tableSortDesc": "Absteigend",
+  "tableStatusLabel": "Status",
+  "tableStatusAll": "Alle"
 }

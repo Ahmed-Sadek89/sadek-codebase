@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCategorySkills } from "@repo/hooks/category-skills";
-import { DynamicTable } from "../ui/dynamic-table";
+import { DynamicTable, useStaticFilter } from "../ui/dynamic-table";
 import useColumns from "./hooks/use-columns";
 import { readListQueryParams } from "../../utils/list-query";
 import { getCategorySkillsQuery } from "./utils/constants";
@@ -40,6 +40,7 @@ export default function CategorySkillsPage() {
   );
   const { data, isPending, isFetching, isError, refetch } =
     useCategorySkills(query);
+  const staticFilter = useStaticFilter();
   const deleteAction = useDeleteCategorySkillAction();
   const columns = useColumns({
     busy: deleteAction.isDeleting,
@@ -65,6 +66,7 @@ export default function CategorySkillsPage() {
         pagination={data}
         showCreate={true}
         makeCreateAction={handleCreate}
+        staticFilter={staticFilter}
       />
       <CategorySkillsForm
         isOpenDialog={isOpenDialog}

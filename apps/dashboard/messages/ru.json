@@ -133,5 +133,10 @@
   "categorySkillDeleteQuestion": "Удалить категорию «{name}»? Это действие нельзя отменить.",
   "categorySkillDeleted": "Категория успешно удалена",
   "tableColCategoryEn": "Категория (англ.)",
-  "tableColCategoryAr": "Категория (араб.)"
+  "tableColCategoryAr": "Категория (араб.)",
+  "tableSortLabel": "Сортировка",
+  "tableSortAsc": "По возрастанию",
+  "tableSortDesc": "По убыванию",
+  "tableStatusLabel": "Статус",
+  "tableStatusAll": "Все"
 }

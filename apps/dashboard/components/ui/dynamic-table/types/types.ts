@@ -1,4 +1,5 @@
 import type { TdHTMLAttributes } from "react";
+import type { LucideIcon } from "@repo/ui/icons";
 import type { ColumnDef, DeepKeys, RowData } from "@tanstack/react-table";
 import type { DynamicTableFeatures } from "../features";
 
@@ -27,6 +28,32 @@ export type DynamicColumnDef<
    */
   sortable: boolean;
   sticky?: StickySide;
+};
+
+/** One chip in a static filter. */
+export type StaticFilterOption = {
+  /** null is the "all" chip: selected while the param is unset. */
+  value: string | null;
+  label: string;
+  icon?: LucideIcon;
+};
+
+/**
+ * A fixed set of chips under the table header, bound to one URL query param
+ * (see `useStaticFilter`). At most one chip is selected; none means the
+ * backend default.
+ */
+export type StaticFilter = {
+  /** URL query param the chips write. */
+  paramName: string;
+  /** Group label shown before the chips. */
+  label: string;
+  icon?: LucideIcon;
+  options: StaticFilterOption[];
+  /** The selected option's value, or null when the param is unset. */
+  value: string | null;
+  /** Selects an option; null (or the selected one again) clears the param. */
+  onChange: (value: string | null) => void;
 };
 
 /** Paging info from a paginated response (`PaginatedResponse` minus `data`). */
@@ -76,5 +103,7 @@ export type DynamicTableProps<TData extends RowData> = {
   emptyMessage?: string;
   showCreate?: boolean
   makeCreateAction?: () => void
+  /** Chip filters shown under the header, e.g. from `useStaticFilter()`. */
+  staticFilter?: StaticFilter[];
 
 };

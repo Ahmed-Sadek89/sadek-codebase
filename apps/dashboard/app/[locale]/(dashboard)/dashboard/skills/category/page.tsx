@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page({
   searchParams,
 }: PageProps<"/[locale]/dashboard/skills/category">) {
-  // ?search=&page=&limit= (any combination). The client builds the same
+  // ?search=&page=&limit=&order=&isActive= (any combination). The client builds the same
   // query from useSearchParams, so the prefetch key matches.
   const query = getCategorySkillsQuery(
     readListQueryParams(recordParamReader(await searchParams)),

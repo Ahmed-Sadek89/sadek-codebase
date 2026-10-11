@@ -133,5 +133,10 @@
   "categorySkillDeleteQuestion": "هل تريد حذف الفئة “{name}”؟ لا يمكن التراجع عن هذا الإجراء.",
   "categorySkillDeleted": "تم حذف الفئة بنجاح",
   "tableColCategoryEn": "التصنيف (بالإنجليزية)",
-  "tableColCategoryAr": "التصنيف (بالعربية)"
+  "tableColCategoryAr": "التصنيف (بالعربية)",
+  "tableSortLabel": "الترتيب",
+  "tableSortAsc": "تصاعدي",
+  "tableSortDesc": "تنازلي",
+  "tableStatusLabel": "الحالة",
+  "tableStatusAll": "الكل"
 }

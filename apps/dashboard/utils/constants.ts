@@ -25,6 +25,15 @@ export const TABLE_CELL_CLASS_NAME =
 /** URL query param written by the table search input. */
 export const SEARCH_PARAM = "search";
 
+/** URL query param for the list sort order (`asc` | `desc`), sent as `order`. */
+export const ORDER_PARAM = "order";
+
+/** URL query param for the active-status filter (`true` | `false`), sent as `isActive`. */
+export const IS_ACTIVE_PARAM = "isActive";
+
+/** Params cleared by the table's "Reset filters" button. */
+export const FILTER_PARAMS = [SEARCH_PARAM, ORDER_PARAM, IS_ACTIVE_PARAM];
+
 /** Delay between the last keystroke and updating the URL. */
 export const SEARCH_DEBOUNCE_MS = 400;
 

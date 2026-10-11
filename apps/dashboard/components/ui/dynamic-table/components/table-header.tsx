@@ -7,7 +7,7 @@ import { FunnelX, Plus, RotateCw } from "@repo/ui/icons";
 import { cn } from "@repo/ui/utils";
 import { SearchInput } from "../../filters/search-input";
 import { updateUrlParams } from "../../../../utils/url-params";
-import { PAGE_PARAM, SEARCH_PARAM } from "../../../../utils/constants";
+import { FILTER_PARAMS, PAGE_PARAM } from "../../../../utils/constants";
 
 export type DynamicTableHeaderProps = {
   /** Ids the table uses for `aria-labelledby` / `aria-describedby`. */
@@ -43,12 +43,17 @@ export function DynamicTableHeader({
 }: DynamicTableHeaderProps) {
   const t = useTranslations();
   const searchParams = useSearchParams();
-  const hasFilters = Boolean(searchParams.get(SEARCH_PARAM));
+  const hasFilters = FILTER_PARAMS.some((name) =>
+    Boolean(searchParams.get(name)),
+  );
   const hasActions = showSearch || onReload || showCreate;
 
   // Clears the filters and goes back to the first page; `limit` stays.
   const resetFilters = () =>
-    updateUrlParams({ [SEARCH_PARAM]: null, [PAGE_PARAM]: null });
+    updateUrlParams({
+      ...Object.fromEntries(FILTER_PARAMS.map((name) => [name, null])),
+      [PAGE_PARAM]: null,
+    });
 
   return (
     <header className="flex flex-col gap-4 border-b border-border p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between">
