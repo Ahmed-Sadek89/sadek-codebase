@@ -129,5 +129,7 @@
   "categorySkillFormEditDescription": "Aktualisiere Namen, Beschreibungen und Sichtbarkeit dieser Kategorie.",
   "categorySkillFormEditSubmit": "Änderungen speichern",
   "categorySkillCreated": "Kategorie erfolgreich erstellt",
-  "categorySkillUpdated": "Kategorie erfolgreich aktualisiert"
+  "categorySkillUpdated": "Kategorie erfolgreich aktualisiert",
+  "categorySkillDeleteQuestion": "Die Kategorie „{name}“ löschen? Dies kann nicht rückgängig gemacht werden.",
+  "categorySkillDeleted": "Kategorie erfolgreich gelöscht"
 }

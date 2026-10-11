@@ -9,6 +9,8 @@ import useColumns from "./hooks/use-columns";
 import { readListQueryParams } from "../../utils/list-query";
 import { getCategorySkillsQuery } from "./utils/constants";
 import { CategorySkillsForm } from "./components/category-skills-form";
+import { useDeleteCategorySkillAction } from "./hooks/use-delete-category-skill";
+import { ConfirmAction } from "../ui/confirm-action";
 import { FolderPlus, Pencil } from "@repo/ui/icons";
 import type { CategorySkill } from "@repo/types/category-skills";
 
@@ -43,10 +45,13 @@ export default function CategorySkillsPage() {
   );
   const { data, isPending, isFetching, isError, refetch } =
     useCategorySkills(query);
+  const deleteAction = useDeleteCategorySkillAction();
   const columns = useColumns({
+    busy: deleteAction.isDeleting,
     canUpdate: true,
     canDelete: true,
     onEdit: handleEdit,
+    onDelete: deleteAction.requestDelete,
   });
 
   return (
@@ -82,6 +87,12 @@ export default function CategorySkillsPage() {
         Icon={isEditing ? Pencil : FolderPlus}
         role={isEditing ? "edit" : "create"}
         defaultValues={selectedCategory}
+      />
+      <ConfirmAction
+        open={deleteAction.isOpen}
+        onOpenChange={deleteAction.onOpenChange}
+        question={deleteAction.question}
+        onConfirm={deleteAction.confirmDelete}
       />
     </main>
   );

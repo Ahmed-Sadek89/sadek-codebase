@@ -129,5 +129,7 @@
   "categorySkillFormEditDescription": "حدّث أسماء هذه الفئة وأوصافها وظهورها.",
   "categorySkillFormEditSubmit": "حفظ التغييرات",
   "categorySkillCreated": "تم إنشاء الفئة بنجاح",
-  "categorySkillUpdated": "تم تحديث الفئة بنجاح"
+  "categorySkillUpdated": "تم تحديث الفئة بنجاح",
+  "categorySkillDeleteQuestion": "هل تريد حذف الفئة “{name}”؟ لا يمكن التراجع عن هذا الإجراء.",
+  "categorySkillDeleted": "تم حذف الفئة بنجاح"
 }

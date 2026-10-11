@@ -129,5 +129,7 @@
   "categorySkillFormEditDescription": "Update this category's names, descriptions and visibility.",
   "categorySkillFormEditSubmit": "Save changes",
   "categorySkillCreated": "Category created successfully",
-  "categorySkillUpdated": "Category updated successfully"
+  "categorySkillUpdated": "Category updated successfully",
+  "categorySkillDeleteQuestion": "Delete the “{name}” category? This can't be undone.",
+  "categorySkillDeleted": "Category deleted successfully"
 }

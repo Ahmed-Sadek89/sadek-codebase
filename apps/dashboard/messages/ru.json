@@ -129,5 +129,7 @@
   "categorySkillFormEditDescription": "Обновите названия, описания и видимость этой категории.",
   "categorySkillFormEditSubmit": "Сохранить изменения",
   "categorySkillCreated": "Категория успешно создана",
-  "categorySkillUpdated": "Категория успешно обновлена"
+  "categorySkillUpdated": "Категория успешно обновлена",
+  "categorySkillDeleteQuestion": "Удалить категорию «{name}»? Это действие нельзя отменить.",
+  "categorySkillDeleted": "Категория успешно удалена"
 }
