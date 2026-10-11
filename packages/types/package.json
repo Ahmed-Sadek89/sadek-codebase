@@ -5,7 +5,9 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./auth": "./src/auth.ts"
+    "./auth": "./src/auth.ts",
+    "./common": "./src/common.ts",
+    "./category-skills": "./src/category-skills.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
