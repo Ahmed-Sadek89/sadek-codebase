@@ -17,7 +17,7 @@ import {
   UPLOAD_MAX_SIZE,
   UPLOAD_TYPES_BY_KIND,
   uploadTypesLabel,
-} from "../../../../libs/upload-types";
+} from "../../../../libs/upload/upload-types";
 import { useBaseUpload } from "./hooks/use-base-upload";
 import type { BaseUploadProps } from "./types/types";
 import { bytesToMb } from "./utils/file";

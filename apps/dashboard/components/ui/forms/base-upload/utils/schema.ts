@@ -3,7 +3,7 @@ import {
   UPLOAD_MAX_SIZE,
   UPLOAD_TYPES_BY_KIND,
   uploadTypesLabel,
-} from "../../../../../libs/upload-types";
+} from "../../../../../libs/upload/upload-types";
 import type { Translate, UploadFieldOptions } from "../types/types";
 import { bytesToMb } from "./file";
 
@@ -11,7 +11,8 @@ import { bytesToMb } from "./file";
  * Zod schema for a BaseUpload field, so RHF owns every upload rule:
  * - One file only.
  * - A type allowed for `uploadType` (images, documents, or both).
- * - At most `maxSize` bytes.
+ * - At most `maxSize` bytes, for documents only: images are checked after
+ *   the server compresses them (see POST /api/uploads).
  * - A stored value must be a URL.
  * Output: the picked File, the URL, or undefined when empty (a blank field
  * is "not set").
@@ -42,7 +43,7 @@ export function createUploadFieldSchema(
               ? t("uploadImagesOnly")
               : t("uploadInvalidType", { types: uploadTypesLabel(accept) }),
           });
-        } else if (value.size > maxSize) {
+        } else if (!value.type.startsWith("image/") && value.size > maxSize) {
           ctx.addIssue({
             code: "custom",
             message: t("uploadTooLarge", { size: sizeMb }),

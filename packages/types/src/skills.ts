@@ -60,8 +60,11 @@ export type SkillsResponse = PaginatedResponse<Skill>;
 /**
  * PATCH /skills/:id: any subset of the create fields. Omit
  * `categorySkillsIds` to keep the current categories; `[]` is rejected.
+ * `avatar_url: null` clears the icon (omitting it keeps the current one).
  */
-export type UpdateSkillRequest = Partial<CreateSkillRequest>;
+export type UpdateSkillRequest = Partial<Omit<CreateSkillRequest, "avatar_url">> & {
+  avatar_url?: string | null;
+};
 
 /** Unlike other modules, the update returns the saved skill, not a message. */
 export type UpdateSkillResponse = SavedSkill;

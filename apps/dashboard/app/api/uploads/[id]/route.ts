@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
-import { allowedImageTypes, s3, UPLOADS_PREFIX } from "../../../../libs/s3";
+import { allowedImageTypes, s3, UPLOADS_PREFIX } from "../../../../libs/upload/s3";
 import { auth } from "../../../../libs/auth";
 
 export const runtime = "nodejs";

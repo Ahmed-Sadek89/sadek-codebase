@@ -1,5 +1,5 @@
 import type { MessageKey } from "../../../../../i18n/types";
-import type { UploadType } from "../../../../../libs/upload-types";
+import type { UploadType } from "../../../../../libs/upload/upload-types";
 
 /** next-intl's `t`, as passed to the schema factory. */
 export type Translate = (

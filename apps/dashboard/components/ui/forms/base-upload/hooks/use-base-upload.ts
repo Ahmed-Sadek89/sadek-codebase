@@ -2,7 +2,7 @@
 
 import { useRef, useState, type DragEvent } from "react";
 import { isMediaUrl } from "../../../../../libs/media";
-import type { UploadType } from "../../../../../libs/upload-types";
+import type { UploadType } from "../../../../../libs/upload/upload-types";
 import type { UploadFieldValue } from "../types/types";
 import { fileExtension, isImageUrl, urlFileName } from "../utils/file";
 import { useObjectUrl } from "./use-object-url";

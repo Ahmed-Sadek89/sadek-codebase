@@ -1,5 +1,5 @@
 /**
- * File types /api/uploads/presign accepts (MIME type → stored extension) and
+ * File types POST /api/uploads accepts (MIME type → stored extension) and
  * the size cap: images in any common format, PDF, and Word files. Shared by
  * the API routes and the upload input, so the browser's checks match the
  * server's. The delete route tries every extension listed here.
@@ -24,7 +24,13 @@ export const UPLOAD_TYPES: Record<string, string> = {
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
 };
 
-/** Largest upload the presign route signs: 2 MB. */
+/** S3 folder every upload is stored under. */
+export const UPLOADS_PREFIX = "projects";
+
+/**
+ * Largest stored file: 2 MB. Documents are checked as picked; images only
+ * after POST /api/uploads compresses them to WebP.
+ */
 export const UPLOAD_MAX_SIZE = 2 * 1024 * 1024;
 
 /** Every MIME type in UPLOAD_TYPES (images, PDF, Word). */

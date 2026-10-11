@@ -1,7 +1,7 @@
 import {
   UPLOAD_IMAGE_TYPES,
   UPLOAD_TYPES,
-} from "../../../../../libs/upload-types";
+} from "../../../../../libs/upload/upload-types";
 
 const IMAGE_EXTENSIONS = new Set(
   UPLOAD_IMAGE_TYPES.map((type) => UPLOAD_TYPES[type]),

@@ -6,9 +6,13 @@ import { useDeleteSkill } from "@repo/hooks/skills";
 import { showToast, toastApiError } from "@repo/libs/toast";
 import type { Skill } from "@repo/types/skills";
 import { getDirection } from "../../../i18n/config";
+import { deleteFile } from "../../../libs/upload/delete-file";
 import { localized } from "../../../utils/format";
 
-/** Delete flow for a row: ask in a ConfirmAction, then call DELETE /skills/:id. */
+/**
+ * Delete flow for a row: ask in a ConfirmAction, then delete the skill's
+ * uploaded icon, then call DELETE /skills/:id.
+ */
 export function useDeleteSkillAction() {
   const t = useTranslations();
   const locale = useLocale();
@@ -27,6 +31,8 @@ export function useDeleteSkillAction() {
   const confirmDelete = async () => {
     if (!skill) return;
     try {
+      // 1. The icon first (only our own uploads; never throws), 2. the row.
+      await deleteFile(skill.avatar_url);
       await deleteSkill.mutateAsync(skill.id);
       showToast({ status: "success", title: t("skillDeleted"), dir });
     } catch (error) {
