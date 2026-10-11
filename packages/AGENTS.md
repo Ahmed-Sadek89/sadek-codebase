@@ -4,19 +4,20 @@ These instructions apply to `packages/` alongside the repository's `AGENTS.md`. 
 
 ## Package responsibilities
 
-| Folder                       | Package name              | Purpose and public imports                                                                                                                                                                  |
-| ---------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `packages/types`             | `@repo/types`             | Shared API request/response contracts. Use type-only imports from `@repo/types/auth` or `@repo/types`. No runtime dependencies.                                                             |
-| `packages/libs`              | `@repo/libs`              | Axios instance and error formatting at `@repo/libs/axios`; TanStack Query configuration and hooks at `@repo/libs/query`; QueryClient factory at `@repo/libs/query`.                     |
-| `packages/services`          | `@repo/services`          | Typed HTTP endpoint functions using the Axios client from libs and contracts from types. Auth is exported through `@repo/services/auth` or `@repo/services`.                              |
-| `packages/hooks`             | `@repo/hooks`             | Client React hooks using services, types, and the QueryClient supplied by libs. Auth hooks are exported through `@repo/hooks/auth` or `@repo/hooks`.                                        |
-| `packages/ui`                | `@repo/ui`                | Shared shadcn primitives, theme tokens, icons, and utilities. Import components through `@repo/ui/<component>`, styles through `@repo/ui/global.css`, and helpers through `@repo/ui/utils`. |
-| `packages/eslint-config`     | `@repo/eslint-config`     | Shared ESLint flat configs: `@repo/eslint-config/base`, `@repo/eslint-config/next-js`, and `@repo/eslint-config/react-internal`.                                                            |
-| `packages/typescript-config` | `@repo/typescript-config` | Shared `base.json`, `react-library.json`, and `nextjs.json` TypeScript configurations.                                                                                                      |
+| Folder                       | Package name              | Purpose and public imports                                                                                                                                                                                                                                                    |
+| ---------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/types`             | `@repo/types`             | Shared API request/response contracts. Use type-only imports from `@repo/types/auth`, `@repo/types/common` (pagination), `@repo/types/category-skills`, or `@repo/types`. No runtime dependencies.                                                                            |
+| `packages/libs`              | `@repo/libs`              | Axios instance and error formatting at `@repo/libs/axios`; TanStack Query configuration, hooks, and option types (`QueryKey`, `UseQueryOptions`, `UseMutationOptions`) at `@repo/libs/query`; server-only NextAuth factory at `@repo/libs/auth`.                              |
+| `packages/services`          | `@repo/services`          | Typed HTTP endpoint functions using the Axios client from libs and contracts from types. Exported through `@repo/services/auth`, `@repo/services/category-skills`, or `@repo/services`.                                                                                       |
+| `packages/hooks`             | `@repo/hooks`             | Client React hooks using services, types, and the QueryClient supplied by libs. Exported through `@repo/hooks/auth`, `@repo/hooks/api` (guarded/public query wrappers), `@repo/hooks/category-skills`, or `@repo/hooks`.                                                      |
+| `packages/utils`             | `@repo/utils`             | Shared helpers with no React or HTTP code. `@repo/utils/query-keys` exports `queryKeys`: one nested object per hooks feature (`queryKeys.auth`, `queryKeys.categorySkills`). The file lives at `packages/utils/src/query-keys.ts`. Depends only on `@repo/types` (type-only). |
+| `packages/ui`                | `@repo/ui`                | Shared shadcn primitives, theme tokens, icons, and utilities. Import components through `@repo/ui/<component>`, styles through `@repo/ui/global.css`, and helpers through `@repo/ui/utils`.                                                                                   |
+| `packages/eslint-config`     | `@repo/eslint-config`     | Shared ESLint flat configs: `@repo/eslint-config/base`, `@repo/eslint-config/next-js`, and `@repo/eslint-config/react-internal`.                                                                                                                                              |
+| `packages/typescript-config` | `@repo/typescript-config` | Shared `base.json`, `react-library.json`, and `nextjs.json` TypeScript configurations.                                                                                                                                                                                        |
 
 ## Dependency direction and usage
 
-Keep dependencies acyclic: types are independent; libs use types; services use libs and types; hooks use services, libs, and types; apps consume these packages. Keep HTTP details in services, reusable API hooks in hooks, client configuration in libs, and page form schemas inside the app.
+Keep dependencies acyclic: types are independent; libs and utils use types; services use libs and types; hooks use services, libs, utils, and types; apps consume these packages. Keep HTTP details in services, reusable API hooks in hooks, client configuration in libs, and page form schemas inside the app.
 
 Declare workspace dependencies as `"workspace:*"` in the consuming package's `package.json`. Import through exported package names, never relative paths into another package. Verify public paths against that package's `exports`. These packages export TypeScript source and do not require a separate build step; their consumers must support TypeScript source imports.
 
@@ -26,15 +27,40 @@ import { apiClient, getApiErrorMessage } from "@repo/libs/axios";
 import { QueryProvider } from "@repo/provider/query-provider";
 import { authService } from "@repo/services/auth";
 import { useLogin, useAuthSession } from "@repo/hooks/auth";
+import type { CategorySkill } from "@repo/types/category-skills";
+import { categorySkillsService } from "@repo/services/category-skills";
+import { useGuardedQuery, usePublicQuery } from "@repo/hooks/api";
+import { useCategorySkills } from "@repo/hooks/category-skills";
+import { queryKeys } from "@repo/utils/query-keys";
 ```
+
+All TanStack Query and mutation keys come from `queryKeys` in `@repo/utils/query-keys` (also re-exported from `@repo/hooks`). When adding hooks for a feature, add a nested object for it there instead of declaring keys inside the hook file. Follow the existing shape: an `all` root segment unique to the feature, then functions such as `lists()`, `list(query)`, `details()`, and `detail(id)` that extend it, so invalidating `all` or `lists()` clears the right entries. `queryKeys.auth.*` are functions (`queryKeys.auth.session()`), producing the same arrays the auth hooks used before.
 
 Wrap the consuming app in `QueryProvider` before using API hooks. `libs` creates a fresh QueryClient on the server and keeps a stable client in the browser. Query defaults: one query retry and no focus refetch; mutations do not retry. Do not set `gcTime` or `staleTime` anywhere in `packages/*`, including QueryClient defaults, query-specific defaults, and hooks; use TanStack Query's built-in timing defaults. Auth session data uses the in-memory query cache and its default garbage collection; it is not persisted to browser storage or cookies.
 
-The shared Axios instance reads its base URL from `process.env.NEXT_PUBLIC_BACKEND_URL`, falls back to `/api` when unset or empty, and uses JSON requests. Configure this public backend URL in the consuming app's environment before starting or building it; shared packages do not load their own `.env` files. Keep direct `process.env.NEXT_PUBLIC_BACKEND_URL` access so Next.js can inline it in browser bundles. With an absolute backend URL, the backend must allow the app origin through CORS. When using the `/api` fallback, apps must proxy that prefix to their backend. Pass auth tokens per request; do not put user tokens in shared Axios defaults or a server-global cache. `getApiErrorMessage` handles Nest's string/array errors and network failures without exposing request credentials.
+The shared Axios instance reads its base URL from `process.env.NEXT_PUBLIC_BACKEND_URL`, falls back to `""` (same-origin relative URLs) when unset or empty, and uses JSON requests. `packages/services/tests/auth.test.ts` still expects a `/api` fallback, so its request tests fail until the code or the tests change. Configure this public backend URL in the consuming app's environment before starting or building it; shared packages do not load their own `.env` files. Keep direct `process.env.NEXT_PUBLIC_BACKEND_URL` access so Next.js can inline it in browser bundles. With an absolute backend URL, the backend must allow the app origin through CORS. When `NEXT_PUBLIC_BACKEND_URL` is unset, requests go to the app's own origin, so the app must proxy those backend paths (the dashboard proxies `/api/auth/:path*` only). Pass auth tokens per request; do not put user tokens in shared Axios defaults or a server-global cache. `getApiErrorMessage` handles Nest's string/array errors and network failures without exposing request credentials.
 
-## Auth API contracts
+## Backend API endpoints
 
-The source of truth is `apps/sadek-backend/src/auth`: controller, DTOs, service, and JWT strategies. Do not invent unsupported endpoints or response fields.
+The source of truth is `apps/sadek-backend/src`: each module's controller, DTOs, service, and entity, plus the JWT strategies in `auth/`. Do not invent unsupported endpoints or response fields. Update this section in the same change whenever a backend controller route, DTO, or response shape changes, and when shared types, services, or hooks are added for an endpoint.
+
+Rules that apply to every controller:
+
+- There is no global route prefix; the Nest app listens on `PORT` (default `4000`). CORS allows only the comma-separated origins in the backend's `FRONTEND_URL`.
+- "Guarded" means `JwtAuthGuard`: send `Authorization: Bearer <access_token>`, or the backend responds 401. "Public" routes need no token.
+- The global `ValidationPipe` uses `whitelist`, `forbidNonWhitelisted`, `transform`, and implicit conversion. Unknown body or query fields are rejected with 400, so send only the documented fields. Query strings are converted to the DTO's number/boolean types.
+- Paginated responses use the shared `paginate()` envelope `{ page, limit, totalPage, total, data }` (`PaginatedResponse<T>` in `@repo/types/common`). Pagination query: `page` (default 1), `limit` (default 10, max 30), and `order` `ASC`/`DESC` (default `DESC`), sorted by `createdAt`.
+- Entities serialize dates as ISO strings and nullable columns as `null`. Relations to the owner are reduced to `user: { id }` where selected.
+- Validation and not-found failures use Nest's error body `{ statusCode, message, error? }` (`ApiErrorResponse`); `message` may be a string or a string array.
+- Every list route that takes the signed-in user filters by that user. Routes noted as "no owner check" act on any id, regardless of which user owns it.
+
+### App (`/`)
+
+| Backend endpoint | Access | Request | Response                  | Shared client |
+| ---------------- | ------ | ------- | ------------------------- | ------------- |
+| `GET /`          | Public | –       | Plain text `Hello World!` | –             |
+
+### Auth (`/auth`)
 
 | Backend endpoint              | Request                                                                           | Response                                                | Service / hook                                     |
 | ----------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------- | -------------------------------------------------- |
@@ -54,11 +80,105 @@ The source of truth is `apps/sadek-backend/src/auth`: controller, DTOs, service,
 - The dashboard proxies `/api/auth/:path*` to `BACKEND_URL/auth/:path*`, defaulting to `http://localhost:4000`. Set `BACKEND_URL` in dashboard environment configuration for another backend and restart/rebuild. This avoids needing browser CORS changes in the backend.
 - Dashboard login redirects only after successful authentication; request errors remain visible in the form. The dashboard now uses the NextAuth authentication described below, with server and client route guards.
 
+### Users (`/users`)
+
+Source: `apps/sadek-backend/src/user`. No shared types, services, or hooks exist yet.
+
+| Backend endpoint             | Access  | Request                                                                             | Response                                       |
+| ---------------------------- | ------- | ----------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `POST /users`                | Public  | JSON `{ firstName?, lastName?, age, email, password, confirmPassword, avatarUrl? }` | `{ message: "User created successfully" }`     |
+| `GET /users`                 | Guarded | Query `page`, `limit`, `search`, `avatarUrl`, `minAge`, `maxAge`                    | Paginated users                                |
+| `GET /users/email?email=...` | Guarded | Query `email`                                                                       | `{ id, email, password, avatarUrl }` or `null` |
+| `GET /users/:id`             | Guarded | –                                                                                   | User                                           |
+| `PATCH /users/:id`           | Guarded | JSON partial of the create body; `password` and `confirmPassword` are ignored       | `{ message: "User updated successfully" }`     |
+| `DELETE /users/:id`          | Guarded | –                                                                                   | `{ message: "User deleted successfully" }`     |
+
+- User fields: `id`, `firstName`, `lastName`, `age`, `email`, `avatarUrl`, `createdAt`, `lastLoginAt`, `lastLogoutAt`, all nullable except `id`, `email`, and `createdAt`. `password` is excluded by default.
+- Create rules: `firstName`/`lastName` 3–20 characters; `age` is a required integer from 0 to 150; `password` 8–32 characters with lowercase, uppercase, digit, and one of `@$!%*?&`; `confirmPassword` must match; `avatarUrl` must be an http(s) URL. Failures, including a duplicate email, return 400.
+- `GET /users` searches `firstName`, `lastName`, and `email`, and ignores `order`.
+- `GET /users/email` returns the stored password hash. Do not call it from browser code or expose it in UI.
+- `PATCH` and `DELETE` have no owner check: any signed-in user can change or delete any user. `PATCH` wraps every failure, including an unknown id, in a 400.
+
+### Category skills (`/category-skills`)
+
+Source: `apps/sadek-backend/src/category_skills`. Types in `@repo/types/category-skills`, service `categorySkillsService` in `@repo/services/category-skills`, hooks in `@repo/hooks/category-skills`. All routes are guarded.
+
+| Backend endpoint               | Request                                                             | Response                                                            | Service / hook                                            |
+| ------------------------------ | ------------------------------------------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------- |
+| `POST /category-skills`        | JSON `{ nameAr, nameEn, descriptionAr?, descriptionEn?, isActive }` | Saved category (`CreateCategorySkillResponse`)                      | `categorySkillsService.create` / `useCreateCategorySkill` |
+| `GET /category-skills/private` | Query pagination plus `search`, `isActive`                          | `PaginatedResponse<CategorySkill>`                                  | `categorySkillsService.findAll` / `useCategorySkills`     |
+| `GET /category-skills/:id`     | –                                                                   | `CategorySkillDetails`: category plus `skills` (linked-skill count) | `categorySkillsService.findOne` / `useCategorySkill`      |
+| `PATCH /category-skills/:id`   | JSON partial of the create body                                     | `{ message }`                                                       | `categorySkillsService.update` / `useUpdateCategorySkill` |
+| `DELETE /category-skills/:id`  | –                                                                   | `{ message }`                                                       | `categorySkillsService.remove` / `useDeleteCategorySkill` |
+
+- Category fields: `id`, `nameAr`, `nameEn` (max 50), `descriptionAr`, `descriptionEn` (nullable), `isActive`, `createdAt`, `user: { id }`.
+- The list path is `/private`, not the collection root. It returns only the signed-in user's categories, and `search` matches `nameAr` or `nameEn` (max 20 characters).
+- `DELETE` returns 400 while any skill still references the category.
+- `GET`, `PATCH`, and `DELETE /:id` have no owner check.
+- Hooks: lists use keys `queryKeys.categorySkills.list(query)`. Create invalidates lists; update invalidates lists and the detail; delete removes the detail and invalidates lists.
+
+### Skills (`/skills`)
+
+Source: `apps/sadek-backend/src/skills`. No shared types, services, or hooks exist yet. All routes are guarded and scoped to the signed-in user, so another user's skill returns 404. `:id` must be an integer (`ParseIntPipe`).
+
+| Backend endpoint     | Request                                                             | Response                                                  |
+| -------------------- | ------------------------------------------------------------------- | --------------------------------------------------------- |
+| `POST /skills`       | JSON `{ nameAr, nameEn, avatar_url?, isActive, categorySkillsIds }` | Saved skill with full `categorySkills` and `user: { id }` |
+| `GET /skills`        | Query `page`, `limit`, `search`, `isActive`, `categoryId`           | Paginated skills                                          |
+| `GET /skills/:id`    | –                                                                   | Skill                                                     |
+| `PATCH /skills/:id`  | JSON partial of the create body                                     | The updated skill (not a message)                         |
+| `DELETE /skills/:id` | –                                                                   | `{ message: "Skill with id <id> has been removed." }`     |
+
+- Skill fields: `id`, `nameAr`, `nameEn` (max 50), `avatar_url` (snake_case, nullable URL), `isActive`, `createdAt`, `user: { id }`, `categorySkills: [{ id, nameAr, nameEn }]` on reads.
+- `categorySkillsIds` needs at least one id, and every id must be one of the user's own skill categories, or the request returns 400. On `PATCH`, omit it to keep the current categories; an empty array returns 400.
+- `GET /skills` filters by `categoryId`, searches `nameAr`/`nameEn`, and ignores `order`.
+
+### Category projects (`/category-projects`)
+
+Source: `apps/sadek-backend/src/category-projects`. No shared types, services, or hooks exist yet. All routes are guarded.
+
+| Backend endpoint                | Request                                                             | Response                                               |
+| ------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------ |
+| `POST /category-projects`       | JSON `{ nameAr, nameEn, descriptionAr?, descriptionEn?, isActive }` | Saved category                                         |
+| `GET /category-projects`        | Query pagination plus `search`, `isActive`                          | Paginated categories with `user: { id }`               |
+| `GET /category-projects/:id`    | –                                                                   | Category, without `user`                               |
+| `PATCH /category-projects/:id`  | JSON partial of the create body                                     | `{ message: "Category project updated successfully" }` |
+| `DELETE /category-projects/:id` | –                                                                   | `{ message: "Category project deleted successfully" }` |
+
+- Same fields and rules as category skills: `nameAr`/`nameEn` max 50, nullable descriptions, `isActive`, `createdAt`. Unlike category skills, the list is at the collection root, and `DELETE` does not check for linked projects.
+- `GET`, `PATCH`, and `DELETE /:id` have no owner check.
+
+### Projects (`/projects`)
+
+Source: `apps/sadek-backend/src/projects`. No shared types, services, or hooks exist yet. All routes are guarded.
+
+| Backend endpoint       | Request                                                                                                                   | Response                                      |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `POST /projects`       | JSON `{ nameAr, nameEn, descriptionAr, descriptionEn, isActive, mainImageUrl?, liveUrl?, repoUrl?, categoryProjectsIds }` | Saved project                                 |
+| `GET /projects`        | No usable query                                                                                                           | `Project[]`, **not paginated**, newest first  |
+| `GET /projects/:id`    | –                                                                                                                         | Project with full `categoryProjects`          |
+| `PATCH /projects/:id`  | JSON partial of the create body                                                                                           | `{ message: "project updated successfully" }` |
+| `DELETE /projects/:id` | –                                                                                                                         | `{ message: "project removed successfully" }` |
+
+- Project fields: `id`, `nameAr`, `nameEn` (max 100), `descriptionAr`, `descriptionEn` (required), `isActive`, `mainImageUrl`, `liveUrl`, `repoUrl` (nullable, max 255), `createdAt`, `user: { id }`, `categoryProjects` (`[{ id, nameAr, nameEn }]` in the list).
+- `categoryProjectsIds` must be a non-empty array of unique integers, all owned by the signed-in user, or the request returns 400.
+- `GET /projects` returns only the signed-in user's projects. It validates pagination/`search`/`isActive` query fields but ignores them.
+- `GET`, `PATCH` (except the category ownership check), and `DELETE /:id` have no owner check.
+
+## Guarded and public query wrappers
+
+`@repo/hooks/api` wraps TanStack Query so endpoint hooks never handle tokens directly:
+
+- `useGuardedQuery({ queryKey, queryFn: (auth) => ..., ...options })` and `useGuardedMutation({ mutationFn: (variables, auth) => ..., ...options })` read `session.accessToken` from `next-auth/react`'s `useSession()` and pass `{ accessToken }` (`AuthorizedRequest`) to the service. Guarded queries stay disabled until a token exists and respect any caller `enabled`. Guarded mutations reject with "Sign in before making an authenticated request." when signed out. The token is not part of query keys, so a token refresh does not refetch.
+- `usePublicQuery({ queryKey, queryFn: () => ..., ... })` and `usePublicMutation({ mutationFn: (variables) => ..., ... })` have the same shape without a token. Use them for public endpoints.
+- Use the guarded pair for every route marked Guarded above and the public pair for Public routes. Endpoint hooks (for example `@repo/hooks/category-skills`) own their query keys and cache invalidation.
+- The wrappers require a NextAuth `SessionProvider` (from `@repo/provider/session-provider`) and `QueryProvider` above them. `api.ts` imports `@repo/libs/auth` as types only, for the `Session.accessToken` augmentation; this adds no server code to client bundles.
+
 ## External packages used
 
 - `provider`: `@tanstack/react-query-devtools` supplies the query inspector inside `QueryProvider`, rendered only when `process.env.NODE_ENV === "development"` and initially closed. Keep it inside the shared provider and use the standard package entry point; do not enable its production entry point. `next-themes` powers `ThemeProvider` and `useTheme`.
 - `libs`: `axios` provides the HTTP client; `@tanstack/react-query` provides QueryClient, the provider, and query/mutation hooks; `react` provides the React runtime.
-- `hooks`: `react` is the client runtime; TanStack Query is consumed through `@repo/libs/query`, not a separately configured client.
+- `hooks`: `react` is the client runtime; TanStack Query is consumed through `@repo/libs/query`, not a separately configured client. `next-auth` (`5.0.0-beta.32`, matching libs and the dashboard) supplies `useSession` for the guarded query wrappers in `@repo/hooks/api`.
 - `types` has no runtime dependencies; services uses libs and shared API types.
 - `ui`: `react` and `react-dom` provide rendering; `radix-ui` supplies accessible primitives; `vaul` supplies drawers; `lucide-react` supplies icons; `class-variance-authority` supplies variants; `clsx` and `tailwind-merge` implement class merging. `cn` is also declared in the package manifest. Tailwind CSS provides token-based styling through `global.css`.
 - `eslint-config`: `@eslint/js`, `eslint`, `eslint-config-prettier`, `eslint-plugin-only-warn`, `eslint-plugin-react-hooks`, `eslint-plugin-turbo`, `@next/eslint-plugin-next`, and `globals` supply shared lint rules and environments. `@babel/core`, `@babel/eslint-parser`, and `@babel/preset-typescript` parse TypeScript.

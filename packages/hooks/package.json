@@ -5,24 +5,28 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./auth": "./src/auth.ts"
+    "./auth": "./src/auth.ts",
+    "./api": "./src/api.ts",
+    "./category-skills": "./src/category-skills.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
     "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "26.4.1",
-    "typescript": "7.0.2",
+    "@types/react": "19.2.18",
     "eslint": "10.9.1",
-    "@types/react": "19.2.18"
+    "typescript": "7.0.2"
   },
   "dependencies": {
     "@repo/libs": "workspace:*",
     "@repo/services": "workspace:*",
     "@repo/types": "workspace:*",
+    "@repo/utils": "workspace:*",
+    "next-auth": "5.0.0-beta.32",
     "react": "19.2.8"
   }
 }

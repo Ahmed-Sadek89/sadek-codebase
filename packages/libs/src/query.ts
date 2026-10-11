@@ -17,4 +17,9 @@ export function getQueryClient() {
 }
 
 export { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-export type { QueryClient } from "@tanstack/react-query";
+export type {
+  QueryClient,
+  QueryKey,
+  UseMutationOptions,
+  UseQueryOptions,
+} from "@tanstack/react-query";

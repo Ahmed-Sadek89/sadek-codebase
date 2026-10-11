@@ -7,6 +7,7 @@ import {
   type QueryClient,
 } from "@repo/libs/query";
 import { authService } from "@repo/services/auth";
+import { queryKeys } from "@repo/utils/query-keys";
 import type {
   AuthSession,
   ChangePasswordRequest,
@@ -17,16 +18,10 @@ import type {
   RefreshResponse,
 } from "@repo/types/auth";
 
-export const authKeys = {
-  session: ["auth", "session"] as const,
-  login: ["auth", "login"] as const,
-  refresh: ["auth", "refresh"] as const,
-  changePassword: ["auth", "change-password"] as const,
-  logout: ["auth", "logout"] as const,
-};
-
 function requireSession(client: QueryClient): AuthSession {
-  const session = client.getQueryData<AuthSession | null>(authKeys.session);
+  const session = client.getQueryData<AuthSession | null>(
+    queryKeys.auth.session(),
+  );
   if (!session)
     throw new Error("Sign in before making an authenticated request.");
   return session;
@@ -43,7 +38,7 @@ function removeUserQueries(client: QueryClient) {
 /** Observes the in-memory session; the backend has no session/me endpoint. */
 export function useAuthSession() {
   return useQuery<AuthSession | null>({
-    queryKey: authKeys.session,
+    queryKey: queryKeys.auth.session(),
     queryFn: () => null,
     initialData: null,
     enabled: false,
@@ -53,12 +48,12 @@ export function useAuthSession() {
 export function useLogin() {
   const client = useQueryClient();
   return useMutation<LoginResponse, Error, LoginRequest>({
-    mutationKey: authKeys.login,
+    mutationKey: queryKeys.auth.login(),
     mutationFn: (request) => authService.login(request),
     onSuccess: (session) => {
       // Discard any cached data belonging to a previous user.
       removeUserQueries(client);
-      client.setQueryData<AuthSession>(authKeys.session, session);
+      client.setQueryData<AuthSession>(queryKeys.auth.session(), session);
     },
   });
 }
@@ -66,15 +61,15 @@ export function useLogin() {
 export function useRefreshToken() {
   const client = useQueryClient();
   return useMutation<RefreshResponse, Error, void>({
-    mutationKey: authKeys.refresh,
+    mutationKey: queryKeys.auth.refresh(),
     mutationFn: async () => {
       const session = requireSession(client);
       const response = await authService.refresh({
         refreshToken: session.refresh_token,
       });
       // Do not resurrect a session if logout or another login occurred meanwhile.
-      if (client.getQueryData(authKeys.session) === session) {
-        client.setQueryData<AuthSession>(authKeys.session, {
+      if (client.getQueryData(queryKeys.auth.session()) === session) {
+        client.setQueryData<AuthSession>(queryKeys.auth.session(), {
           ...session,
           ...response,
         });
@@ -87,7 +82,7 @@ export function useRefreshToken() {
 export function useChangePassword() {
   const client = useQueryClient();
   return useMutation<ChangePasswordResponse, Error, ChangePasswordRequest>({
-    mutationKey: authKeys.changePassword,
+    mutationKey: queryKeys.auth.changePassword(),
     mutationFn: (request) =>
       authService.changePassword(request, {
         accessToken: requireSession(client).access_token,
@@ -98,15 +93,15 @@ export function useChangePassword() {
 export function useLogout() {
   const client = useQueryClient();
   return useMutation<LogoutResponse, Error, void>({
-    mutationKey: authKeys.logout,
+    mutationKey: queryKeys.auth.logout(),
     mutationFn: async () => {
       const session = requireSession(client);
       const response = await authService.logout({
         accessToken: session.access_token,
       });
-      if (client.getQueryData(authKeys.session) === session) {
+      if (client.getQueryData(queryKeys.auth.session()) === session) {
         removeUserQueries(client);
-        client.setQueryData(authKeys.session, null);
+        client.setQueryData(queryKeys.auth.session(), null);
       }
       return response;
     },
