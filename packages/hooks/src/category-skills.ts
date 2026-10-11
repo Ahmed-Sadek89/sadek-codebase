@@ -52,6 +52,8 @@ export function useUpdateCategorySkill() {
         client.invalidateQueries({
           queryKey: queryKeys.categorySkills.detail(id),
         }),
+        // Skills embed category names.
+        client.invalidateQueries({ queryKey: queryKeys.skills.all }),
       ]),
   });
 }

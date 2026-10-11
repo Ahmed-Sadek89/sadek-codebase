@@ -29,7 +29,10 @@ export type GuardedMutationOptions<TData, TVariables = void> = Omit<
   UseMutationOptions<TData, Error, TVariables>,
   "mutationFn"
 > & {
-  mutationFn: (variables: TVariables, auth: AuthorizedRequest) => Promise<TData>;
+  mutationFn: (
+    variables: TVariables,
+    auth: AuthorizedRequest,
+  ) => Promise<TData>;
 };
 
 /** The current access token; NextAuth refreshes it before it expires. */

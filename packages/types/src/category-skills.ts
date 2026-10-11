@@ -1,5 +1,9 @@
 import type { MessageResponse } from "./auth";
-import type { IsoDateString, PaginatedResponse, PaginationQuery } from "./common";
+import type {
+  IsoDateString,
+  PaginatedResponse,
+  PaginationQuery,
+} from "./common";
 
 /** A skill category as returned by the backend `category_skills` entity. */
 export interface CategorySkill {

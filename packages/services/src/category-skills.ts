@@ -10,17 +10,13 @@ import type {
   UpdateCategorySkillRequest,
   UpdateCategorySkillResponse,
 } from "@repo/types/category-skills";
+import { authHeaders } from "./auth-headers";
 
 export const categorySkillsEndpoints = {
   create: "/category-skills",
   findAll: "/category-skills/private",
   byId: (id: number) => `/category-skills/${id}`,
 } as const;
-
-// Every category-skills route sits behind JwtAuthGuard.
-const authHeaders = ({ accessToken }: AuthorizedRequest) => ({
-  Authorization: `Bearer ${accessToken}`,
-});
 
 export const categorySkillsService = {
   async create(

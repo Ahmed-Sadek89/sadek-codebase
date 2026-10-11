@@ -3,3 +3,9 @@ export {
   categorySkillsEndpoints,
   categorySkillsService,
 } from "./category-skills";
+export { skillsEndpoints, skillsService } from "./skills";
+export {
+  categoryProjectsEndpoints,
+  categoryProjectsService,
+} from "./category-projects";
+export { projectsEndpoints, projectsService } from "./projects";

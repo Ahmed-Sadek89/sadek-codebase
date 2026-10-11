@@ -4,16 +4,16 @@ These instructions apply to `packages/` alongside the repository's `AGENTS.md`. 
 
 ## Package responsibilities
 
-| Folder                       | Package name              | Purpose and public imports                                                                                                                                                                                                                                                    |
-| ---------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `packages/types`             | `@repo/types`             | Shared API request/response contracts. Use type-only imports from `@repo/types/auth`, `@repo/types/common` (pagination), `@repo/types/category-skills`, or `@repo/types`. No runtime dependencies.                                                                            |
-| `packages/libs`              | `@repo/libs`              | Axios instance and error formatting at `@repo/libs/axios`; TanStack Query configuration, hooks, and option types (`QueryKey`, `UseQueryOptions`, `UseMutationOptions`) at `@repo/libs/query`; server-only NextAuth factory at `@repo/libs/auth`.                              |
-| `packages/services`          | `@repo/services`          | Typed HTTP endpoint functions using the Axios client from libs and contracts from types. Exported through `@repo/services/auth`, `@repo/services/category-skills`, or `@repo/services`.                                                                                       |
-| `packages/hooks`             | `@repo/hooks`             | Client React hooks using services, types, and the QueryClient supplied by libs. Exported through `@repo/hooks/auth`, `@repo/hooks/api` (guarded/public query wrappers), `@repo/hooks/category-skills`, or `@repo/hooks`.                                                      |
-| `packages/utils`             | `@repo/utils`             | Shared helpers with no React or HTTP code. `@repo/utils/query-keys` exports `queryKeys`: one nested object per hooks feature (`queryKeys.auth`, `queryKeys.categorySkills`). The file lives at `packages/utils/src/query-keys.ts`. Depends only on `@repo/types` (type-only). |
-| `packages/ui`                | `@repo/ui`                | Shared shadcn primitives, theme tokens, icons, and utilities. Import components through `@repo/ui/<component>`, styles through `@repo/ui/global.css`, and helpers through `@repo/ui/utils`.                                                                                   |
-| `packages/eslint-config`     | `@repo/eslint-config`     | Shared ESLint flat configs: `@repo/eslint-config/base`, `@repo/eslint-config/next-js`, and `@repo/eslint-config/react-internal`.                                                                                                                                              |
-| `packages/typescript-config` | `@repo/typescript-config` | Shared `base.json`, `react-library.json`, and `nextjs.json` TypeScript configurations.                                                                                                                                                                                        |
+| Folder                       | Package name              | Purpose and public imports                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ---------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `packages/types`             | `@repo/types`             | Shared API request/response contracts. Use type-only imports from `@repo/types/auth`, `@repo/types/common` (pagination, `NamedRef`), `@repo/types/category-skills`, `@repo/types/skills`, `@repo/types/category-projects`, `@repo/types/projects`, or `@repo/types`. No runtime dependencies.                                                                                                                                                    |
+| `packages/libs`              | `@repo/libs`              | Axios instance and error formatting at `@repo/libs/axios`; TanStack Query configuration, hooks, and option types (`QueryKey`, `UseQueryOptions`, `UseMutationOptions`) at `@repo/libs/query`; server-only NextAuth factory at `@repo/libs/auth`.                                                                                                                                                                                                 |
+| `packages/services`          | `@repo/services`          | Typed HTTP endpoint functions using the Axios client from libs and contracts from types. Exported through `@repo/services/auth`, `@repo/services/category-skills`, `@repo/services/skills`, `@repo/services/category-projects`, `@repo/services/projects`, or `@repo/services`. Guarded services take `{ accessToken }` (`AuthorizedRequest`) as their last argument and build the Bearer header with the internal `src/auth-headers.ts` helper. |
+| `packages/hooks`             | `@repo/hooks`             | Client React hooks using services, types, and the QueryClient supplied by libs. Exported through `@repo/hooks/auth`, `@repo/hooks/api` (guarded/public query wrappers), `@repo/hooks/category-skills`, `@repo/hooks/skills`, `@repo/hooks/category-projects`, `@repo/hooks/projects`, or `@repo/hooks`.                                                                                                                                          |
+| `packages/utils`             | `@repo/utils`             | Shared helpers with no React or HTTP code. `@repo/utils/query-keys` exports `queryKeys`: one nested object per hooks feature (`queryKeys.auth`, `queryKeys.categorySkills`, `queryKeys.skills`, `queryKeys.categoryProjects`, `queryKeys.projects`). The file lives at `packages/utils/src/query-keys.ts`. Depends only on `@repo/types` (type-only).                                                                                            |
+| `packages/ui`                | `@repo/ui`                | Shared shadcn primitives, theme tokens, icons, and utilities. Import components through `@repo/ui/<component>`, styles through `@repo/ui/global.css`, and helpers through `@repo/ui/utils`.                                                                                                                                                                                                                                                      |
+| `packages/eslint-config`     | `@repo/eslint-config`     | Shared ESLint flat configs: `@repo/eslint-config/base`, `@repo/eslint-config/next-js`, and `@repo/eslint-config/react-internal`.                                                                                                                                                                                                                                                                                                                 |
+| `packages/typescript-config` | `@repo/typescript-config` | Shared `base.json`, `react-library.json`, and `nextjs.json` TypeScript configurations.                                                                                                                                                                                                                                                                                                                                                           |
 
 ## Dependency direction and usage
 
@@ -115,11 +115,11 @@ Source: `apps/sadek-backend/src/category_skills`. Types in `@repo/types/category
 - The list path is `/private`, not the collection root. It returns only the signed-in user's categories, and `search` matches `nameAr` or `nameEn` (max 20 characters).
 - `DELETE` returns 400 while any skill still references the category.
 - `GET`, `PATCH`, and `DELETE /:id` have no owner check.
-- Hooks: lists use keys `queryKeys.categorySkills.list(query)`. Create invalidates lists; update invalidates lists and the detail; delete removes the detail and invalidates lists.
+- Hooks: lists use keys `queryKeys.categorySkills.list(query)`. Create invalidates lists; update invalidates lists, the detail, and `queryKeys.skills.all` (skills embed category names); delete removes the detail and invalidates lists.
 
 ### Skills (`/skills`)
 
-Source: `apps/sadek-backend/src/skills`. No shared types, services, or hooks exist yet. All routes are guarded and scoped to the signed-in user, so another user's skill returns 404. `:id` must be an integer (`ParseIntPipe`).
+Source: `apps/sadek-backend/src/skills`. Types in `@repo/types/skills` (`Skill`, `SavedSkill`, `SkillsQuery`, ...), service `skillsService` in `@repo/services/skills`, hooks in `@repo/hooks/skills`. All routes are guarded and scoped to the signed-in user, so another user's skill returns 404. `:id` must be an integer (`ParseIntPipe`).
 
 | Backend endpoint     | Request                                                             | Response                                                  |
 | -------------------- | ------------------------------------------------------------------- | --------------------------------------------------------- |
@@ -132,10 +132,11 @@ Source: `apps/sadek-backend/src/skills`. No shared types, services, or hooks exi
 - Skill fields: `id`, `nameAr`, `nameEn` (max 50), `avatar_url` (snake_case, nullable URL), `isActive`, `createdAt`, `user: { id }`, `categorySkills: [{ id, nameAr, nameEn }]` on reads.
 - `categorySkillsIds` needs at least one id, and every id must be one of the user's own skill categories, or the request returns 400. On `PATCH`, omit it to keep the current categories; an empty array returns 400.
 - `GET /skills` filters by `categoryId`, searches `nameAr`/`nameEn`, and ignores `order`.
+- Client: `skillsService.create/findAll/findOne/update/remove`; hooks `useCreateSkill`, `useSkills(query)`, `useSkill(id)`, `useUpdateSkill` (`{ id, data }`), `useDeleteSkill` (`id`). Every skill mutation invalidates skill lists and `queryKeys.categorySkills.details()`, because category details include a linked-skill count. Update also invalidates the skill detail, and delete removes it.
 
 ### Category projects (`/category-projects`)
 
-Source: `apps/sadek-backend/src/category-projects`. No shared types, services, or hooks exist yet. All routes are guarded.
+Source: `apps/sadek-backend/src/category-projects`. Types in `@repo/types/category-projects`, service `categoryProjectsService` in `@repo/services/category-projects`, hooks in `@repo/hooks/category-projects`. All routes are guarded.
 
 | Backend endpoint                | Request                                                             | Response                                               |
 | ------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------ |
@@ -145,12 +146,13 @@ Source: `apps/sadek-backend/src/category-projects`. No shared types, services, o
 | `PATCH /category-projects/:id`  | JSON partial of the create body                                     | `{ message: "Category project updated successfully" }` |
 | `DELETE /category-projects/:id` | –                                                                   | `{ message: "Category project deleted successfully" }` |
 
+- Client: `categoryProjectsService.create/findAll/findOne/update/remove`; hooks `useCreateCategoryProject`, `useCategoryProjects(query)`, `useCategoryProject(id)` (`CategoryProjectDetails`, no `user`), `useUpdateCategoryProject` (`{ id, data }`), `useDeleteCategoryProject` (`id`). Update and delete also invalidate `queryKeys.projects.all`, because projects embed category names.
 - Same fields and rules as category skills: `nameAr`/`nameEn` max 50, nullable descriptions, `isActive`, `createdAt`. Unlike category skills, the list is at the collection root, and `DELETE` does not check for linked projects.
 - `GET`, `PATCH`, and `DELETE /:id` have no owner check.
 
 ### Projects (`/projects`)
 
-Source: `apps/sadek-backend/src/projects`. No shared types, services, or hooks exist yet. All routes are guarded.
+Source: `apps/sadek-backend/src/projects`. Types in `@repo/types/projects` (`Project` for list items with `NamedRef` categories, `ProjectDetails` with full categories), service `projectsService` in `@repo/services/projects`, hooks in `@repo/hooks/projects`. All routes are guarded.
 
 | Backend endpoint       | Request                                                                                                                   | Response                                      |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
@@ -162,7 +164,8 @@ Source: `apps/sadek-backend/src/projects`. No shared types, services, or hooks e
 
 - Project fields: `id`, `nameAr`, `nameEn` (max 100), `descriptionAr`, `descriptionEn` (required), `isActive`, `mainImageUrl`, `liveUrl`, `repoUrl` (nullable, max 255), `createdAt`, `user: { id }`, `categoryProjects` (`[{ id, nameAr, nameEn }]` in the list).
 - `categoryProjectsIds` must be a non-empty array of unique integers, all owned by the signed-in user, or the request returns 400.
-- `GET /projects` returns only the signed-in user's projects. It validates pagination/`search`/`isActive` query fields but ignores them.
+- `GET /projects` returns only the signed-in user's projects. It validates pagination/`search`/`isActive` query fields but ignores them, so `projectsService.findAll(auth)` takes no query and `useProjects()` uses the single key `queryKeys.projects.list()`.
+- Client: `projectsService.create/findAll/findOne/update/remove`; hooks `useCreateProject`, `useProjects()`, `useProject(id)`, `useUpdateProject` (`{ id, data }`), `useDeleteProject` (`id`).
 - `GET`, `PATCH` (except the category ownership check), and `DELETE /:id` have no owner check.
 
 ## Guarded and public query wrappers

@@ -22,3 +22,10 @@ export interface PaginatedResponse<T> {
 
 /** Dates arrive as ISO 8601 strings after JSON serialization. */
 export type IsoDateString = string;
+
+/** The trimmed shape the backend selects for related categories in lists. */
+export interface NamedRef {
+  id: number;
+  nameAr: string;
+  nameEn: string;
+}
