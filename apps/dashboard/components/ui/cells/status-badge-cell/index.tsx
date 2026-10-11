@@ -1,22 +1,29 @@
 import { cn } from "@repo/ui/utils";
 
-export type StatusBadgeTone = "success" | "neutral" | "warning" | "danger";
+export type StatusBadgeTone =
+  | "primary"
+  | "success"
+  | "neutral"
+  | "warning"
+  | "danger";
 
 export type StatusBadgeCellProps = {
   value: string;
   tone?: StatusBadgeTone;
 };
 
-// Theme tokens only; "success" uses the brand primary (there is no success token).
+// Theme tokens only.
 const TONE: Record<StatusBadgeTone, string> = {
-  success: "bg-primary/10 text-primary",
+  primary: "bg-primary/10 text-primary",
+  success: "bg-success/10 text-success",
   neutral: "bg-muted text-muted-foreground",
   warning: "bg-warning/10 text-warning",
   danger: "bg-danger/10 text-danger",
 };
 
 const DOT: Record<StatusBadgeTone, string> = {
-  success: "bg-primary",
+  primary: "bg-primary",
+  success: "bg-success",
   neutral: "bg-muted-foreground",
   warning: "bg-warning",
   danger: "bg-danger",

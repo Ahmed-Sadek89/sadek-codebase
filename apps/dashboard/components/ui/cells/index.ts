@@ -1,4 +1,5 @@
 export { TextCell, type TextCellProps } from "./text-cell";
+export { DateCell, type DateCellProps } from "./date-cell";
 export {
   StatusBadgeCell,
   type StatusBadgeCellProps,

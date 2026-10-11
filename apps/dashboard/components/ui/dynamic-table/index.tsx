@@ -1,11 +1,17 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useTable, type RowData } from "@tanstack/react-table";
 import { Button } from "@repo/ui/button";
 import { Card, CardContent } from "@repo/ui/card";
-import { CircleAlert, RotateCw } from "@repo/ui/icons";
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  CircleAlert,
+  RotateCw,
+} from "@repo/ui/icons";
 import { Skeleton } from "@repo/ui/skeleton";
 import { cn } from "@repo/ui/utils";
 import { DynamicTableHeader } from "./components/table-header";
@@ -70,9 +76,15 @@ export function DynamicTable<TData extends RowData>({
   const t = useTranslations();
   const titleId = useId();
   const descriptionId = useId();
+  // `sortable` is the only switch: TanStack reads it as `enableSorting`.
+  const tableColumns = useMemo(
+    () =>
+      columns.map((column) => ({ ...column, enableSorting: column.sortable })),
+    [columns],
+  );
   const table = useTable({
     features: dynamicTableFeatures,
-    columns,
+    columns: tableColumns,
     data: data ?? NO_ROWS,
     getRowId,
   });
@@ -200,26 +212,57 @@ export function DynamicTable<TData extends RowData>({
           <thead className="bg-muted/50">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    scope="col"
-                    colSpan={header.colSpan}
-                    className={cn(
-                      TABLE_CELL_CLASS_NAME,
-                      "text-xs font-medium uppercase tracking-wide text-muted-foreground",
-                      stickySide(header.column.columnDef) &&
-                      cn(
-                        STICKY_CLASS[stickySide(header.column.columnDef)!],
-                        "bg-muted",
-                      ),
-                    )}
-                  >
-                    {header.isPlaceholder ? null : (
-                      <table.FlexRender header={header} />
-                    )}
-                  </th>
-                ))}
+                {headerGroup.headers.map((header) => {
+                  const canSort = header.column.getCanSort();
+                  const sorted = header.column.getIsSorted();
+                  const SortIcon =
+                    sorted === "asc"
+                      ? ArrowUp
+                      : sorted === "desc"
+                        ? ArrowDown
+                        : ArrowUpDown;
+                  return (
+                    <th
+                      key={header.id}
+                      scope="col"
+                      colSpan={header.colSpan}
+                      aria-sort={
+                        sorted === "asc"
+                          ? "ascending"
+                          : sorted === "desc"
+                            ? "descending"
+                            : canSort
+                              ? "none"
+                              : undefined
+                      }
+                      className={cn(
+                        TABLE_CELL_CLASS_NAME,
+                        "text-xs font-medium uppercase tracking-wide text-muted-foreground",
+                        stickySide(header.column.columnDef) &&
+                        cn(
+                          STICKY_CLASS[stickySide(header.column.columnDef)!],
+                          "bg-muted",
+                        ),
+                      )}
+                    >
+                      {header.isPlaceholder ? null : canSort ? (
+                        <button
+                          type="button"
+                          onClick={header.column.getToggleSortingHandler()}
+                          className={cn(
+                            "inline-flex items-center gap-1 uppercase tracking-wide transition-colors hover:text-foreground",
+                            sorted && "text-foreground",
+                          )}
+                        >
+                          <table.FlexRender header={header} />
+                          <SortIcon className="size-3.5 shrink-0" aria-hidden />
+                        </button>
+                      ) : (
+                        <table.FlexRender header={header} />
+                      )}
+                    </th>
+                  );
+                })}
               </tr>
             ))}
           </thead>

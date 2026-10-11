@@ -131,5 +131,7 @@
   "categorySkillCreated": "Category created successfully",
   "categorySkillUpdated": "Category updated successfully",
   "categorySkillDeleteQuestion": "Delete the “{name}” category? This can't be undone.",
-  "categorySkillDeleted": "Category deleted successfully"
+  "categorySkillDeleted": "Category deleted successfully",
+  "tableColCategoryEn": "Category (English)",
+  "tableColCategoryAr": "Category (Arabic)"
 }

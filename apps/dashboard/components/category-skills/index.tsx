@@ -14,11 +14,9 @@ import { ConfirmAction } from "../ui/confirm-action";
 import { FolderPlus, Pencil } from "@repo/ui/icons";
 import type { CategorySkill } from "@repo/types/category-skills";
 
-/** All category-skills page content. Data is prefetched in the route's page.tsx. */
 export default function CategorySkillsPage() {
   const t = useTranslations();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
-  // The row being edited; null while creating.
   const [selectedCategory, setSelectedCategory] = useState<CategorySkill | null>(null);
   const handleOpenDialog = useCallback((open: boolean) => {
     setIsOpenDialog(open);
@@ -32,10 +30,7 @@ export default function CategorySkillsPage() {
     setIsOpenDialog(true);
   }, []);
   const isEditing = selectedCategory !== null;
-  // ?search=&page=&limit= (any combination); the search box writes ?search=.
   const searchParams = useSearchParams();
-  // Same query as the server prefetch, so the hydrated cache is reused.
-  // useSearchParams returns a new object only when the URL changes.
   const query = useMemo(
     () =>
       getCategorySkillsQuery(

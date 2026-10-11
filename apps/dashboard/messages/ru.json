@@ -131,5 +131,7 @@
   "categorySkillCreated": "Категория успешно создана",
   "categorySkillUpdated": "Категория успешно обновлена",
   "categorySkillDeleteQuestion": "Удалить категорию «{name}»? Это действие нельзя отменить.",
-  "categorySkillDeleted": "Категория успешно удалена"
+  "categorySkillDeleted": "Категория успешно удалена",
+  "tableColCategoryEn": "Категория (англ.)",
+  "tableColCategoryAr": "Категория (араб.)"
 }

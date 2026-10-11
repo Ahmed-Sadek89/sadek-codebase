@@ -131,5 +131,7 @@
   "categorySkillCreated": "Kategorie erfolgreich erstellt",
   "categorySkillUpdated": "Kategorie erfolgreich aktualisiert",
   "categorySkillDeleteQuestion": "Die Kategorie „{name}“ löschen? Dies kann nicht rückgängig gemacht werden.",
-  "categorySkillDeleted": "Kategorie erfolgreich gelöscht"
+  "categorySkillDeleted": "Kategorie erfolgreich gelöscht",
+  "tableColCategoryEn": "Kategorie (Englisch)",
+  "tableColCategoryAr": "Kategorie (Arabisch)"
 }

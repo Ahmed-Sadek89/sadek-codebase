@@ -1,12 +1,16 @@
 "use client";
 
 import { useMemo } from "react";
-import { useFormatter, useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import type { CategorySkill } from "@repo/types/category-skills";
 import { Eye, Pencil, Trash2 } from "@repo/ui/icons";
-import { StatusBadgeCell, TableActionsGroup, TextCell } from "../../ui/cells";
+import {
+  DateCell,
+  StatusBadgeCell,
+  TableActionsGroup,
+  TextCell,
+} from "../../ui/cells";
 import type { DynamicColumnDef } from "../../ui/dynamic-table/types/types";
-import { localized } from "../../../utils/format";
 
 type UseColumnsOptions = {
   busy?: boolean;
@@ -29,124 +33,66 @@ const useColumns = ({
   canDelete = false,
 }: UseColumnsOptions = {}) => {
   const t = useTranslations();
-  const format = useFormatter();
-  const locale = useLocale();
 
   return useMemo<DynamicColumnDef<CategorySkill>[]>(() => {
 
     const columns: DynamicColumnDef<CategorySkill>[] = [
       {
         accessorKey: "id",
+        sortable: true,
         header: t("tableColId"),
         cell: ({ row }) => <TextCell value={row.original.id} tone="muted" />,
       },
       {
-        id: "category",
-        accessorFn: (row) => localized(locale, row.nameEn, row.nameAr),
-        header: t("tableColCategory"),
-        cell: ({ row }) => {
-          const c = row.original;
-          return (
-            <div className="max-w-sm min-w-55">
-              <TextCell
-                value={localized(locale, c.nameEn, c.nameAr)}
-                weight="semibold"
-              />
-              <TextCell
-                value={localized(locale, c.descriptionEn, c.descriptionAr)}
-                tone="muted"
-                size="sm"
-              />
-            </div>
-          );
-        },
+        accessorKey: "nameAr",
+        sortable: true,
+        header: t("tableColCategoryAr"),
+        meta: { cellProps: { lang: "ar", dir: "rtl" } },
+        cell: ({ row }) => (
+          <div className="max-w-sm min-w-55 flex items-start flex-col gap-y-1.5">
+            <TextCell value={row.original.nameAr} weight="semibold" />
+            <TextCell
+              value={row.original.descriptionAr}
+              tone="muted"
+              size="sm"
+            />
+          </div>
+        ),
       },
       {
-        id: "category",
-        accessorFn: (row) => localized(locale, row.nameEn, row.nameAr),
-        header: t("tableColCategory"),
-        cell: ({ row }) => {
-          const c = row.original;
-          return (
-            <div className="max-w-sm min-w-55">
-              <TextCell
-                value={localized(locale, c.nameEn, c.nameAr)}
-                weight="semibold"
-              />
-              <TextCell
-                value={localized(locale, c.descriptionEn, c.descriptionAr)}
-                tone="muted"
-                size="sm"
-              />
-            </div>
-          );
-        },
-      },
-      {
-        id: "category",
-        accessorFn: (row) => localized(locale, row.nameEn, row.nameAr),
-        header: t("tableColCategory"),
-        cell: ({ row }) => {
-          const c = row.original;
-          return (
-            <div className="max-w-sm min-w-55">
-              <TextCell
-                value={localized(locale, c.nameEn, c.nameAr)}
-                weight="semibold"
-              />
-              <TextCell
-                value={localized(locale, c.descriptionEn, c.descriptionAr)}
-                tone="muted"
-                size="sm"
-              />
-            </div>
-          );
-        },
-      },
-      {
-        id: "category",
-        accessorFn: (row) => localized(locale, row.nameEn, row.nameAr),
-        header: t("tableColCategory"),
-        cell: ({ row }) => {
-          const c = row.original;
-          return (
-            <div className="max-w-sm min-w-55">
-              <TextCell
-                value={localized(locale, c.nameEn, c.nameAr)}
-                weight="semibold"
-              />
-              <TextCell
-                value={localized(locale, c.descriptionEn, c.descriptionAr)}
-                tone="muted"
-                size="sm"
-              />
-            </div>
-          );
-        },
+        accessorKey: "nameEn",
+        sortable: true,
+        header: t("tableColCategoryEn"),
+        meta: { cellProps: { lang: "en", dir: "ltr" } },
+        cell: ({ row }) => (
+          <div className="max-w-sm min-w-55 flex items-start flex-col gap-y-1.5">
+            <TextCell value={row.original.nameEn} weight="semibold" />
+            <TextCell
+              value={row.original.descriptionEn}
+              tone="muted"
+              size="sm"
+            />
+          </div>
+        ),
       },
       {
         accessorKey: "isActive",
+        sortable: true,
         header: t("tableColStatus"),
         cell: ({ row }) => (
           <StatusBadgeCell
             value={
               row.original.isActive ? t("statusActive") : t("statusInactive")
             }
-            tone={row.original.isActive ? "success" : "neutral"}
+            tone={row.original.isActive ? "primary" : "danger"}
           />
         ),
       },
       {
         accessorKey: "createdAt",
+        sortable: true,
         header: t("tableColCreatedAt"),
-        cell: ({ row }) => (
-          <TextCell
-            value={format.dateTime(new Date(row.original.createdAt), {
-              dateStyle: "medium",
-            })}
-            className="whitespace-nowrap"
-          />
-        ),
+        cell: ({ row }) => <DateCell value={row.original.createdAt} />,
       },
     ];
 
@@ -156,6 +102,7 @@ const useColumns = ({
       ...columns,
       {
         id: "actions",
+        sortable: false,
         header: () => (
           <span className="block text-end">{t("tableColActions")}</span>
         ),
@@ -199,8 +146,6 @@ const useColumns = ({
     canDelete,
     canUpdate,
     canView,
-    format,
-    locale,
     onDelete,
     onEdit,
     onView,

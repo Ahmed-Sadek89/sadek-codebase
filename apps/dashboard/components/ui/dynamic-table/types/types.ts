@@ -13,7 +13,7 @@ export type DynamicTableColumnMeta = {
 
 /**
  * One column, written as a plain object: `{ accessorKey | accessorFn | id,
- * header, cell, meta? }`, plus `sticky` to pin it (e.g. actions at "end").
+ * header, cell, sortable, meta? }`, plus `sticky` to pin it (e.g. actions at "end").
  */
 export type DynamicColumnDef<
   TData extends RowData,
@@ -21,6 +21,11 @@ export type DynamicColumnDef<
 > = ColumnDef<DynamicTableFeatures, TData, TValue> & {
   /** Narrowed from TanStack's `string` so a misspelled key is a type error. */
   accessorKey?: DeepKeys<TData>;
+  /**
+   * Clicking the header sorts the shown rows by this column (asc, desc, off).
+   * Needs a value to sort by (`accessorKey` or `accessorFn`).
+   */
+  sortable: boolean;
   sticky?: StickySide;
 };
 
