@@ -1,5 +1,6 @@
 "use client";
 
+import type { ComponentProps } from "react";
 import { Link, usePathname } from "../../../../../../i18n/navigation";
 import { useTranslations } from "next-intl";
 import {
@@ -23,6 +24,24 @@ import { ChevronLeft, ChevronRight } from "@repo/ui/icons";
 import type { SidebarNavGroup } from "../utils/constants";
 import { isActivePath } from "../utils/is-active-path";
 
+type NavLinkProps = ComponentProps<typeof Link> & { isCurrent: boolean };
+
+/** A sidebar link that can't be clicked while it points at the current page. */
+function NavLink({ isCurrent, onClick, className, ...props }: NavLinkProps) {
+  return (
+    <Link
+      {...props}
+      aria-current={isCurrent ? "page" : undefined}
+      className={isCurrent ? `${className ?? ""} cursor-default` : className}
+      onClick={(event) => {
+        // Stays focusable (and keeps its tooltip) but never re-navigates.
+        if (isCurrent) event.preventDefault();
+        onClick?.(event);
+      }}
+    />
+  );
+}
+
 export function NavGroup({ group }: { group: SidebarNavGroup }) {
   const t = useTranslations();
   // Locale-free ("/dashboard/skills"), so it compares directly with the nav hrefs.
@@ -44,17 +63,22 @@ export function NavGroup({ group }: { group: SidebarNavGroup }) {
           const Icon = item.icon;
 
           if (!item.items?.length) {
+            const isCurrent = isActivePath(pathname, item.href);
             return (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
                   tooltip={t(item.titleKey)}
-                  isActive={isActivePath(pathname, item.href)}
+                  isActive={isCurrent}
                 >
-                  <Link href={item.href} onClick={handleNavigate}>
+                  <NavLink
+                    href={item.href}
+                    isCurrent={isCurrent}
+                    onClick={handleNavigate}
+                  >
                     <Icon />
                     <span>{t(item.titleKey)}</span>
-                  </Link>
+                  </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             );
@@ -84,18 +108,22 @@ export function NavGroup({ group }: { group: SidebarNavGroup }) {
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    {item.items.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.href}>
-                        <SidebarMenuSubButton
-                          asChild
-                          isActive={isActivePath(pathname, subItem.href)}
-                        >
-                          <Link href={subItem.href} onClick={handleNavigate}>
-                            <span>{t(subItem.titleKey)}</span>
-                          </Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
+                    {item.items.map((subItem) => {
+                      const isCurrent = isActivePath(pathname, subItem.href);
+                      return (
+                        <SidebarMenuSubItem key={subItem.href}>
+                          <SidebarMenuSubButton asChild isActive={isCurrent}>
+                            <NavLink
+                              href={subItem.href}
+                              isCurrent={isCurrent}
+                              onClick={handleNavigate}
+                            >
+                              <span>{t(subItem.titleKey)}</span>
+                            </NavLink>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      );
+                    })}
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>
