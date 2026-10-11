@@ -94,6 +94,7 @@ export class SkillsService {
       limit: query.limit,
       relations: skillRelations,
       select: skillSelect,
+      order: query.order,
     });
   }
 

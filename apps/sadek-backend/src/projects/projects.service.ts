@@ -5,6 +5,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
 import { CategoryProjectsService } from '../category-projects/category-projects.service';
+import { PAGINATION, type SortOrder } from '../common/pagination.constants';
 
 @Injectable()
 export class ProjectsService {
@@ -29,7 +30,10 @@ export class ProjectsService {
     return this.projectRepository.save(project);
   }
 
-  async findAll(userId: number): Promise<Project[]> {
+  async findAll(
+    userId: number,
+    order: SortOrder = PAGINATION.DEFAULT_ORDER,
+  ): Promise<Project[]> {
     return this.projectRepository.find({
       where: {
         user: { id: userId }
@@ -48,7 +52,7 @@ export class ProjectsService {
           nameEn: true
         }
       },
-      order: { createdAt: 'DESC' },
+      order: { createdAt: order },
     });
   }
 

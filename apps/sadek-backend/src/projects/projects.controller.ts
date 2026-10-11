@@ -26,7 +26,7 @@ export class ProjectsController {
     @Query() filterProjectsDto: FilterProjectDto,
     @Request() req: RequestUserDto
   ) {
-    return await this.projectsService.findAll(req.user.userId);
+    return await this.projectsService.findAll(req.user.userId, filterProjectsDto.order);
   }
 
   @UseGuards(JwtAuthGuard)

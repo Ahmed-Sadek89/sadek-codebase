@@ -59,6 +59,7 @@ export class UserService {
       where,
       page: query.page,
       limit: query.limit,
+      order: query.order,
     });
   }
 
