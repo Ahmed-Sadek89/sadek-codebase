@@ -1,3 +1,4 @@
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query, UseGuards, Request } from '@nestjs/common';
 import { CategorySkillsService } from './category_skills.service';
 import { CreateCategorySkillDto } from './dto/create-category_skill.dto';
@@ -6,11 +7,13 @@ import { FilterCategorySkillDto } from './dto/filter-category_skills.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth/jwt-auth.guard';
 import { RequestUserDto } from '../auth/dto/request-user.dto';
 
+@ApiTags('Category Skills')
 @Controller('category-skills')
 export class CategorySkillsController {
   constructor(private readonly categorySkillsService: CategorySkillsService) { }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Post()
   async create(
     @Body() createCategorySkillDto: CreateCategorySkillDto,
@@ -20,6 +23,7 @@ export class CategorySkillsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get("private")
   async findAll(
     @Query() filterCategorySkillDto: FilterCategorySkillDto,
@@ -30,6 +34,7 @@ export class CategorySkillsController {
 
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const categorySkill = await this.categorySkillsService.findOne(+id);
@@ -40,6 +45,7 @@ export class CategorySkillsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateCategorySkillDto: UpdateCategorySkillDto) {
     await this.categorySkillsService.update(+id, updateCategorySkillDto);
@@ -49,6 +55,7 @@ export class CategorySkillsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   async remove(@Param('id') id: string) {
     await this.categorySkillsService.remove(+id);

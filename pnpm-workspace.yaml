@@ -3,6 +3,14 @@ packages:
   - "packages/*"
 allowBuilds:
   '@parcel/watcher': true
+  '@scarf/scarf': false
   '@swc/core': false
   bcrypt: true
   unrs-resolver: true
+# @nestjs/swagger's CLI plugin requires `typescript` without declaring it, so it
+# would pick up the root TypeScript 7 (no compiler API). Declaring the peer makes
+# pnpm link the backend's own TypeScript 5 instead.
+packageExtensions:
+  '@nestjs/swagger':
+    peerDependencies:
+      typescript: '*'

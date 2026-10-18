@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import type { INestApplication } from '@nestjs/common';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { AppModule } from './app.module';
+import { setupSwagger } from '../lib/SwaggerConfig';
 
 export async function createApp(): Promise<INestApplication> {
   const app = await NestFactory.create(AppModule);
@@ -25,6 +26,7 @@ export async function createApp(): Promise<INestApplication> {
       },
     }),
   );
+  setupSwagger(app);
   return app;
 }
 

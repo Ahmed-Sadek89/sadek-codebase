@@ -1,3 +1,4 @@
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Query, ParseIntPipe } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -6,11 +7,13 @@ import { JwtAuthGuard } from '../auth/guard/jwt-auth/jwt-auth.guard';
 import { RequestUserDto } from '../auth/dto/request-user.dto';
 import { FilterProjectDto } from './dto/filter-projects.dto';
 
+@ApiTags('Projects')
 @Controller('projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) { }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Post()
   async create(
     @Body() createProjectDto: CreateProjectDto,
@@ -21,6 +24,7 @@ export class ProjectsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get()
   async findAll(
     @Query() filterProjectsDto: FilterProjectDto,
@@ -30,12 +34,14 @@ export class ProjectsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number, @Request() req: RequestUserDto) {
     return await this.projectsService.findOne(id, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -49,6 +55,7 @@ export class ProjectsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number, @Request() req: RequestUserDto) {
     await this.projectsService.remove(id, req.user.userId);
