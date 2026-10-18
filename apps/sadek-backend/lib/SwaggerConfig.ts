@@ -9,15 +9,18 @@ export function setupSwagger(app: INestApplication): void {
     (process.env.SWAGGER_ENABLED !== 'false' && process.env.NODE_ENV !== 'production');
   if (!enabled) return;
 
-  const document = SwaggerModule.createDocument(
-    app,
-    new DocumentBuilder()
-      .setTitle('Sadek Portfolio API')
-      .setDescription('Backend API for the Sadek portfolio dashboard')
-      .setVersion('1.0')
-      .addBearerAuth()
-      .build(),
-  );
+  const builder = new DocumentBuilder()
+    .setTitle('Sadek Portfolio API')
+    .setDescription('Backend API for the Sadek portfolio dashboard')
+    .setVersion('1.0')
+    .addBearerAuth()
+    // Listed servers become selectable base URLs in Swagger UI and Apidog.
+    .addServer(`http://localhost:${process.env.PORT ?? 4000}`, 'Local');
+  if (process.env.PRODUCTION_API_URL) {
+    builder.addServer(process.env.PRODUCTION_API_URL, 'Production');
+  }
+
+  const document = SwaggerModule.createDocument(app, builder.build());
   SwaggerModule.setup('api-docs', app, document, {
     jsonDocumentUrl: 'openapi.json',
     swaggerOptions: { persistAuthorization: true },
