@@ -3,7 +3,8 @@ import { CategoryProject } from "../../category-projects/entities/category-proje
 import { CategorySkill } from "../../category_skills/entities/category_skill.entity";
 import { Project } from "../../projects/entities/project.entity";
 import { Skill } from "../../skills/entities/skill.entity";
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { UserInfo } from "../../user-info/entities/user-info.entity";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("users")
 export class User {
@@ -99,4 +100,10 @@ export class User {
         (project) => project.user
     )
     projects!: Project[];
+
+    @OneToOne(
+        () => UserInfo,
+        (userInfo) => userInfo.user
+    )
+    userInfo!: UserInfo;
 }

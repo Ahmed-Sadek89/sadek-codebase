@@ -25,7 +25,8 @@
     "seed:category-skills": "ts-node -r tsconfig-paths/register ./src/database/seed.ts category-skills",
     "seed:category-projects": "ts-node -r tsconfig-paths/register ./src/database/seed.ts category-projects",
     "seed:skills": "ts-node -r tsconfig-paths/register ./src/database/seed.ts skills",
-    "seed:projects": "ts-node -r tsconfig-paths/register ./src/database/seed.ts projects"
+    "seed:projects": "ts-node -r tsconfig-paths/register ./src/database/seed.ts projects",
+    "seed:user-info": "ts-node -r tsconfig-paths/register ./src/database/seed.ts user-info"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
