@@ -10,6 +10,7 @@ import { CategorySkillsModule } from './category_skills/category_skills.module';
 import { SkillsModule } from './skills/skills.module';
 import { ProjectsModule } from './projects/projects.module';
 import { CategoryProjectsModule } from './category-projects/category-projects.module';
+import { UserInfoModule } from './user-info/user-info.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { CategoryProjectsModule } from './category-projects/category-projects.mo
     CategorySkillsModule,
     SkillsModule,
     ProjectsModule,
-    CategoryProjectsModule
+    CategoryProjectsModule,
+    UserInfoModule
   ],
   controllers: [AppController],
   providers: [AppService],
