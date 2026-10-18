@@ -1,5 +1,5 @@
 import { User } from '../../user/entities/user.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, CreateDateColumn } from 'typeorm';
 
 @Entity('user_info')
 export class UserInfo {
@@ -38,7 +38,13 @@ export class UserInfo {
 
     @Column({ type: 'varchar', length: 255, nullable: true })
     cv!: string;
-
+    
+    @CreateDateColumn({
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+        nullable: false,
+    })
+    createdAt!: Date;
     // Owning side: adds a unique `userId` FK, so each user has at most one row.
     @OneToOne(
         () => User,

@@ -1,5 +1,5 @@
 import type { INestApplication } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 
 // Serves Swagger UI at /api-docs and the OpenAPI spec at /openapi.json (imported by Apidog).
 // Off in production unless SWAGGER_ENABLED=true, so the API shape is not public by default.
@@ -21,8 +21,25 @@ export function setupSwagger(app: INestApplication): void {
   }
 
   const document = SwaggerModule.createDocument(app, builder.build());
+  nameOperationsByMethod(document);
   SwaggerModule.setup('api-docs', app, document, {
     jsonDocumentUrl: 'openapi.json',
     swaggerOptions: { persistAuthorization: true },
   });
 }
+
+// Apidog names an endpoint by its summary, else its operationId ("AuthController_login").
+// Default the summary to the handler name ("login"); the tag already gives the controller.
+// operationId stays as-is because it must be unique across the spec.
+function nameOperationsByMethod(document: OpenAPIObject): void {
+  for (const pathItem of Object.values(document.paths)) {
+    for (const method of HTTP_METHODS) {
+      const operation = pathItem[method];
+      if (operation?.operationId && !operation.summary) {
+        operation.summary = operation.operationId.split('_').pop();
+      }
+    }
+  }
+}
+
+const HTTP_METHODS = ['get', 'post', 'put', 'patch', 'delete', 'options', 'head', 'trace'] as const;
