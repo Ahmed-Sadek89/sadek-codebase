@@ -11,6 +11,7 @@ import { SkillsModule } from './skills/skills.module';
 import { ProjectsModule } from './projects/projects.module';
 import { CategoryProjectsModule } from './category-projects/category-projects.module';
 import { UserInfoModule } from './user-info/user-info.module';
+import { UserCompanyModule } from './user-company/user-company.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { UserInfoModule } from './user-info/user-info.module';
     SkillsModule,
     ProjectsModule,
     CategoryProjectsModule,
-    UserInfoModule
+    UserInfoModule,
+    UserCompanyModule
   ],
   controllers: [AppController],
   providers: [AppService],

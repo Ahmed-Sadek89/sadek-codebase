@@ -4,6 +4,7 @@ import { CategorySkill } from "../../category_skills/entities/category_skill.ent
 import { Project } from "../../projects/entities/project.entity";
 import { Skill } from "../../skills/entities/skill.entity";
 import { UserInfo } from "../../user-info/entities/user-info.entity";
+import { UserCompany } from "../../user-company/entities/user-company.entity";
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("users")
@@ -106,4 +107,10 @@ export class User {
         (userInfo) => userInfo.user
     )
     userInfo!: UserInfo;
+
+    @OneToMany(
+        () => UserCompany,
+        (userCompany) => userCompany.user
+    )
+    userCompanies!: UserCompany[];
 }

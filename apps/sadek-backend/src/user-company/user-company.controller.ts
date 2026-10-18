@@ -1,0 +1,70 @@
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, Query, ParseIntPipe } from '@nestjs/common';
+import { UserCompanyService } from './user-company.service';
+import { CreateUserCompanyDto } from './dto/create-user-company.dto';
+import { UpdateUserCompanyDto } from './dto/update-user-company.dto';
+import { RequestUserDto } from '../auth/dto/request-user.dto';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth/jwt-auth.guard';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+
+@ApiTags('User Company')
+@Controller('user-company')
+export class UserCompanyController {
+  constructor(private readonly userCompanyService: UserCompanyService) { }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Post()
+  async create(
+    @Body() createUserCompanyDto: CreateUserCompanyDto,
+    @Request() req: RequestUserDto,
+  ) {
+    return await this.userCompanyService.create(createUserCompanyDto, req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get()
+  async findAll(@Query() query: PaginationQueryDto, @Request() req: RequestUserDto) {
+    return await this.userCompanyService.findAll(query, req.user.userId);
+  }
+
+  // Declared before ':id' so "me" is not parsed as an id.
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get('me')
+  async findMine(@Request() req: RequestUserDto) {
+    return await this.userCompanyService.findByUser(req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number, @Request() req: RequestUserDto) {
+    return await this.userCompanyService.findOne(id, req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Patch(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserCompanyDto: UpdateUserCompanyDto,
+    @Request() req: RequestUserDto,
+  ) {
+    await this.userCompanyService.update(id, updateUserCompanyDto, req.user.userId);
+    return {
+      message: 'User company updated successfully',
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Delete(':id')
+  async remove(@Param('id', ParseIntPipe) id: number, @Request() req: RequestUserDto) {
+    await this.userCompanyService.remove(id, req.user.userId);
+    return {
+      message: 'User company deleted successfully',
+    };
+  }
+}
