@@ -14,23 +14,11 @@ export class User {
 
     @Column({
         type: "varchar",
-        nullable: true,
+        nullable: false,
+        unique: true,
         length: 50
     })
-    firstName!: string;
-
-    @Column({
-        type: "varchar",
-        nullable: true,
-        length: 50
-    })
-    lastName!: string
-
-    @Column({
-        type: "int",
-        nullable: true,
-    })
-    age!: number
+    username!: string;
 
     @Column({
         type: "varchar",
@@ -54,6 +42,13 @@ export class User {
         nullable: true,
     })
     avatarUrl!: string
+
+    @Column({
+        type: "varchar",
+        length: 255,
+        nullable: true,
+    })
+    coverPhotoUrl!: string
 
     @Column({
         type: "timestamp",

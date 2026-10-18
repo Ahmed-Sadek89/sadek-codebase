@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 
 export class FilterUserDto extends PaginationQueryDto {
@@ -13,13 +13,5 @@ export class FilterUserDto extends PaginationQueryDto {
     @IsString()
     @IsOptional()
     avatarUrl!: string;
-
-    @IsInt()
-    @IsOptional()
-    minAge!: number;
-
-    @IsInt()
-    @IsOptional()
-    maxAge!: number;
 
 }

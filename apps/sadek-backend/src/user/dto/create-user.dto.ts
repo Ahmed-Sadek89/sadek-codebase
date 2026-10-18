@@ -1,36 +1,16 @@
-import { IsEmail, IsInt, IsOptional, IsString, IsUrl, Matches, Max, MaxLength, Min, MinLength, validate } from 'class-validator';
+import { IsEmail, IsOptional, IsString, IsUrl, Matches, MaxLength, MinLength, validate } from 'class-validator';
 import { IsEqualTo } from '../../../lib/validations/is-equal.validate';
 export class CreateUserDto {
-    @IsString()
-    @IsOptional()
+    @IsString({
+        message: 'Username is required',
+    })
     @MinLength(3, {
-        message: 'First name must be at least 3 characters long',
+        message: 'Username must be at least 3 characters long',
     })
-    @MaxLength(20, {
-        message: 'First name must be at most 20 characters long',
+    @MaxLength(50, {
+        message: 'Username must be at most 50 characters long',
     })
-    firstName!: string;
-
-    @IsString()
-    @IsOptional()
-    @MinLength(3, {
-        message: 'Last name must be at least 3 characters long',
-    })
-    @MaxLength(20, {
-        message: 'Last name must be at most 20 characters long',
-    })
-    lastName!: string;
-
-    @IsInt({
-        message: 'Age must be an integer',
-    })
-    @Min(0, {
-        message: 'Age must be at least 0',
-    })
-    @Max(150, {
-        message: 'Age must be at most 150',
-    })
-    age!: number
+    username!: string;
 
     @IsEmail()
     email!: string;
@@ -63,11 +43,20 @@ export class CreateUserDto {
         require_valid_protocol: true,
     })
     avatarUrl!: string;
+
+    @IsString()
+    @IsOptional()
+    @IsUrl({
+        protocols: ['http', 'https'],
+        require_tld: true,
+        require_protocol: true,
+        require_valid_protocol: true,
+    })
+    coverPhotoUrl!: string;
 }
 
 // let user = new CreateUserDto();
-// user.firstName = 'John';
-// user.lastName = 'Doe';
+// user.username = 'johndoe';
 // user.email = 'test@test.com';
 // user.password = 'Ahmed@01212758221';
 // user.confirmPassword = 'Ahmed@01212758221';

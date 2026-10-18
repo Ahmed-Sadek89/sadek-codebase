@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Between, FindOptionsWhere, ILike, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { FilterUserDto } from './dto/filter-user.dto';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from "bcrypt";
@@ -38,18 +38,9 @@ export class UserService {
       filters.avatarUrl = query.avatarUrl;
     }
 
-    if (query.minAge !== undefined && query.maxAge !== undefined) {
-      filters.age = Between(query.minAge, query.maxAge);
-    } else if (query.minAge !== undefined) {
-      filters.age = MoreThanOrEqual(query.minAge);
-    } else if (query.maxAge !== undefined) {
-      filters.age = LessThanOrEqual(query.maxAge);
-    }
-
     const where: FindOptionsWhere<User> | FindOptionsWhere<User>[] = query.search
       ? [
-        { ...filters, firstName: ILike(`%${query.search}%`) },
-        { ...filters, lastName: ILike(`%${query.search}%`) },
+        { ...filters, username: ILike(`%${query.search}%`) },
         { ...filters, email: ILike(`%${query.search}%`) },
       ]
       : filters;
