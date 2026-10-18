@@ -1,5 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+import { syncToApidog } from './ApidogSync';
 
 // Serves Swagger UI at /api-docs and the OpenAPI spec at /openapi.json (imported by Apidog).
 // Off in production unless SWAGGER_ENABLED=true, so the API shape is not public by default.
@@ -22,6 +23,7 @@ export function setupSwagger(app: INestApplication): void {
 
   const document = SwaggerModule.createDocument(app, builder.build());
   nameOperationsByMethod(document);
+  syncToApidog(document);
   SwaggerModule.setup('api-docs', app, document, {
     jsonDocumentUrl: 'openapi.json',
     swaggerOptions: { persistAuthorization: true },
