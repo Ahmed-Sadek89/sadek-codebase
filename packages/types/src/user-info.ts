@@ -8,11 +8,15 @@ import type {
 /** GET /user-info/:id and GET /user-info/me: the row without its owner. */
 export interface UserInfoDetails {
   id: number;
-  /** Max 100 characters. */
-  headTitle: string;
-  /** Max 255 characters. */
-  shortDescription: string;
-  description: string;
+  /** Max 100 characters each. */
+  headTitle_en: string;
+  /** `null` until the Arabic text is added. */
+  headTitle_ar: string | null;
+  /** Max 255 characters each. */
+  shortDescription_en: string;
+  shortDescription_ar: string | null;
+  description_en: string;
+  description_ar: string | null;
   yearsOfExp: number;
   companies: number;
   projectNumbers: number;
@@ -31,11 +35,14 @@ export interface UserInfo extends UserInfoDetails {
 
 /** POST /user-info: creates the signed-in user's single row. */
 export interface CreateUserInfoRequest {
-  /** Max 100 characters. */
-  headTitle: string;
-  /** Max 255 characters. */
-  shortDescription: string;
-  description: string;
+  /** Max 100 characters each. English is required, Arabic optional. */
+  headTitle_en: string;
+  headTitle_ar?: string;
+  /** Max 255 characters each. */
+  shortDescription_en: string;
+  shortDescription_ar?: string;
+  description_en: string;
+  description_ar?: string;
   /** Integers, 0 or more. */
   yearsOfExp: number;
   companies: number;
@@ -49,16 +56,23 @@ export interface CreateUserInfoRequest {
   cv?: string;
 }
 
-/** The saved row; optional fields are omitted when not sent. */
-export type CreateUserInfoResponse = Omit<
-  UserInfo,
-  "gmail" | "linkedin" | "github" | "cv"
-> & {
-  gmail?: string | null;
-  linkedin?: string | null;
-  github?: string | null;
-  cv?: string | null;
+/** Optional fields: omitted from a create response when not sent, cleared with `null` on update. */
+type OptionalUserInfoField =
+  | "headTitle_ar"
+  | "shortDescription_ar"
+  | "description_ar"
+  | "gmail"
+  | "linkedin"
+  | "github"
+  | "cv";
+
+type OptionalUserInfoFields = {
+  [Field in OptionalUserInfoField]?: string | null;
 };
+
+/** The saved row; optional fields are omitted when not sent. */
+export type CreateUserInfoResponse = Omit<UserInfo, OptionalUserInfoField> &
+  OptionalUserInfoFields;
 
 /** GET /user-info; `order` sorts by `createdAt` (default DESC). */
 export type UserInfoQuery = PaginationQuery;
@@ -71,16 +85,12 @@ export type MyUserInfoResponse = UserInfoDetails;
 
 /**
  * PATCH /user-info/:id: any subset of the create fields. `null` clears an
- * optional contact field (omitting it keeps the current one).
+ * optional field, e.g. an Arabic text or a link (omitting it keeps the current one).
  */
 export type UpdateUserInfoRequest = Partial<
-  Omit<CreateUserInfoRequest, "gmail" | "linkedin" | "github" | "cv">
-> & {
-  gmail?: string | null;
-  linkedin?: string | null;
-  github?: string | null;
-  cv?: string | null;
-};
+  Omit<CreateUserInfoRequest, OptionalUserInfoField>
+> &
+  OptionalUserInfoFields;
 
 export type UpdateUserInfoResponse = MessageResponse;
 
