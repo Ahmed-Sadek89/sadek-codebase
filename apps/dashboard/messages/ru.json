@@ -65,6 +65,10 @@
   "navCategories": "Категории",
   "navProjects": "Проекты",
   "navAllProjects": "Все проекты",
+  "navUser": "Пользователь",
+  "navUserInfo": "Информация",
+  "navUserCompanies": "Компании",
+  "navWhatCanIDo": "Что я умею",
   "navAccount": "Аккаунт",
   "navProfile": "Профиль",
   "navTest": "Тест",
@@ -283,5 +287,14 @@
   "projectDeleted": "Проект успешно удалён",
   "projectDetailsTitle": "Сведения о проекте",
   "projectDetailsDescription": "Всё, что сохранено для этого проекта.",
-  "dialogClose": "Закрыть"
+  "dialogClose": "Закрыть",
+  "metaUserInfoTitle": "Информация о пользователе | Sadek Dashboard",
+  "metaUserInfoDescription": "Управляйте личной информацией в вашем портфолио.",
+  "userInfoTitle": "Информация о пользователе",
+  "metaUserCompaniesTitle": "Компании | Sadek Dashboard",
+  "metaUserCompaniesDescription": "Управляйте компаниями, в которых вы работали.",
+  "userCompaniesTitle": "Компании",
+  "metaWhatCanIDoTitle": "Что я умею | Sadek Dashboard",
+  "metaWhatCanIDoDescription": "Управляйте услугами и навыками, которые вы предлагаете.",
+  "whatCanIDoTitle": "Что я умею"
 }

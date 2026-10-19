@@ -65,6 +65,10 @@
   "navCategories": "Kategorien",
   "navProjects": "Projekte",
   "navAllProjects": "Alle Projekte",
+  "navUser": "Benutzer",
+  "navUserInfo": "Info",
+  "navUserCompanies": "Unternehmen",
+  "navWhatCanIDo": "Was ich kann",
   "navAccount": "Konto",
   "navProfile": "Profil",
   "navTest": "Test",
@@ -283,5 +287,14 @@
   "projectDeleted": "Projekt erfolgreich gelöscht",
   "projectDetailsTitle": "Projektdetails",
   "projectDetailsDescription": "Alles, was für dieses Projekt gespeichert ist.",
-  "dialogClose": "Schließen"
+  "dialogClose": "Schließen",
+  "metaUserInfoTitle": "Benutzerinfo | Sadek Dashboard",
+  "metaUserInfoDescription": "Verwalte die persönlichen Angaben in deinem Portfolio.",
+  "userInfoTitle": "Benutzerinfo",
+  "metaUserCompaniesTitle": "Unternehmen | Sadek Dashboard",
+  "metaUserCompaniesDescription": "Verwalte die Unternehmen, bei denen du gearbeitet hast.",
+  "userCompaniesTitle": "Unternehmen",
+  "metaWhatCanIDoTitle": "Was ich kann | Sadek Dashboard",
+  "metaWhatCanIDoDescription": "Verwalte die Leistungen und Fähigkeiten, die du anbietest.",
+  "whatCanIDoTitle": "Was ich kann"
 }

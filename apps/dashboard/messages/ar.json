@@ -65,6 +65,10 @@
   "navCategories": "التصنيفات",
   "navProjects": "المشاريع",
   "navAllProjects": "كل المشاريع",
+  "navUser": "المستخدم",
+  "navUserInfo": "المعلومات",
+  "navUserCompanies": "الشركات",
+  "navWhatCanIDo": "ماذا أستطيع أن أفعل",
   "navAccount": "الحساب",
   "navProfile": "الملف الشخصي",
   "navTest": "اختبار",
@@ -283,5 +287,14 @@
   "projectDeleted": "تم حذف المشروع بنجاح",
   "projectDetailsTitle": "تفاصيل المشروع",
   "projectDetailsDescription": "كل ما تم حفظه لهذا المشروع.",
-  "dialogClose": "إغلاق"
+  "dialogClose": "إغلاق",
+  "metaUserInfoTitle": "معلومات المستخدم | لوحة صادق",
+  "metaUserInfoDescription": "إدارة المعلومات الشخصية المعروضة في معرض أعمالك.",
+  "userInfoTitle": "معلومات المستخدم",
+  "metaUserCompaniesTitle": "الشركات | لوحة صادق",
+  "metaUserCompaniesDescription": "إدارة الشركات التي عملت بها.",
+  "userCompaniesTitle": "الشركات",
+  "metaWhatCanIDoTitle": "ماذا أستطيع أن أفعل | لوحة صادق",
+  "metaWhatCanIDoDescription": "إدارة الخدمات والمهارات التي تقدمها.",
+  "whatCanIDoTitle": "ماذا أستطيع أن أفعل"
 }

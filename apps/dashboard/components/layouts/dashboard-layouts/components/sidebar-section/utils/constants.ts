@@ -1,5 +1,6 @@
 import {
   FolderKanban,
+  IdCard,
   LayoutDashboard,
   Sparkles,
   UserRound,
@@ -32,6 +33,16 @@ export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
     labelKey: "navPortfolio",
     items: [
       {
+        titleKey: "navUser",
+        href: "/dashboard/user",
+        icon: IdCard,
+        items: [
+          { titleKey: "navUserInfo", href: "/dashboard/user/info" },
+          { titleKey: "navUserCompanies", href: "/dashboard/user/companies" },
+          { titleKey: "navWhatCanIDo", href: "/dashboard/user/what-can-i-do" },
+        ],
+      },
+      {
         titleKey: "navSkills",
         href: "/dashboard/skills",
         icon: Sparkles,
@@ -48,7 +59,8 @@ export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
           { titleKey: "navAllProjects", href: "/dashboard/projects" },
           { titleKey: "navCategories", href: "/dashboard/projects/category" },
         ],
-      }
+      },
+      
 
     ],
   },
