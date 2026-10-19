@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { WhatCanDo } from './entities/what-can-do.entity';
 import { CreateWhatCanDoDto } from './dto/create-what-can-do.dto';
 import { UpdateWhatCanDoDto } from './dto/update-what-can-do.dto';
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { FilterWhatCanDoDto } from './dto/filter-what-can-do.dto';
 import { paginate } from '../common/pagination';
 
 @Injectable()
@@ -22,10 +22,10 @@ export class WhatCanDoService {
     return await this.whatCanDoRepository.save(whatCanDo);
   }
 
-  async findAll(query: PaginationQueryDto, userId: number) {
+  async findAll(query: FilterWhatCanDoDto, userId: number) {
     return await paginate({
       repository: this.whatCanDoRepository,
-      where: { user: { id: userId } },
+      where: this.ownedWhere(userId, query.search),
       page: query.page,
       limit: query.limit,
       relations: { user: true },
@@ -36,11 +36,14 @@ export class WhatCanDoService {
     });
   }
 
-  /** Every item of the user, in display order (lowest rank first). */
-  async findByUser(userId: number): Promise<WhatCanDo[]> {
-    return await this.whatCanDoRepository.find({
-      where: { user: { id: userId } },
-      order: { rank: 'ASC', id: 'ASC' },
+  /** The user's items, paginated by `rank`: lowest rank first unless `order` is DESC. */
+  async findByUser(query: FilterWhatCanDoDto, userId: number) {
+    return await paginate({
+      repository: this.whatCanDoRepository,
+      where: this.ownedWhere(userId, query.search),
+      page: query.page,
+      limit: query.limit,
+      order: query.order,
     });
   }
 
@@ -63,5 +66,17 @@ export class WhatCanDoService {
   async remove(id: number, userId: number): Promise<void> {
     const whatCanDo = await this.findOne(id, userId);
     await this.whatCanDoRepository.remove(whatCanDo);
+  }
+
+  /** The user's rows, optionally narrowed by `search` on title, shortDescription or description. */
+  private ownedWhere(userId: number, search?: string): FindOptionsWhere<WhatCanDo> | FindOptionsWhere<WhatCanDo>[] {
+    const owner: FindOptionsWhere<WhatCanDo> = { user: { id: userId } };
+    search = search?.trim();
+    if (!search) return owner;
+    return [
+      { ...owner, title: ILike(`%${search}%`) },
+      { ...owner, shortDescription: ILike(`%${search}%`) },
+      { ...owner, description: ILike(`%${search}%`) },
+    ];
   }
 }

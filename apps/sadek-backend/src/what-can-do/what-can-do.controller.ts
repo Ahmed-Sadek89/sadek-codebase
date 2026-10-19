@@ -5,7 +5,7 @@ import { CreateWhatCanDoDto } from './dto/create-what-can-do.dto';
 import { UpdateWhatCanDoDto } from './dto/update-what-can-do.dto';
 import { RequestUserDto } from '../auth/dto/request-user.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth/jwt-auth.guard';
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { FilterWhatCanDoDto } from './dto/filter-what-can-do.dto';
 
 @ApiTags('What Can Do')
 @Controller('what-can-do')
@@ -25,7 +25,7 @@ export class WhatCanDoController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get()
-  async findAll(@Query() query: PaginationQueryDto, @Request() req: RequestUserDto) {
+  async findAll(@Query() query: FilterWhatCanDoDto, @Request() req: RequestUserDto) {
     return await this.whatCanDoService.findAll(query, req.user.userId);
   }
 
@@ -33,8 +33,8 @@ export class WhatCanDoController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get('me')
-  async findMine(@Request() req: RequestUserDto) {
-    return await this.whatCanDoService.findByUser(req.user.userId);
+  async findMine(@Query() query: FilterWhatCanDoDto, @Request() req: RequestUserDto) {
+    return await this.whatCanDoService.findByUser(query, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)

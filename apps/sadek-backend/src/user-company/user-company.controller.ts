@@ -5,7 +5,7 @@ import { CreateUserCompanyDto } from './dto/create-user-company.dto';
 import { UpdateUserCompanyDto } from './dto/update-user-company.dto';
 import { RequestUserDto } from '../auth/dto/request-user.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth/jwt-auth.guard';
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { FilterUserCompanyDto } from './dto/filter-user-company.dto';
 
 @ApiTags('User Company')
 @Controller('user-company')
@@ -25,7 +25,7 @@ export class UserCompanyController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get()
-  async findAll(@Query() query: PaginationQueryDto, @Request() req: RequestUserDto) {
+  async findAll(@Query() query: FilterUserCompanyDto, @Request() req: RequestUserDto) {
     return await this.userCompanyService.findAll(query, req.user.userId);
   }
 
@@ -33,8 +33,8 @@ export class UserCompanyController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get('me')
-  async findMine(@Request() req: RequestUserDto) {
-    return await this.userCompanyService.findByUser(req.user.userId);
+  async findMine(@Query() query: FilterUserCompanyDto, @Request() req: RequestUserDto) {
+    return await this.userCompanyService.findByUser(query, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { UserCompany } from './entities/user-company.entity';
 import { CreateUserCompanyDto } from './dto/create-user-company.dto';
 import { UpdateUserCompanyDto } from './dto/update-user-company.dto';
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { FilterUserCompanyDto } from './dto/filter-user-company.dto';
 import { paginate } from '../common/pagination';
 
 @Injectable()
@@ -24,10 +24,10 @@ export class UserCompanyService {
     return await this.userCompanyRepository.save(userCompany);
   }
 
-  async findAll(query: PaginationQueryDto, userId: number) {
+  async findAll(query: FilterUserCompanyDto, userId: number) {
     return await paginate({
       repository: this.userCompanyRepository,
-      where: { user: { id: userId } },
+      where: this.ownedWhere(userId, query.search),
       page: query.page,
       limit: query.limit,
       relations: { user: true },
@@ -38,11 +38,14 @@ export class UserCompanyService {
     });
   }
 
-  /** Every company of the user, latest job first (for the portfolio timeline). */
-  async findByUser(userId: number): Promise<UserCompany[]> {
-    return await this.userCompanyRepository.find({
-      where: { user: { id: userId } },
-      order: { startWorkFrom: 'DESC' },
+  /** The user's companies, paginated by `startWorkFrom`: latest job first unless `order` is ASC. */
+  async findByUser(query: FilterUserCompanyDto, userId: number) {
+    return await paginate({
+      repository: this.userCompanyRepository,
+      where: this.ownedWhere(userId, query.search),
+      page: query.page,
+      limit: query.limit,
+      order: query.order
     });
   }
 
@@ -66,6 +69,17 @@ export class UserCompanyService {
   async remove(id: number, userId: number): Promise<void> {
     const userCompany = await this.findOne(id, userId);
     await this.userCompanyRepository.remove(userCompany);
+  }
+
+  /** The user's rows, optionally narrowed by `search` on name or description. */
+  private ownedWhere(userId: number, search?: string): FindOptionsWhere<UserCompany> | FindOptionsWhere<UserCompany>[] {
+    const owner: FindOptionsWhere<UserCompany> = { user: { id: userId } };
+    search = search?.trim();
+    if (!search) return owner;
+    return [
+      { ...owner, name: ILike(`%${search}%`) },
+      { ...owner, description: ILike(`%${search}%`) },
+    ];
   }
 }
 
