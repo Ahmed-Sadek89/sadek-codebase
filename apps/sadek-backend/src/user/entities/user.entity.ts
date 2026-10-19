@@ -5,6 +5,7 @@ import { Project } from "../../projects/entities/project.entity";
 import { Skill } from "../../skills/entities/skill.entity";
 import { UserInfo } from "../../user-info/entities/user-info.entity";
 import { UserCompany } from "../../user-company/entities/user-company.entity";
+import { WhatCanDo } from "../../what-can-do/entities/what-can-do.entity";
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("users")
@@ -113,4 +114,10 @@ export class User {
         (userCompany) => userCompany.user
     )
     userCompanies!: UserCompany[];
+
+    @OneToMany(
+        () => WhatCanDo,
+        (whatCanDo) => whatCanDo.user
+    )
+    whatCanDos!: WhatCanDo[];
 }

@@ -12,6 +12,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { CategoryProjectsModule } from './category-projects/category-projects.module';
 import { UserInfoModule } from './user-info/user-info.module';
 import { UserCompanyModule } from './user-company/user-company.module';
+import { WhatCanDoModule } from './what-can-do/what-can-do.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { UserCompanyModule } from './user-company/user-company.module';
     ProjectsModule,
     CategoryProjectsModule,
     UserInfoModule,
-    UserCompanyModule
+    UserCompanyModule,
+    WhatCanDoModule
   ],
   controllers: [AppController],
   providers: [AppService],
