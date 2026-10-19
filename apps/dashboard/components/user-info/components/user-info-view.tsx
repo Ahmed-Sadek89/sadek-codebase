@@ -65,7 +65,7 @@ export function UserInfoView({ userInfo }: UserInfoViewProps) {
           <CardContent>
             <p
               dir="auto"
-              className="leading-relaxed break-words whitespace-pre-line"
+            // className="leading-relaxed break-words whitespace-pre-line"
             >
               {text(userInfo.description_en, userInfo.description_ar)}
             </p>
@@ -77,7 +77,9 @@ export function UserInfoView({ userInfo }: UserInfoViewProps) {
             <CardTitle>{t("userInfoSectionLinks")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="divide-y divide-border">
+            <ul
+            // className="divide-y divide-border"
+            >
               {USER_INFO_LINKS.map(({ field, labelKey, icon, href }) => {
                 const value = userInfo[field];
                 return (

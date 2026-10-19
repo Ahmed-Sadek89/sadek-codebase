@@ -71,14 +71,16 @@ export class UserCompanyService {
     await this.userCompanyRepository.remove(userCompany);
   }
 
-  /** The user's rows, optionally narrowed by `search` on name or description. */
+  /** The user's rows, optionally narrowed by `search` on the English or Arabic name or description. */
   private ownedWhere(userId: number, search?: string): FindOptionsWhere<UserCompany> | FindOptionsWhere<UserCompany>[] {
     const owner: FindOptionsWhere<UserCompany> = { user: { id: userId } };
     search = search?.trim();
     if (!search) return owner;
     return [
-      { ...owner, name: ILike(`%${search}%`) },
-      { ...owner, description: ILike(`%${search}%`) },
+      { ...owner, name_en: ILike(`%${search}%`) },
+      { ...owner, name_ar: ILike(`%${search}%`) },
+      { ...owner, description_en: ILike(`%${search}%`) },
+      { ...owner, description_ar: ILike(`%${search}%`) },
     ];
   }
 }

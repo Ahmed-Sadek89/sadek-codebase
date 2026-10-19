@@ -7,10 +7,16 @@ export class UserCompany {
     id!: number;
 
     @Column({ type: 'varchar', length: 50, nullable: false })
-    name!: string;
+    name_en!: string;
+
+    @Column({ type: 'varchar', length: 50, nullable: true })
+    name_ar!: string;
 
     @Column({ type: 'text', nullable: true })
-    description!: string;
+    description_en!: string;
+
+    @Column({ type: 'text', nullable: true })
+    description_ar!: string;
 
     @Column({ type: 'timestamp', nullable: false })
     startWorkFrom!: Date;

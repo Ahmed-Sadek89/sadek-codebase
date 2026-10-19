@@ -7,13 +7,22 @@ export class WhatCanDo {
     id!: number;
 
     @Column({ type: 'varchar', length: 50, nullable: false })
-    title!: string;
+    title_en!: string;
+
+    @Column({ type: 'varchar', length: 50, nullable: true })
+    title_ar!: string;
 
     @Column({ type: 'varchar', length: 100, nullable: true })
-    shortDescription!: string;
+    shortDescription_en!: string;
+
+    @Column({ type: 'varchar', length: 100, nullable: true })
+    shortDescription_ar!: string;
 
     @Column({ type: 'text', nullable: true })
-    description!: string;
+    description_en!: string;
+
+    @Column({ type: 'text', nullable: true })
+    description_ar!: string;
 
     // Display order, set by the client on create and editable on update.
     @Column({ type: 'int', nullable: false })

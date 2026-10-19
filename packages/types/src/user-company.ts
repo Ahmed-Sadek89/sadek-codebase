@@ -8,9 +8,11 @@ import type {
 /** GET /user-company/:id and the items of GET /user-company/me (no owner). */
 export interface UserCompanyDetails {
   id: number;
-  /** Max 50 characters. */
-  name: string;
-  description: string | null;
+  /** Max 50 characters each. English is always set; Arabic is `null` until added. */
+  name_en: string;
+  name_ar: string | null;
+  description_en: string | null;
+  description_ar: string | null;
   startWorkFrom: IsoDateString;
   /** `null` while still working there. */
   startWorkTo: IsoDateString | null;
@@ -26,9 +28,11 @@ export interface UserCompany extends UserCompanyDetails {
 
 /** POST /user-company */
 export interface CreateUserCompanyRequest {
-  /** Max 50 characters. */
-  name: string;
-  description?: string;
+  /** Max 50 characters each. English is required, Arabic optional. */
+  name_en: string;
+  name_ar?: string;
+  description_en?: string;
+  description_ar?: string;
   /** ISO 8601 date or date-time. */
   startWorkFrom: IsoDateString;
   /** On or after `startWorkFrom`, or the request returns 400. Omit while still working there. */
@@ -38,23 +42,32 @@ export interface CreateUserCompanyRequest {
   company_site?: string;
 }
 
+/** Optional fields: omitted from a create response when not sent, cleared with `null` on update. */
+type OptionalUserCompanyField =
+  | "name_ar"
+  | "description_en"
+  | "description_ar"
+  | "startWorkTo"
+  | "logo"
+  | "company_site";
+
+type OptionalUserCompanyFields = {
+  [Field in OptionalUserCompanyField]?: string | null;
+};
+
 /** The saved row; optional fields are omitted when not sent. */
 export type CreateUserCompanyResponse = Omit<
   UserCompany,
-  "description" | "startWorkTo" | "logo" | "company_site"
-> & {
-  description?: string | null;
-  startWorkTo?: IsoDateString | null;
-  logo?: string | null;
-  company_site?: string | null;
-};
+  OptionalUserCompanyField
+> &
+  OptionalUserCompanyFields;
 
 /**
  * GET /user-company and GET /user-company/me (`FilterUserCompanyDto`). `order` sorts the
  * list by `createdAt` and `/me` by `startWorkFrom`; both default to DESC.
  */
 export interface UserCompaniesQuery extends PaginationQuery {
-  /** Matches name or description (case-insensitive). Max 20 characters. */
+  /** Matches the English or Arabic name or description (case-insensitive). Max 20 characters. */
   search?: string;
 }
 
@@ -68,16 +81,9 @@ export type MyUserCompaniesResponse = PaginatedResponse<UserCompanyDetails>;
  * optional field, e.g. `startWorkTo: null` marks the job as current.
  */
 export type UpdateUserCompanyRequest = Partial<
-  Omit<
-    CreateUserCompanyRequest,
-    "description" | "startWorkTo" | "logo" | "company_site"
-  >
-> & {
-  description?: string | null;
-  startWorkTo?: IsoDateString | null;
-  logo?: string | null;
-  company_site?: string | null;
-};
+  Omit<CreateUserCompanyRequest, OptionalUserCompanyField>
+> &
+  OptionalUserCompanyFields;
 
 export type UpdateUserCompanyResponse = MessageResponse;
 

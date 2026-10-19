@@ -68,15 +68,18 @@ export class WhatCanDoService {
     await this.whatCanDoRepository.remove(whatCanDo);
   }
 
-  /** The user's rows, optionally narrowed by `search` on title, shortDescription or description. */
+  /** The user's rows, optionally narrowed by `search` on the English or Arabic title, shortDescription or description. */
   private ownedWhere(userId: number, search?: string): FindOptionsWhere<WhatCanDo> | FindOptionsWhere<WhatCanDo>[] {
     const owner: FindOptionsWhere<WhatCanDo> = { user: { id: userId } };
     search = search?.trim();
     if (!search) return owner;
     return [
-      { ...owner, title: ILike(`%${search}%`) },
-      { ...owner, shortDescription: ILike(`%${search}%`) },
-      { ...owner, description: ILike(`%${search}%`) },
+      { ...owner, title_en: ILike(`%${search}%`) },
+      { ...owner, title_ar: ILike(`%${search}%`) },
+      { ...owner, shortDescription_en: ILike(`%${search}%`) },
+      { ...owner, shortDescription_ar: ILike(`%${search}%`) },
+      { ...owner, description_en: ILike(`%${search}%`) },
+      { ...owner, description_ar: ILike(`%${search}%`) },
     ];
   }
 }

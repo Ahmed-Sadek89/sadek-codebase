@@ -14,7 +14,7 @@ export class FilterUserCompanyDto extends OmitType(PaginationQueryDto, ['order']
   @IsIn(['ASC', 'DESC'])
   order?: SortOrder;
 
-  /** Case-insensitive match on name or description. */
+  /** Case-insensitive match on the English or Arabic name or description. */
   @IsString()
   @IsOptional()
   @MaxLength(20, {

@@ -6,7 +6,8 @@ export default setSeederFactory(UserInfo, () => {
     const userInfo = new UserInfo();
     const handle = faker.internet.userName().toLowerCase();
     userInfo.headTitle_en = faker.person.jobTitle().slice(0, 100);
-    userInfo.headTitle_ar = fakerAR.person.jobTitle().slice(0, 100);
+    // fakerAR has no job-title data (person.jobTitle() throws), so use plain words.
+    userInfo.headTitle_ar = fakerAR.lorem.words(3).slice(0, 100);
     userInfo.shortDescription_en = faker.company.catchPhrase().slice(0, 255);
     userInfo.shortDescription_ar = fakerAR.lorem.sentence().slice(0, 255);
     userInfo.description_en = faker.lorem.paragraphs(2);

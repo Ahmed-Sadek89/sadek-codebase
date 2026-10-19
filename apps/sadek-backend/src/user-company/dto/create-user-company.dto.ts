@@ -12,11 +12,20 @@ export class CreateUserCompanyDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(50)
-    name!: string;
+    name_en!: string;
 
     @IsString()
     @IsOptional()
-    description?: string;
+    @MaxLength(50)
+    name_ar?: string;
+
+    @IsString()
+    @IsOptional()
+    description_en?: string;
+
+    @IsString()
+    @IsOptional()
+    description_ar?: string;
 
     @Type(() => Date)
     @IsDate()

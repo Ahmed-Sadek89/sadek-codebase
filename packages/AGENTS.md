@@ -189,17 +189,17 @@ Source: `apps/sadek-backend/src/user-info`. Types in `@repo/types/user-info` (`U
 
 Source: `apps/sadek-backend/src/user-company`. Types in `@repo/types/user-company` (`UserCompany` for list items with `user: { id }`, `UserCompanyDetails` without it), service `userCompanyService` in `@repo/services/user-company`, hooks in `@repo/hooks/user-company`. All routes are guarded and owner-scoped.
 
-| Backend endpoint           | Request                                                                             | Response                                           |
-| -------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------- |
-| `POST /user-company`       | JSON `{ name, description?, startWorkFrom, startWorkTo?, logo?, company_site? }`    | Saved company with `user: { id }`                  |
-| `GET /user-company`        | Query pagination plus `search`                                                      | Paginated companies with `user: { id }`            |
-| `GET /user-company/me`     | Query `page`, `limit`, `search`, `order` (sorts by `startWorkFrom`, default `DESC`) | Paginated `UserCompanyDetails`                     |
-| `GET /user-company/:id`    | –                                                                                   | Company, without `user`                            |
-| `PATCH /user-company/:id`  | JSON partial of the create body                                                     | `{ message: "User company updated successfully" }` |
-| `DELETE /user-company/:id` | –                                                                                   | `{ message: "User company deleted successfully" }` |
+| Backend endpoint           | Request                                                                                                           | Response                                           |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `POST /user-company`       | JSON `{ name_en, name_ar?, description_en?, description_ar?, startWorkFrom, startWorkTo?, logo?, company_site? }` | Saved company with `user: { id }`                  |
+| `GET /user-company`        | Query pagination plus `search`                                                                                    | Paginated companies with `user: { id }`            |
+| `GET /user-company/me`     | Query `page`, `limit`, `search`, `order` (sorts by `startWorkFrom`, default `DESC`)                               | Paginated `UserCompanyDetails`                     |
+| `GET /user-company/:id`    | –                                                                                                                 | Company, without `user`                            |
+| `PATCH /user-company/:id`  | JSON partial of the create body                                                                                   | `{ message: "User company updated successfully" }` |
+| `DELETE /user-company/:id` | –                                                                                                                 | `{ message: "User company deleted successfully" }` |
 
-- Fields: `id`, `name` (max 50), `description` (nullable), `startWorkFrom` (required ISO date), `startWorkTo` (nullable; `null` means a current job), `logo`, `company_site` (nullable http(s) URLs, max 255), `createdAt`.
-- `search` (max 20 characters, trimmed) matches `name` or `description` case-insensitively on both `GET /user-company` and `GET /user-company/me`.
+- Fields: `id`, `name_en` (required) / `name_ar` (nullable), both max 50; `description_en` / `description_ar` (nullable); `startWorkFrom` (required ISO date), `startWorkTo` (nullable; `null` means a current job), `logo`, `company_site` (nullable http(s) URLs, max 255), `createdAt`.
+- `search` (max 20 characters, trimmed) matches the English or Arabic `name` or `description` (`name_en`, `name_ar`, `description_en`, `description_ar`) case-insensitively on both `GET /user-company` and `GET /user-company/me`.
 - `startWorkTo` before `startWorkFrom` returns 400 on create and update. Send `startWorkTo: null` in a `PATCH` to mark a job as current.
 - A company of another user returns 404 from `GET`, `PATCH`, and `DELETE /:id`.
 - Client: `userCompanyService.create/findAll/findMine/findOne/update/remove`; hooks `useCreateUserCompany`, `useUserCompanies(query)`, `useMyUserCompanies(query)`, `useUserCompany(id)`, `useUpdateUserCompany` (`{ id, data }`), `useDeleteUserCompany` (`id`). Every mutation invalidates `queryKeys.userCompany.lists()` and `mines()`; update also refreshes `detail(id)`, delete removes it.
@@ -208,17 +208,17 @@ Source: `apps/sadek-backend/src/user-company`. Types in `@repo/types/user-compan
 
 Source: `apps/sadek-backend/src/what-can-do`. Types in `@repo/types/what-can-do` (`WhatCanDo` for list items with `user: { id }`, `WhatCanDoDetails` without it), service `whatCanDoService` in `@repo/services/what-can-do`, hooks in `@repo/hooks/what-can-do`. All routes are guarded and owner-scoped.
 
-| Backend endpoint          | Request                                                                                 | Response                                            |
-| ------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| `POST /what-can-do`       | JSON `{ title, shortDescription?, description?, rank }`                                 | Saved item with `user: { id }`                      |
-| `GET /what-can-do`        | Query pagination plus `search`                                                          | Paginated items with `user: { id }`, by `createdAt` |
-| `GET /what-can-do/me`     | Query `page`, `limit`, `search`, `order` (sorts by `rank`, default `ASC`; ties by `id`) | Paginated `WhatCanDoDetails`                        |
-| `GET /what-can-do/:id`    | –                                                                                       | Item, without `user`                                |
-| `PATCH /what-can-do/:id`  | JSON partial of the create body                                                         | `{ message: "What can do updated successfully" }`   |
-| `DELETE /what-can-do/:id` | –                                                                                       | `{ message: "What can do deleted successfully" }`   |
+| Backend endpoint          | Request                                                                                                            | Response                                            |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------- |
+| `POST /what-can-do`       | JSON `{ title_en, title_ar?, shortDescription_en?, shortDescription_ar?, description_en?, description_ar?, rank }` | Saved item with `user: { id }`                      |
+| `GET /what-can-do`        | Query pagination plus `search`                                                                                     | Paginated items with `user: { id }`, by `createdAt` |
+| `GET /what-can-do/me`     | Query `page`, `limit`, `search`, `order` (sorts by `rank`, default `ASC`; ties by `id`)                            | Paginated `WhatCanDoDetails`                        |
+| `GET /what-can-do/:id`    | –                                                                                                                  | Item, without `user`                                |
+| `PATCH /what-can-do/:id`  | JSON partial of the create body                                                                                    | `{ message: "What can do updated successfully" }`   |
+| `DELETE /what-can-do/:id` | –                                                                                                                  | `{ message: "What can do deleted successfully" }`   |
 
-- Fields: `id`, `title` (max 50), `shortDescription` (nullable, max 100), `description` (nullable), `rank` (required integer ≥ 0, set by the client, not unique), `createdAt`.
-- `search` (max 20 characters, trimmed) matches `title`, `shortDescription` or `description` case-insensitively on both `GET /what-can-do` and `GET /what-can-do/me`.
+- Fields: `id`, `title_en` (required) / `title_ar` (nullable), both max 50; `shortDescription_en` / `shortDescription_ar` (nullable, max 100); `description_en` / `description_ar` (nullable); `rank` (required integer ≥ 0, set by the client, not unique), `createdAt`.
+- `search` (max 20 characters, trimmed) matches the English or Arabic `title`, `shortDescription` or `description` (each `_en` and `_ar` column) case-insensitively on both `GET /what-can-do` and `GET /what-can-do/me`.
 - An item of another user returns 404 from `GET`, `PATCH`, and `DELETE /:id`.
 - Client: `whatCanDoService.create/findAll/findMine/findOne/update/remove`; hooks `useCreateWhatCanDo`, `useWhatCanDos(query)`, `useMyWhatCanDos(query)`, `useWhatCanDo(id)`, `useUpdateWhatCanDo` (`{ id, data }`), `useDeleteWhatCanDo` (`id`). Every mutation invalidates `queryKeys.whatCanDo.lists()` and `mines()`; update also refreshes `detail(id)`, delete removes it.
 

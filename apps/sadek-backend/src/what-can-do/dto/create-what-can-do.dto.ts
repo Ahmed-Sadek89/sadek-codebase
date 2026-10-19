@@ -4,16 +4,30 @@ export class CreateWhatCanDoDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(50)
-    title!: string;
+    title_en!: string;
+
+    @IsString()
+    @IsOptional()
+    @MaxLength(50)
+    title_ar?: string;
 
     @IsString()
     @IsOptional()
     @MaxLength(100)
-    shortDescription?: string;
+    shortDescription_en?: string;
 
     @IsString()
     @IsOptional()
-    description?: string;
+    @MaxLength(100)
+    shortDescription_ar?: string;
+
+    @IsString()
+    @IsOptional()
+    description_en?: string;
+
+    @IsString()
+    @IsOptional()
+    description_ar?: string;
 
     /** Display order. */
     @IsInt()

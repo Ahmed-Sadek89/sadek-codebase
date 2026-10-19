@@ -14,7 +14,7 @@ export class FilterWhatCanDoDto extends OmitType(PaginationQueryDto, ['order'] a
   @IsIn(['ASC', 'DESC'])
   order?: SortOrder;
 
-  /** Case-insensitive match on title, shortDescription or description. */
+  /** Case-insensitive match on the English or Arabic title, shortDescription or description. */
   @IsString()
   @IsOptional()
   @MaxLength(20, {
