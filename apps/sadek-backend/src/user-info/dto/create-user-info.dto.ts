@@ -11,16 +11,30 @@ export class CreateUserInfoDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(100)
-    headTitle!: string;
+    headTitle_en!: string;
+
+    @IsString()
+    @IsOptional()
+    @MaxLength(100)
+    headTitle_ar?: string;
 
     @IsString()
     @IsNotEmpty()
     @MaxLength(255)
-    shortDescription!: string;
+    shortDescription_en!: string;
+
+    @IsString()
+    @IsOptional()
+    @MaxLength(255)
+    shortDescription_ar?: string;
 
     @IsString()
     @IsNotEmpty()
-    description!: string;
+    description_en!: string;
+
+    @IsString()
+    @IsOptional()
+    description_ar?: string;
 
     @IsInt()
     @Min(0)

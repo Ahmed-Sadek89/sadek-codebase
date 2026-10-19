@@ -1,13 +1,16 @@
 import { setSeederFactory } from 'typeorm-extension';
 import { UserInfo } from '../../user-info/entities/user-info.entity';
-import { faker } from '@faker-js/faker';
+import { faker, fakerAR } from '@faker-js/faker';
 
 export default setSeederFactory(UserInfo, () => {
     const userInfo = new UserInfo();
     const handle = faker.internet.userName().toLowerCase();
-    userInfo.headTitle = faker.person.jobTitle().slice(0, 100);
-    userInfo.shortDescription = faker.company.catchPhrase().slice(0, 255);
-    userInfo.description = faker.lorem.paragraphs(2);
+    userInfo.headTitle_en = faker.person.jobTitle().slice(0, 100);
+    userInfo.headTitle_ar = fakerAR.person.jobTitle().slice(0, 100);
+    userInfo.shortDescription_en = faker.company.catchPhrase().slice(0, 255);
+    userInfo.shortDescription_ar = fakerAR.lorem.sentence().slice(0, 255);
+    userInfo.description_en = faker.lorem.paragraphs(2);
+    userInfo.description_ar = fakerAR.lorem.paragraphs(2);
     userInfo.yearsOfExp = faker.number.int({ min: 1, max: 20 });
     userInfo.companies = faker.number.int({ min: 1, max: 8 });
     userInfo.projectNumbers = faker.number.int({ min: 5, max: 60 });
