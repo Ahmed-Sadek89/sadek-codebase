@@ -10,7 +10,10 @@
     "./category-skills": "./src/category-skills.ts",
     "./skills": "./src/skills.ts",
     "./category-projects": "./src/category-projects.ts",
-    "./projects": "./src/projects.ts"
+    "./projects": "./src/projects.ts",
+    "./user-info": "./src/user-info.ts",
+    "./user-company": "./src/user-company.ts",
+    "./what-can-do": "./src/what-can-do.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

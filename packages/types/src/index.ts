@@ -4,3 +4,6 @@ export type * from "./category-skills";
 export type * from "./skills";
 export type * from "./category-projects";
 export type * from "./projects";
+export type * from "./user-info";
+export type * from "./user-company";
+export type * from "./what-can-do";

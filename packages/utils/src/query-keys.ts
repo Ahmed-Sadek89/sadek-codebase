@@ -2,6 +2,9 @@ import type { CategoryProjectsQuery } from "@repo/types/category-projects";
 import type { CategorySkillsQuery } from "@repo/types/category-skills";
 import type { ProjectsQuery } from "@repo/types/projects";
 import type { SkillsQuery } from "@repo/types/skills";
+import type { UserCompaniesQuery } from "@repo/types/user-company";
+import type { UserInfoQuery } from "@repo/types/user-info";
+import type { WhatCanDosQuery } from "@repo/types/what-can-do";
 
 /**
  * TanStack Query keys for every shared hook, one nested object per feature.
@@ -49,5 +52,36 @@ export const queryKeys = {
       [...queryKeys.projects.lists(), query] as const,
     details: () => [...queryKeys.projects.all, "detail"] as const,
     detail: (id: number) => [...queryKeys.projects.details(), id] as const,
+  },
+  userInfo: {
+    all: ["user-info"] as const,
+    lists: () => [...queryKeys.userInfo.all, "list"] as const,
+    list: (query: UserInfoQuery) =>
+      [...queryKeys.userInfo.lists(), query] as const,
+    mine: () => [...queryKeys.userInfo.all, "mine"] as const,
+    details: () => [...queryKeys.userInfo.all, "detail"] as const,
+    detail: (id: number) => [...queryKeys.userInfo.details(), id] as const,
+  },
+  userCompany: {
+    all: ["user-company"] as const,
+    lists: () => [...queryKeys.userCompany.all, "list"] as const,
+    list: (query: UserCompaniesQuery) =>
+      [...queryKeys.userCompany.lists(), query] as const,
+    mines: () => [...queryKeys.userCompany.all, "mine"] as const,
+    mine: (query: UserCompaniesQuery) =>
+      [...queryKeys.userCompany.mines(), query] as const,
+    details: () => [...queryKeys.userCompany.all, "detail"] as const,
+    detail: (id: number) => [...queryKeys.userCompany.details(), id] as const,
+  },
+  whatCanDo: {
+    all: ["what-can-do"] as const,
+    lists: () => [...queryKeys.whatCanDo.all, "list"] as const,
+    list: (query: WhatCanDosQuery) =>
+      [...queryKeys.whatCanDo.lists(), query] as const,
+    mines: () => [...queryKeys.whatCanDo.all, "mine"] as const,
+    mine: (query: WhatCanDosQuery) =>
+      [...queryKeys.whatCanDo.mines(), query] as const,
+    details: () => [...queryKeys.whatCanDo.all, "detail"] as const,
+    detail: (id: number) => [...queryKeys.whatCanDo.details(), id] as const,
   },
 };
