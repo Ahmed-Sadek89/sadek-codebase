@@ -123,4 +123,14 @@
     color: var(--foreground);
     font-family: var(--font-sans);
   }
+  /* Hide the default up/down arrows of number inputs (Chrome, Safari, Edge, Firefox). */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
 }
