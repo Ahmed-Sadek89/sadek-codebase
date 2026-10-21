@@ -35,6 +35,7 @@ export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
       throw new UnauthorizedException('Token revoked');
     }
 
-    return { userId: payload.sub, email: payload.email };
+    // The user's current avatar, so a refreshed access token picks up changes.
+    return { userId: payload.sub, email: payload.email, avatar: user.avatarUrl ?? null };
   }
 }

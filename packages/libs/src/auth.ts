@@ -1,5 +1,5 @@
 import NextAuth, { type NextAuthResult, type DefaultSession } from "next-auth";
-import type {} from "next-auth/jwt";
+import type { } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import { tokenExpiresAt, refreshTokens, type AuthService } from "./auth-tokens";
 
@@ -65,6 +65,7 @@ export function createAuth(
               { email: credentials.email, password: credentials.password },
               requestConfig,
             );
+            console.log({ result })
             if (
               tokenExpiresAt(result.access_token) <= Date.now() ||
               tokenExpiresAt(result.refresh_token) <= Date.now()

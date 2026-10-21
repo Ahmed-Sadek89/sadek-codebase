@@ -3,8 +3,11 @@ import { ThemeSelect } from "../../../../ui/theme-switcher";
 import { LanguageSelect } from "../../../../ui/language-switcher";
 import { SidebarToggles } from "./components/sidebar-toggles";
 import { UserMenu } from "./components/user-menu";
+import { useSession } from "next-auth/react";
 
 const HeaderSection = () => {
+  const { data: session } = useSession();
+  console.log({ session })
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur">
       <div className="flex h-16 items-center justify-between gap-4 px-4 sm:px-6">

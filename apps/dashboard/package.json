@@ -21,6 +21,7 @@
     "@repo/ui": "workspace:*",
     "@repo/utils": "workspace:*",
     "@tanstack/react-table": "^9.2.8",
+    "jwt-decode": "^4.0.0",
     "next": "16.3.4",
     "next-auth": "5.0.0-beta.32",
     "next-intl": "^4.14.9",

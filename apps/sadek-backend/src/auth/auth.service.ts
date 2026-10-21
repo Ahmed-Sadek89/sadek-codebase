@@ -19,13 +19,13 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     try {
       const user = await this.userService.login(loginDto)
-      const payload = { sub: user.id, email: user.email };
-      const refreshPayload = { ...payload, typ: 'refresh' };
+      // The avatar rides in the access token so clients can show it without
+      // another request; the refresh token needs only the identity.
+      const payload = { sub: user.id, email: user.email, avatar: user.avatarUrl ?? null };
+      const refreshPayload = { sub: user.id, email: user.email, typ: 'refresh' };
       const refreshOptions: JwtSignOptions = { ...this.refreshJwt };
 
       return {
-        // The avatar is only returned here, not signed into the tokens, so
-        // the JWTs stay small; the client keeps it in its own session.
         user: payload,
         access_token: this.jwtService.sign({ ...payload, avatar: user.avatarUrl ?? null }),
         refresh_token: this.jwtService.sign(refreshPayload, refreshOptions),
@@ -35,14 +35,14 @@ export class AuthService {
     }
   }
 
-  /** The current user's profile; `password` is never selected. */
   async me(userId: number) {
     return await this.userService.findOne(userId);
   }
 
-  refreshAccess(user: { userId: number; email: string }) {
+  /** `user` comes from RefreshJwtStrategy, which reads the current avatar from the DB. */
+  refreshAccess(user: { userId: number; email: string; avatar: string | null }) {
     return {
-      access_token: this.jwtService.sign({ sub: user.userId, email: user.email }),
+      access_token: this.jwtService.sign({ sub: user.userId, email: user.email, avatar: user.avatar }),
     };
   }
 
