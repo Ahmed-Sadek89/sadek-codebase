@@ -1,1 +1,5 @@
--- profile links FE BE
+
+-- table for user company and what can id 
+-- allow in profile page to see his username email cover and logo and edit 
+-- allow also in profile page to change password
+-- make isAdmin col in user entity

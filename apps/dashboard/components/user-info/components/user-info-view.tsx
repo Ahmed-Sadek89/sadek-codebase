@@ -57,7 +57,7 @@ export function UserInfoView({ userInfo }: UserInfoViewProps) {
         </ul>
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="lg:grid lg:gap-6 space-y-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>{t("userInfoAbout")}</CardTitle>
