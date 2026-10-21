@@ -24,12 +24,13 @@ export class AuthService {
       const refreshOptions: JwtSignOptions = { ...this.refreshJwt };
 
       return {
-        user: payload,
+        // The avatar is only returned here, not signed into the tokens, so
+        // the JWTs stay small; the client keeps it in its own session.
+        user: { ...payload, avatar: user.avatarUrl ?? null },
         access_token: this.jwtService.sign(payload),
         refresh_token: this.jwtService.sign(refreshPayload, refreshOptions),
       };
     } catch (error: any) {
-      console.log({ error: error.message })
       throw new BadRequestException(error.message)
     }
   }
