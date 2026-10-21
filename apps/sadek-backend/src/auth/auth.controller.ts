@@ -1,5 +1,5 @@
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Controller, Post, Body, Patch, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -22,6 +22,14 @@ export class AuthController {
   @Post('refresh')
   refresh(@Request() req) {
     return this.authService.refreshAccess(req.user);
+  }
+
+  /** The signed-in user, by the `sub` (user id) of the access token. */
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get("me")
+  async me(@Request() req: RequestUserDto) {
+    return await this.authService.me(req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)

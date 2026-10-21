@@ -34,6 +34,11 @@ export class AuthService {
     }
   }
 
+  /** The current user's profile; `password` is never selected. */
+  async me(userId: number) {
+    return await this.userService.findOne(userId);
+  }
+
   refreshAccess(user: { userId: number; email: string }) {
     return {
       access_token: this.jwtService.sign({ sub: user.userId, email: user.email }),
