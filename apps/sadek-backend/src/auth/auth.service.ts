@@ -19,15 +19,15 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     try {
       const user = await this.userService.login(loginDto)
-      const payload = { sub: user.id, email: user.email, avatar: user.avatarUrl };
+      const payload = { sub: user.id, email: user.email };
       const refreshPayload = { ...payload, typ: 'refresh' };
       const refreshOptions: JwtSignOptions = { ...this.refreshJwt };
 
       return {
         // The avatar is only returned here, not signed into the tokens, so
         // the JWTs stay small; the client keeps it in its own session.
-        user: { ...payload, avatar: user.avatarUrl ?? null },
-        access_token: this.jwtService.sign(payload),
+        user: payload,
+        access_token: this.jwtService.sign({ ...payload, avatar: user.avatarUrl ?? null }),
         refresh_token: this.jwtService.sign(refreshPayload, refreshOptions),
       };
     } catch (error: any) {
