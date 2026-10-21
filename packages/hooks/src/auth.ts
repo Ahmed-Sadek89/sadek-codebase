@@ -17,6 +17,7 @@ import type {
   LogoutResponse,
   RefreshResponse,
 } from "@repo/types/auth";
+import { useGuardedQuery } from "./api";
 
 function requireSession(client: QueryClient): AuthSession {
   const session = client.getQueryData<AuthSession | null>(
@@ -35,7 +36,18 @@ function removeUserQueries(client: QueryClient) {
   });
 }
 
-/** Observes the in-memory session; the backend has no session/me endpoint. */
+/**
+ * GET /auth/me: the signed-in user's profile, using the NextAuth session's
+ * access token. Login and logout drop it with the other user queries.
+ */
+export function useMe() {
+  return useGuardedQuery({
+    queryKey: queryKeys.auth.me(),
+    queryFn: (auth) => authService.me(auth),
+  });
+}
+
+/** Observes the in-memory session; it makes no network request (see `useMe`). */
 export function useAuthSession() {
   return useQuery<AuthSession | null>({
     queryKey: queryKeys.auth.session(),

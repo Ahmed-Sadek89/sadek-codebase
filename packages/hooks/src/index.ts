@@ -4,6 +4,7 @@ export { queryKeys } from "@repo/utils/query-keys";
 
 export {
   useAuthSession,
+  useMe,
   useLogin,
   useRefreshToken,
   useChangePassword,

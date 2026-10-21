@@ -1,3 +1,5 @@
+import type { IsoDateString } from "./common";
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -7,6 +9,14 @@ export interface LoginRequest {
 export interface AuthUser {
   sub: number;
   email: string;
+  /** The user's `avatarUrl`; `null` when none is set. Also in the access token's payload. */
+  avatar: string | null;
+}
+
+/** Claims in the access token's payload (`refresh` re-reads the avatar from the DB). */
+export interface AccessTokenPayload extends AuthUser {
+  iat: number;
+  exp: number;
 }
 
 export interface LoginResponse {
@@ -35,6 +45,20 @@ export interface AuthorizedRequest {
 
 export interface MessageResponse {
   message: string;
+}
+
+/** GET /auth/me: the user whose id is the access token's `sub`. Never includes the password. */
+export interface CurrentUser {
+  id: number;
+  /** Max 50 characters. */
+  username: string;
+  /** Max 70 characters. */
+  email: string;
+  avatarUrl: string | null;
+  coverPhotoUrl: string | null;
+  createdAt: IsoDateString;
+  lastLoginAt: IsoDateString | null;
+  lastLogoutAt: IsoDateString | null;
 }
 
 export type ChangePasswordResponse = MessageResponse;

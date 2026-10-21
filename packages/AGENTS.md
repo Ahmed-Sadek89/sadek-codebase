@@ -64,14 +64,16 @@ Rules that apply to every controller:
 
 | Backend endpoint              | Request                                                                           | Response                                                | Service / hook                                     |
 | ----------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------- | -------------------------------------------------- |
-| `POST /auth/login`            | JSON `{ email, password }`                                                        | `{ user: { sub, email }, access_token, refresh_token }` | `authService.login` / `useLogin`                   |
+| `POST /auth/login`            | JSON `{ email, password }`                                                        | `{ user: { sub, email, avatar }, access_token, refresh_token }` | `authService.login` / `useLogin`                   |
 | `POST /auth/refresh`          | Refresh token in `Authorization: Bearer ...`; no body                             | `{ access_token }`                                      | `authService.refresh` / `useRefreshToken`          |
 | `PATCH /auth/change-password` | Access Bearer token plus JSON `{ email, password, newPassword, confirmPassword }` | `{ message }`                                           | `authService.changePassword` / `useChangePassword` |
 | `POST /auth/logout`           | Access token in `Authorization: Bearer ...`; no body                              | `{ message }`                                           | `authService.logout` / `useLogout`                 |
+| `GET /auth/me`                | Access token in `Authorization: Bearer ...`                                       | `CurrentUser`                                           | `authService.me` / `useMe`                         |
 
-- The login user's identifier is `sub`, matching the backend payload.
+- The login user's identifier is `sub`, matching the backend payload. `avatar` is the user's `avatarUrl` (or `null`); it is returned only in the login response, not signed into the tokens.
 - `useLogin().mutateAsync(credentials)` stores the returned session and clears previous-user caches on success.
-- `useAuthSession()` observes the cached session. There is no backend `/me` endpoint; this hook does not make a network request.
+- `useAuthSession()` observes the cached session and makes no network request.
+- `GET /auth/me` returns the user whose id is the access token's `sub` (`JwtAuthGuard`): `CurrentUser` = `{ id, username, email, avatarUrl, coverPhotoUrl, createdAt, lastLoginAt, lastLogoutAt }` (nullable: `avatarUrl`, `coverPhotoUrl`, `lastLoginAt`, `lastLogoutAt`); the password is never selected. A missing, revoked, or refresh token, or a deleted user, returns 401. `useMe()` is a guarded query (NextAuth session token via `useGuardedQuery`) under `queryKeys.auth.me()`, and `authService.me(auth)` can also be called on the server. `useLogin`/`useLogout` remove it along with every other non-session query.
 - `useRefreshToken().mutateAsync()` reads the cached refresh token and updates only the access token. Refresh is explicit, not an automatic Axios retry interceptor. Failed refresh leaves the session unchanged and returns an error to the caller.
 - `useChangePassword().mutateAsync(body)` reads the cached access token. The backend requires new passwords of 8–32 characters with uppercase, lowercase, number, and one of `@$!%*?&`, plus matching confirmation. Page forms must validate these requirements when built.
 - `useLogout().mutateAsync()` calls the backend before clearing the local session and caches. Failed logout leaves the session unchanged and returns an error to the caller.

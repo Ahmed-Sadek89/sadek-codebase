@@ -3,6 +3,7 @@ import type {
   AuthorizedRequest,
   ChangePasswordRequest,
   ChangePasswordResponse,
+  CurrentUser,
   LoginRequest,
   LoginResponse,
   LogoutRequest,
@@ -16,6 +17,7 @@ export const authEndpoints = {
   refresh: "/auth/refresh",
   changePassword: "/auth/change-password",
   logout: "/auth/logout",
+  me: "/auth/me",
 } as const;
 
 export const authService = {
@@ -42,6 +44,12 @@ export const authService = {
         headers: { Authorization: `Bearer ${refreshToken}` },
       },
     );
+    return data;
+  },
+  async me({ accessToken }: AuthorizedRequest): Promise<CurrentUser> {
+    const { data } = await apiClient.get<CurrentUser>(authEndpoints.me, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
     return data;
   },
   async changePassword(
