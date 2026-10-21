@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserService } from '../../user/user.service';
 
-type JwtPayload = { sub: number; email: string; iat?: number; typ?: 'access' | 'refresh' };
+type JwtPayload = { sub: number; email: string; avatar?: string, iat?: number; typ?: 'access' | 'refresh' };
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -22,7 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     await this.assertNotRevoked(payload);
 
-    return { userId: payload.sub, email: payload.email };
+    return { userId: payload.sub, email: payload.email, avatar: payload.avatar };
   }
 
   private async assertNotRevoked(payload: JwtPayload) {

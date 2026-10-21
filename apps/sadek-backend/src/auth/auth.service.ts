@@ -19,7 +19,7 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     try {
       const user = await this.userService.login(loginDto)
-      const payload = { sub: user.id, email: user.email };
+      const payload = { sub: user.id, email: user.email, avatar: user.avatarUrl };
       const refreshPayload = { ...payload, typ: 'refresh' };
       const refreshOptions: JwtSignOptions = { ...this.refreshJwt };
 
@@ -29,7 +29,7 @@ export class AuthService {
         refresh_token: this.jwtService.sign(refreshPayload, refreshOptions),
       };
     } catch (error: any) {
-      console.log({error: error.message})
+      console.log({ error: error.message })
       throw new BadRequestException(error.message)
     }
   }
