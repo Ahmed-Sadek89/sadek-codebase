@@ -15,7 +15,7 @@ import {
 } from "../schema";
 import { USER_INFO_STATS } from "../utils/constants";
 import { CvField } from "./cv-field";
-import { FormSection } from "./form-section";
+import { FormSection } from "../../ui/forms/form-section";
 
 type UserInfoFormProps = {
   /** The saved row to edit; null creates the first one. */
