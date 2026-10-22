@@ -1,1 +1,1 @@
-export {};
+export { ServiceRow } from "./service-row";

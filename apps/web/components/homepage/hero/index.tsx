@@ -1,8 +1,13 @@
+"use client";
+
 import { Button } from "@repo/ui/button";
 import { ArrowRight } from "@repo/ui/icons";
 import Link from "next/link";
+import { SocialLinks, TrustedBy } from "./components";
+import { useHeroContent } from "./hooks";
 
 export function Hero() {
+  const { info, isPending, socialLinks, companyNames } = useHeroContent();
   return (
     <section
       id="home"
@@ -15,18 +20,14 @@ export function Hero() {
       <p className="relative text-[10px] text-primary">
         ✦ Available for new projects
       </p>
-      <h1 className="relative my-[14px] text-6xl leading-[1.1] tracking-[-0.04em] max-[700px]:text-[26px]">
-        I&apos;m Daniel Mercer, a{" "}
-        <em className="text-primary not-italic">product designer</em> &<br />{" "}
-        developer building delightful digital
-        <br className="max-[700px]:hidden" /> experiences.
+      <h1 className="relative mx-auto my-[14px] max-w-[900px] text-6xl leading-[1.1] tracking-[-0.04em] max-[700px]:text-[26px]">
+        {info?.headTitle_en ?? (isPending ? "…" : "Welcome")}
       </h1>
-      <p className="text-[11px] leading-[1.7] text-muted-foreground">
-        For nearly a decade I&apos;ve helped startups and studios ship
-        interfaces that are
-        <br className="max-[700px]:hidden" /> as dependable as they are
-        beautiful — from first sketch to final pixel.
-      </p>
+      {info && (
+        <p className="mx-auto max-w-[620px] text-[11px] leading-[1.7] text-muted-foreground">
+          {info.shortDescription_en}
+        </p>
+      )}
       <div className="m-[18px] flex justify-center gap-2.5">
         <Button asChild>
           <Link className="text-[11px]" href="#work">
@@ -40,18 +41,8 @@ export function Hero() {
           Let&apos;s Talk <ArrowRight className="w-[13px]" />
         </Link>
       </div>
-      <div className="text-sm text-muted-foreground">in　◉　◈　◎</div>
-      <div className="mt-20 text-[8px] tracking-[0.12em] text-muted-foreground max-[700px]:mt-[60px]">
-        TRUSTED BY FORWARD-THINKING TEAMS AND STUDIOS
-        <div className="mt-4 flex justify-between gap-5 text-xs tracking-normal text-muted-foreground max-[700px]:justify-start max-[700px]:overflow-hidden">
-          <b>Altisale</b>
-          <b>HSC</b>
-          <b>LUXMARK</b>
-          <b>Westward</b>
-          <b>Raygun</b>
-          <b>TRITON</b>
-        </div>
-      </div>
+      <SocialLinks links={socialLinks} />
+      <TrustedBy names={companyNames} />
     </section>
   );
 }

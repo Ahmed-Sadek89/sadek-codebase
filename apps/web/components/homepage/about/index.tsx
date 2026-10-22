@@ -1,13 +1,12 @@
-import { Card, CardContent } from "@repo/ui/card";
+"use client";
+
 import { SectionTitle } from "../components/section-title";
+import { SectionStatus } from "../components/section-status";
+import { StatCard } from "./components";
+import { useAboutContent } from "./hooks";
 
 export function About() {
-  const stats = [
-    ["8+", "Years Experience"],
-    ["120+", "Projects Shipped"],
-    ["48", "Happy Clients"],
-    ["16", "Awards Won"],
-  ];
+  const { description, stats, isPending } = useAboutContent();
   return (
     <section
       id="about"
@@ -17,25 +16,20 @@ export function About() {
         title="About Me"
         copy="A short story, and a few numbers from the journey"
       />
-      <p className="mx-auto mb-[26px] max-w-[750px] text-center text-[11px] leading-[1.7] text-muted-foreground">
-        I&apos;m a multidisciplinary product designer and front-end developer
-        based in Austin, Texas. I help founders turn rough ideas into refined,
-        usable products — pairing research-driven design decisions with clean,
-        accessible code. When I&apos;m not pushing pixels you&apos;ll find me
-        sketching type, mentoring juniors, or chasing good coffee.
-      </p>
-      <div className="grid grid-cols-4 gap-3 max-[700px]:grid-cols-2">
-        {stats.map(([number, label]) => (
-          <Card className="border-0 bg-card" key={label}>
-            <CardContent className="p-4 text-center">
-              <strong className="block text-2xl text-primary">{number}</strong>
-              <small className="text-[9px] text-muted-foreground">
-                {label}
-              </small>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {description ? (
+        <>
+          <p className="mx-auto mb-[26px] max-w-[750px] whitespace-pre-line text-center text-[11px] leading-[1.7] text-muted-foreground">
+            {description}
+          </p>
+          <div className="grid grid-cols-4 gap-3 max-[700px]:grid-cols-2">
+            {stats.map((stat) => (
+              <StatCard key={stat.label} stat={stat} />
+            ))}
+          </div>
+        </>
+      ) : (
+        <SectionStatus isPending={isPending} emptyText="Nothing here yet." />
+      )}
     </section>
   );
 }

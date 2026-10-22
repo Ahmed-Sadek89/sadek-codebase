@@ -264,12 +264,27 @@ importers:
 
   apps/web:
     dependencies:
+      '@repo/hooks':
+        specifier: workspace:*
+        version: link:../../packages/hooks
+      '@repo/libs':
+        specifier: workspace:*
+        version: link:../../packages/libs
       '@repo/provider':
         specifier: workspace:*
         version: link:../../packages/provider
+      '@repo/services':
+        specifier: workspace:*
+        version: link:../../packages/services
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@repo/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       next:
         specifier: 16.3.4
         version: 16.3.4(@babel/core@8.0.1)(@types/node@26.4.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)

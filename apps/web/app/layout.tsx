@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { QueryProvider } from "@repo/provider/query-provider";
 import { ThemeProvider } from "@repo/provider/theme-provider";
 import "./styles.css";
 
@@ -10,11 +10,6 @@ const poppins = Poppins({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Daniel Mercer — Product Designer",
-  description: "Independent product designer and developer portfolio.",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -24,7 +19,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable} min-w-[320px]`}>
         <ThemeProvider defaultTheme="dark" enableSystem={false}>
-          {children}
+          <QueryProvider>{children}</QueryProvider>
         </ThemeProvider>
       </body>
     </html>

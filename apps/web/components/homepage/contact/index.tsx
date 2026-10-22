@@ -1,9 +1,14 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, Mail, MapPin, Send, Smartphone } from "@repo/ui/icons";
+import { ArrowRight, Send } from "@repo/ui/icons";
 import { Button } from "@repo/ui/button";
 import { SectionTitle } from "../components/section-title";
+import { ContactDetails } from "./components";
+import { useContactDetails } from "./hooks";
 
 export function Contact() {
+  const details = useContactDetails();
   return (
     <>
       <section className="mx-auto w-full max-w-[1440px] px-4 py-[76px] max-[700px]:py-[54px] text-center bg-background bg-radial-[circle_at_center] from-primary-muted from-0% to-transparent to-35%">
@@ -35,17 +40,7 @@ export function Contact() {
           title="Get In Touch"
           copy="Tell me about your project and let's make it a reality"
         />
-        <div className="mb-5 flex justify-center gap-5 text-[10px] text-muted-foreground max-[700px]:flex-col max-[700px]:items-center max-[700px]:gap-2">
-          <span className="flex items-center gap-[5px]">
-            <Mail className="w-3 text-primary" /> hello@danielmercer.com
-          </span>
-          <span className="flex items-center gap-[5px]">
-            <Smartphone className="w-3 text-primary" /> +1 (555) 123-4567
-          </span>
-          <span className="flex items-center gap-[5px]">
-            <MapPin className="w-3 text-primary" /> Austin, TX
-          </span>
-        </div>
+        <ContactDetails details={details} />
         <form
           className="mx-auto grid max-w-[560px] grid-cols-2 gap-2 rounded-[7px] bg-card p-4"
           id="form"
