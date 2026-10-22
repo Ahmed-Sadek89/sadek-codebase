@@ -20,6 +20,7 @@
   "navTitle": "Navigation",
   "navDescription": "Explore Workfolio.",
   "statusLoading": "Loading…",
+  "statusError": "Couldn't load this section. Please try again later.",
   "heroAvailable": "✦ Available for new projects",
   "heroWelcome": "Welcome",
   "heroViewWork": "View My Work",

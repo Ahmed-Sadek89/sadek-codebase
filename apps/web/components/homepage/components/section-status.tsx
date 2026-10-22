@@ -1,20 +1,26 @@
 import { useTranslations } from "next-intl";
 
-/** Loading or empty placeholder shown in place of a section's list. */
+/** Loading, error or empty placeholder shown in place of a section's list. */
 export const SectionStatus = ({
-  isPending,
+  isLoading,
+  isError,
   emptyText,
 }: {
-  isPending: boolean;
+  isLoading: boolean;
+  isError: boolean;
   emptyText: string;
 }) => {
   const t = useTranslations();
+  let text = emptyText;
+  if (isLoading) text = t("statusLoading");
+  else if (isError) text = t("statusError");
   return (
     <p
       className="py-6 text-center text-[11px] text-muted-foreground"
       aria-live="polite"
+      role={isError ? "alert" : undefined}
     >
-      {isPending ? t("statusLoading") : emptyText}
+      {text}
     </p>
   );
 };

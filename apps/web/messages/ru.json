@@ -20,6 +20,7 @@
   "navTitle": "Навигация",
   "navDescription": "Исследуйте Workfolio.",
   "statusLoading": "Загрузка…",
+  "statusError": "Не удалось загрузить этот раздел. Попробуйте позже.",
   "heroAvailable": "✦ Открыт для новых проектов",
   "heroWelcome": "Добро пожаловать",
   "heroViewWork": "Мои работы",

@@ -20,6 +20,7 @@
   "navTitle": "Navigation",
   "navDescription": "Workfolio entdecken.",
   "statusLoading": "Wird geladen…",
+  "statusError": "Dieser Bereich konnte nicht geladen werden. Bitte versuche es später erneut.",
   "heroAvailable": "✦ Verfügbar für neue Projekte",
   "heroWelcome": "Willkommen",
   "heroViewWork": "Meine Arbeiten ansehen",

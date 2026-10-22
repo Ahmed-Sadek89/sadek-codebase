@@ -1,25 +1,47 @@
-import { About } from "./about";
-import { Contact } from "./contact";
-import { Experience } from "./experience";
-import { Hero } from "./hero";
-import { HowItWorks } from "./how-it-works";
-import { Reviews } from "./reviews";
-import { Services } from "./services";
-import { Skills } from "./skills";
-import { Work } from "./work";
+"use client";
 
+import {
+  About,
+  Contact,
+  Experience,
+  Hero,
+  HowItWorks,
+  Reviews,
+  Services,
+  Skills,
+  Work,
+} from "./components";
+import { useHomePageData } from "./hooks";
+
+/** The homepage queries live in useHomePageData; sections get them as props. */
 export function HomePage() {
+  const {
+    userInfo,
+    companies,
+    services,
+    skills,
+    skillCategories,
+    projects,
+    projectCategories,
+    projectsFilter,
+  } = useHomePageData();
+
   return (
     <div className="overflow-hidden">
-      <Hero />
-      <About />
-      <Services />
-      <Skills />
-      <Experience />
-      <Work />
+      <Hero userInfo={userInfo} companies={companies} />
+      <About userInfo={userInfo} />
+      <Services services={services} />
+      <Skills skills={skills} categories={skillCategories} />
+      <Experience companies={companies} userInfo={userInfo} />
+      <Work
+        projects={projects}
+        categories={projectCategories}
+        categoryId={projectsFilter.categoryId}
+        onCategoryChange={projectsFilter.setCategoryId}
+      />
       <Reviews />
       <HowItWorks />
-      <Contact />
+      <Contact userInfo={userInfo} />
     </div>
   );
 }

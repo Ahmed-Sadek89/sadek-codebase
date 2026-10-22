@@ -20,6 +20,7 @@
   "navTitle": "التنقل",
   "navDescription": "استكشف Workfolio.",
   "statusLoading": "جارٍ التحميل…",
+  "statusError": "تعذّر تحميل هذا القسم. يُرجى المحاولة لاحقاً.",
   "heroAvailable": "✦ متاح لمشاريع جديدة",
   "heroWelcome": "أهلاً بك",
   "heroViewWork": "شاهد أعمالي",
