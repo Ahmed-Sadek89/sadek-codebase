@@ -40,7 +40,10 @@ export function useHomePageData() {
     skillCategories: toQueryState(categorySkills, listOf),
     projects: {
       ...toQueryState(projects, listOf),
-      isFetching: projects.isFetching,
+      // True only while another category loads behind the previous rows
+      // (keepPreviousData). Unlike isFetching, it is false on the server and
+      // on the first client render, so hydration matches.
+      isSwitching: projects.isPlaceholderData,
     },
     projectCategories: toQueryState(categoryProjects, listOf),
     projectsFilter,

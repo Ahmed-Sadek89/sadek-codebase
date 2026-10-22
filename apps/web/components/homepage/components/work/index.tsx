@@ -15,14 +15,14 @@ export function Work({
   categoryId,
   onCategoryChange,
 }: {
-  /** `isFetching` is true while another category loads; the previous rows stay. */
-  projects: QueryState<Project[]> & { isFetching: boolean };
+  /** `isSwitching` is true while another category loads; the previous rows stay. */
+  projects: QueryState<Project[]> & { isSwitching: boolean };
   categories: QueryState<CategoryProject[]>;
   categoryId: number | undefined;
   onCategoryChange: (id: number | undefined) => void;
 }) {
   const t = useTranslations();
-  const { data: projects, isFetching } = projectsQuery;
+  const { data: projects, isSwitching } = projectsQuery;
   return (
     <section
       id="work"
@@ -36,10 +36,10 @@ export function Work({
       />
       {projects.length ? (
         <div
-          aria-busy={isFetching}
+          aria-busy={isSwitching}
           className={cn(
             "flex flex-col gap-[27px] transition-opacity",
-            isFetching && "opacity-60",
+            isSwitching && "opacity-60",
           )}
         >
           {projects.map((project, i) => (
