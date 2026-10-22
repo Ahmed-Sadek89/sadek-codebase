@@ -23,7 +23,7 @@ export function Header() {
           : "border-transparent bg-background/40 backdrop-blur-sm",
       )}
     >
-      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:h-[70px] sm:px-6">
+      <div className="app-container flex h-16 items-center justify-between gap-4 py-0 sm:h-[70px]">
         <BrandLink />
         <DesktopNavigation active={active} />
         <div className="flex shrink-0 items-center gap-2">

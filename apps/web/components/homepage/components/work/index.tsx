@@ -26,37 +26,39 @@ export function Work({
   return (
     <section
       id="work"
-      className="mx-auto w-full max-w-[1440px] px-4 py-[76px] max-[700px]:py-[54px] bg-background"
+      className="py-[76px] max-[700px]:py-[54px] bg-background"
     >
-      <SectionTitle title={t("workTitle")} copy={t("workCopy")} />
-      <CategoryFilter
-        categories={categories.data}
-        selectedId={categoryId}
-        onSelect={onCategoryChange}
-      />
-      {projects.length ? (
-        <div
-          aria-busy={isSwitching}
-          className={cn(
-            "flex flex-col gap-[27px] transition-opacity",
-            isSwitching && "opacity-60",
-          )}
-        >
-          {projects.map((project, i) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              reversed={i % 2 === 1}
-            />
-          ))}
-        </div>
-      ) : (
-        <SectionStatus
-          isLoading={projectsQuery.isLoading}
-          isError={projectsQuery.isError}
-          emptyText={t("workEmpty")}
+      <div className="app-container py-0">
+        <SectionTitle title={t("workTitle")} copy={t("workCopy")} />
+        <CategoryFilter
+          categories={categories.data}
+          selectedId={categoryId}
+          onSelect={onCategoryChange}
         />
-      )}
+        {projects.length ? (
+          <div
+            aria-busy={isSwitching}
+            className={cn(
+              "flex flex-col gap-[27px] transition-opacity",
+              isSwitching && "opacity-60",
+            )}
+          >
+            {projects.map((project, i) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                reversed={i % 2 === 1}
+              />
+            ))}
+          </div>
+        ) : (
+          <SectionStatus
+            isLoading={projectsQuery.isLoading}
+            isError={projectsQuery.isError}
+            emptyText={t("workEmpty")}
+          />
+        )}
+      </div>
     </section>
   );
 }

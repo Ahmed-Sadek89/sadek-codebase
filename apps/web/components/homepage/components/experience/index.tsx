@@ -25,33 +25,35 @@ export function Experience({
   return (
     <section
       id="experience"
-      className="mx-auto w-full max-w-[1440px] px-4 py-[76px] max-[700px]:py-[54px] bg-surface"
+      className="py-[76px] max-[700px]:py-[54px] bg-surface"
     >
-      <SectionTitle title={t("experienceTitle")} copy={t("experienceCopy")} />
-      {companies.length ? (
-        <div className="relative mx-auto grid max-w-[850px] grid-cols-3 gap-[30px] before:absolute before:top-[7px] before:right-0 before:left-0 before:border-t before:border-border before:content-[''] max-[700px]:grid-cols-1 max-[700px]:gap-[5px] max-[700px]:before:top-0 max-[700px]:before:end-auto max-[700px]:before:bottom-0 max-[700px]:before:start-1 max-[700px]:before:border-t-0 max-[700px]:before:border-s">
-          {companies.map((company) => (
-            <ExperienceItem key={company.id} company={company} />
-          ))}
-        </div>
-      ) : (
-        <SectionStatus
-          isLoading={companiesQuery.isLoading}
-          isError={companiesQuery.isError}
-          emptyText={t("experienceEmpty")}
-        />
-      )}
-      {cvUrl && (
-        <Button
-          asChild
-          variant="outline"
-          className="mx-auto mt-[30px] flex w-fit text-[10px]"
-        >
-          <a href={cvUrl} rel="noreferrer" target="_blank">
-            {t("experienceDownloadCv")}
-          </a>
-        </Button>
-      )}
+      <div className="app-container py-0">
+        <SectionTitle title={t("experienceTitle")} copy={t("experienceCopy")} />
+        {companies.length ? (
+          <div className="relative mx-auto grid max-w-[850px] grid-cols-3 gap-[30px] before:absolute before:top-[7px] before:right-0 before:left-0 before:border-t before:border-border before:content-[''] max-[700px]:grid-cols-1 max-[700px]:gap-[5px] max-[700px]:before:top-0 max-[700px]:before:end-auto max-[700px]:before:bottom-0 max-[700px]:before:start-1 max-[700px]:before:border-t-0 max-[700px]:before:border-s">
+            {companies.map((company) => (
+              <ExperienceItem key={company.id} company={company} />
+            ))}
+          </div>
+        ) : (
+          <SectionStatus
+            isLoading={companiesQuery.isLoading}
+            isError={companiesQuery.isError}
+            emptyText={t("experienceEmpty")}
+          />
+        )}
+        {cvUrl && (
+          <Button
+            asChild
+            variant="outline"
+            className="mx-auto mt-[30px] flex w-fit text-[10px]"
+          >
+            <a href={cvUrl} rel="noreferrer" target="_blank">
+              {t("experienceDownloadCv")}
+            </a>
+          </Button>
+        )}
+      </div>
     </section>
   );
 }

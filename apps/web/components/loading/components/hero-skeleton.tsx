@@ -2,7 +2,7 @@ import { Skeleton } from "@repo/ui/skeleton";
 
 export function HeroSkeleton() {
   return (
-    <section className="mx-auto flex min-h-[650px] w-full max-w-[1440px] flex-col items-center px-4 py-[76px] max-[700px]:min-h-[590px] max-[700px]:py-[54px]">
+    <section className="app-container flex min-h-[650px] flex-col items-center py-[76px] max-[700px]:min-h-[590px] max-[700px]:py-[54px]">
       <Skeleton className="mb-3 size-[100px] rounded-full" />
       <Skeleton className="mb-[14px] h-3 w-40" />
       <Skeleton className="mb-3 h-14 w-full max-w-[760px] max-[700px]:h-8" />

@@ -19,7 +19,7 @@ export function Companies({
   if (!companies.data.length) return null;
   return (
     <section className="w-full border-y border-border/60 bg-surface/40 py-10 sm:py-14">
-      <div className="mx-auto mb-6 flex max-w-[1440px] items-center gap-4 px-4 sm:mb-8">
+      <div className="app-container mb-6 flex items-center gap-4 py-0 sm:mb-8">
         <span
           aria-hidden="true"
           className="h-px flex-1 bg-linear-to-r from-transparent to-border"
