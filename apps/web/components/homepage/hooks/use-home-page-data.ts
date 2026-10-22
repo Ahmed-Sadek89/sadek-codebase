@@ -6,7 +6,7 @@ import { usePublicProjects } from "@repo/hooks/projects";
 import { usePublicSkills } from "@repo/hooks/skills";
 import { usePublicUserCompanies } from "@repo/hooks/user-company";
 import { usePublicUserInfo } from "@repo/hooks/user-info";
-import { usePublicWhatCanDos } from "@repo/hooks/what-can-do";
+import { useInfinitePublicWhatCanDos } from "@repo/hooks/what-can-do";
 import {
   categoryProjectsQuery,
   categorySkillsQuery,
@@ -25,7 +25,7 @@ export function useHomePageData() {
 
   const userInfo = usePublicUserInfo();
   const userCompanies = usePublicUserCompanies(userCompanyQuery);
-  const whatCanDos = usePublicWhatCanDos(whatCanDoQuery);
+  const whatCanDos = useInfinitePublicWhatCanDos(whatCanDoQuery);
   const skills = usePublicSkills(skillsQuery);
   const categorySkills = usePublicCategorySkills(categorySkillsQuery);
   const projects = usePublicProjects(projectsFilter.query);
@@ -35,7 +35,15 @@ export function useHomePageData() {
     // GET /user-info/public: the default-view user's row (404 when there is none).
     userInfo: toQueryState(userInfo, (response) => response),
     companies: toQueryState(userCompanies, listOf),
-    services: toQueryState(whatCanDos, listOf),
+    services: {
+      // Every loaded page, in order; "Show more" appends the next one.
+      ...toQueryState(whatCanDos, (data) =>
+        data ? data.pages.flatMap((page) => page.data) : [],
+      ),
+      hasMore: whatCanDos.hasNextPage,
+      isLoadingMore: whatCanDos.isFetchingNextPage,
+      loadMore: () => void whatCanDos.fetchNextPage(),
+    },
     skills: toQueryState(skills, listOf),
     skillCategories: toQueryState(categorySkills, listOf),
     projects: {

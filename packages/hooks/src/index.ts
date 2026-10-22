@@ -88,6 +88,7 @@ export {
   useWhatCanDo,
   useWhatCanDos,
   usePublicWhatCanDos,
+  useInfinitePublicWhatCanDos,
 } from "./what-can-do";
 
 export {

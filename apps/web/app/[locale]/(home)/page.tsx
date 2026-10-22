@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
 import { dehydrate, getQueryClient, HydrationBoundary } from "@repo/libs/query";
 import {
-  categoryProjectsService, categorySkillsService, projectsService, skillsService, userCompanyService, whatCanDoService
+  categoryProjectsService,
+  categorySkillsService,
+  projectsService,
+  skillsService,
+  userCompanyService,
+  whatCanDoService,
 } from "@repo/services";
+import { getNextPageParam } from "@repo/utils/pagination";
 import { queryKeys } from "@repo/utils/query-keys";
 import { HomePage } from "../../../components/homepage";
 import {
@@ -28,7 +34,6 @@ export async function generateMetadata({
 }
 
 export default async function Page() {
-
   const queryClient = getQueryClient();
   await Promise.all([
     queryClient
@@ -36,44 +41,51 @@ export default async function Page() {
         queryKey: queryKeys.userInfo.public(),
         queryFn: getPublicUserInfo,
       })
-      .catch(() => { }),
+      .catch(() => {}),
+    // Services is an infinite list: prefetch its first page only.
     queryClient
-      .query({
-        queryKey: queryKeys.whatCanDo.publicList(whatCanDoQuery),
-        queryFn: () => whatCanDoService.findAllPublic(whatCanDoQuery),
+      .infiniteQuery({
+        queryKey: queryKeys.whatCanDo.publicInfinite(whatCanDoQuery),
+        queryFn: ({ pageParam }: { pageParam: number }) =>
+          whatCanDoService.findAllPublic({
+            ...whatCanDoQuery,
+            page: pageParam,
+          }),
+        initialPageParam: 1,
+        getNextPageParam,
       })
-      .catch(() => { }),
+      .catch(() => {}),
     queryClient
       .query({
         queryKey: queryKeys.skills.publicList(skillsQuery),
         queryFn: () => skillsService.findAllPublic(skillsQuery),
       })
-      .catch(() => { }),
+      .catch(() => {}),
     queryClient
       .query({
         queryKey: queryKeys.categorySkills.publicList(categorySkillsQuery),
         queryFn: () => categorySkillsService.findAllPublic(categorySkillsQuery),
       })
-      .catch(() => { }),
+      .catch(() => {}),
     queryClient
       .query({
         queryKey: queryKeys.userCompany.publicList(userCompanyQuery),
         queryFn: () => userCompanyService.findAllPublic(userCompanyQuery),
       })
-      .catch(() => { }),
+      .catch(() => {}),
     queryClient
       .query({
         queryKey: queryKeys.categoryProjects.publicList(categoryProjectsQuery),
         queryFn: () =>
           categoryProjectsService.findAllPublic(categoryProjectsQuery),
       })
-      .catch(() => { }),
+      .catch(() => {}),
     queryClient
       .query({
         queryKey: queryKeys.projects.publicList(projectsQuery),
         queryFn: () => projectsService.findAllPublic(projectsQuery),
       })
-      .catch(() => { }),
+      .catch(() => {}),
   ]);
 
   return (

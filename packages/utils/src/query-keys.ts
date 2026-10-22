@@ -107,6 +107,9 @@ export const queryKeys = {
     publicLists: () => [...queryKeys.whatCanDo.lists(), "public"] as const,
     publicList: (query: WhatCanDosQuery) =>
       [...queryKeys.whatCanDo.publicLists(), query] as const,
+    // The "show more" list: pages of `query` (without `page`), one cache entry.
+    publicInfinite: (query: Omit<WhatCanDosQuery, "page">) =>
+      [...queryKeys.whatCanDo.publicLists(), "infinite", query] as const,
     mines: () => [...queryKeys.whatCanDo.all, "mine"] as const,
     mine: (query: WhatCanDosQuery) =>
       [...queryKeys.whatCanDo.mines(), query] as const,

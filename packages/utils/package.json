@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./query-keys": "./src/query-keys.ts"
+    "./query-keys": "./src/query-keys.ts",
+    "./pagination": "./src/pagination.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

@@ -20,12 +20,14 @@ export {
   dehydrate,
   HydrationBoundary,
   keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 export type {
   DehydratedState,
+  InfiniteData,
   QueryClient,
   QueryKey,
   UseMutationOptions,

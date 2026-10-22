@@ -2,6 +2,7 @@
 
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useQueryClient,
   type QueryClient,
 } from "@repo/libs/query";
@@ -11,6 +12,7 @@ import type {
   UpdateWhatCanDoRequest,
   WhatCanDosQuery,
 } from "@repo/types/what-can-do";
+import { getNextPageParam } from "@repo/utils/pagination";
 import { queryKeys } from "@repo/utils/query-keys";
 import { useGuardedMutation, useGuardedQuery, usePublicQuery } from "./api";
 
@@ -39,6 +41,23 @@ export function usePublicWhatCanDos(query: WhatCanDosQuery = {}) {
     queryFn: () => whatCanDoService.findAllPublic(query),
     // Keep the current rows on screen while a new page or search loads.
     placeholderData: keepPreviousData,
+  });
+}
+
+/**
+ * GET /what-can-do/public, page by page: `fetchNextPage()` appends the next
+ * `query.limit` items and `hasNextPage` turns false after the last page.
+ * No sign-in needed.
+ */
+export function useInfinitePublicWhatCanDos(
+  query: Omit<WhatCanDosQuery, "page"> = {},
+) {
+  return useInfiniteQuery({
+    queryKey: queryKeys.whatCanDo.publicInfinite(query),
+    queryFn: ({ pageParam }) =>
+      whatCanDoService.findAllPublic({ ...query, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam,
   });
 }
 

@@ -1,1 +1,1 @@
-export { ServiceRow } from "./service-row";
+export { ShowMoreButton } from "./show-more-button";
