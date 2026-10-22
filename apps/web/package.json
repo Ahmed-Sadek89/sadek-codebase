@@ -21,7 +21,9 @@
     "next": "16.3.4",
     "next-intl": "^4.14.9",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-slick": "^0.31.0",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -30,6 +32,7 @@
     "@types/node": "26.4.1",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.5",
+    "@types/react-slick": "^0.23.13",
     "eslint": "10.9.1",
     "postcss": "^8.5.28",
     "tailwindcss": "^4.3.3",

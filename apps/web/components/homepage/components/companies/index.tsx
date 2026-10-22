@@ -3,12 +3,12 @@
 import { useTranslations } from "next-intl";
 import type { UserCompany } from "@repo/types/user-company";
 import type { QueryState } from "../../utils";
-import { CompanyBadge } from "./components";
-import { useCompanyBadges } from "./hooks";
+import { CompaniesCarousel } from "./components";
 
 /**
- * "Trusted by" strip under the hero (GET /user-company/public). It is
- * decorative, so it renders nothing while loading, on error, or when empty.
+ * "Companies I've worked with" strip under the hero
+ * (GET /user-company/public), as a slow endless carousel. It is decorative,
+ * so it renders nothing while loading, on error, or when empty.
  */
 export function Companies({
   companies,
@@ -16,16 +16,23 @@ export function Companies({
   companies: QueryState<UserCompany[]>;
 }) {
   const t = useTranslations();
-  const badges = useCompanyBadges(companies.data);
-  if (!badges.length) return null;
+  if (!companies.data.length) return null;
   return (
-    <section className="mx-auto w-full max-w-[1440px] px-4 pb-[54px] text-center text-[8px] tracking-[0.12em] text-muted-foreground">
-      {t("companiesTitle")}
-      <div className="mt-4 flex flex-wrap justify-center gap-x-10 gap-y-3 max-[700px]:justify-start">
-        {badges.map((company) => (
-          <CompanyBadge key={company.id} company={company} />
-        ))}
+    <section className="w-full border-y border-border/60 bg-surface/40 py-10 sm:py-14">
+      <div className="mx-auto mb-6 flex max-w-[1440px] items-center gap-4 px-4 sm:mb-8">
+        <span
+          aria-hidden="true"
+          className="h-px flex-1 bg-linear-to-r from-transparent to-border"
+        />
+        <h2 className="text-center text-[10px] font-semibold tracking-[0.2em] text-muted-foreground uppercase sm:text-xs">
+          {t("companiesTitle")}
+        </h2>
+        <span
+          aria-hidden="true"
+          className="h-px flex-1 bg-linear-to-l from-transparent to-border"
+        />
       </div>
+      <CompaniesCarousel companies={companies.data} />
     </section>
   );
 }

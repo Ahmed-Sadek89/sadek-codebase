@@ -14,7 +14,7 @@ export const categorySkillsQuery: CategorySkillsQuery = {
   limit: 10,
   isActive: true,
 };
-export const userCompanyQuery: UserCompaniesQuery = { limit: 10 };
+export const userCompanyQuery: UserCompaniesQuery = { limit: 20 };
 export const categoryProjectsQuery: CategoryProjectsQuery = {
   limit: 10,
   isActive: true,
