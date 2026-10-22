@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { BrandLink } from "../header/components";
 import { navItems } from "../header/utils";
 
 const linkClass = "text-muted-foreground no-underline hover:text-primary";
@@ -10,15 +11,7 @@ export function Footer() {
     <footer className="bg-surface pt-14">
       <div className="app-container grid grid-cols-1 gap-9 sm:grid-cols-2 lg:grid-cols-[2.2fr_1fr_1.5fr_1.2fr]">
         <div className="flex flex-col gap-2">
-          <Link
-            className="flex items-center gap-2 text-[17px] font-extrabold text-foreground no-underline"
-            href="#home"
-          >
-            <span className="grid size-6 place-items-center rounded-md bg-primary font-black text-primary-foreground">
-              W
-            </span>
-            {t("brandName")}
-          </Link>
+          <BrandLink className="self-start" />
           <p className="my-2 max-w-[250px] leading-5 text-muted-foreground">
             {t("footerTagline")}
           </p>

@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 /** The cover photo, faded into the page background behind the hero. */
-export function HeroCover({ src, name }: { src?: string, name: string }) {
+export function HeroCover({ src, name }: { src?: string; name: string }) {
   const t = useTranslations();
   if (!src) return null;
 

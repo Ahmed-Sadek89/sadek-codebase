@@ -8,12 +8,4 @@ export function getHeroLinks(info: PublicUserInfoResponse): ProfileLink[] {
   return getProfileLinks(info, info.user?.email);
 }
 
-/** "Ahmed Sadek" -> "AS": shown in the avatar circle when there is no photo. */
-export function getInitials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((word) => word.charAt(0).toLocaleUpperCase())
-    .join("");
-}
+export { getInitials } from "../../../../../utils/initials";

@@ -17,3 +17,6 @@ export const LANGUAGE_OPTIONS = [
   { value: "de", label: "Deutsch", flag: "/logo/de.svg" },
   { value: "ru", label: "Русский", flag: "/logo/ru.svg" },
 ] as const;
+
+/** The homepage section ids behind the nav links ("#about" -> "about"). */
+export const sectionIds = navItems.map((item) => item.href.slice(1));

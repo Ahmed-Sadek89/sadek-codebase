@@ -27,7 +27,10 @@ export function Hero({
       id="home"
       className="relative isolate flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-4 py-[76px] text-center bg-radial-[circle_at_50%_13%] from-primary-muted from-0% to-transparent to-27% max-[700px]:min-h-[590px] max-[700px]:py-[54px]"
     >
-      <HeroCover name={profile?.name || "default user"} src={profile?.coverPhotoUrl} />
+      <HeroCover
+        name={profile?.name || "default user"}
+        src={profile?.coverPhotoUrl}
+      />
       <div className="absolute top-[45px] left-1/2 -z-10 h-[170px] w-[300px] -translate-x-1/2 bg-glow blur-[45px]" />
 
       <div className={reveal}>

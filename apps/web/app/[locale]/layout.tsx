@@ -38,7 +38,13 @@ export default async function RootLayout({
   const dir = getDirection(locale);
 
   return (
-    <html lang={locale} dir={dir} suppressHydrationWarning>
+    <html
+      lang={locale}
+      dir={dir}
+      // Smooth #section jumps that stop below the sticky header.
+      className="scroll-smooth scroll-pt-20 motion-reduce:scroll-auto"
+      suppressHydrationWarning
+    >
       <body className={`${poppins.variable} min-w-[320px]`}>
         <NextIntlClientProvider>
           <DirectionProvider dir={dir}>
