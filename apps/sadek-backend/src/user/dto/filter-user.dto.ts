@@ -1,5 +1,6 @@
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
+import { ToBoolean } from '../../common/transformers/to-boolean';
 
 export class FilterUserDto extends PaginationQueryDto {
 
@@ -13,5 +14,10 @@ export class FilterUserDto extends PaginationQueryDto {
     @IsString()
     @IsOptional()
     avatarUrl!: string;
+
+    @IsOptional()
+    @ToBoolean()
+    @IsBoolean()
+    isDefaultView?: boolean;
 
 }

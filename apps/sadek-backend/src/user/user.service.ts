@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { FilterUserDto } from './dto/filter-user.dto';
+import { UpdateDefaultViewDto } from './dto/update-default-view.dto';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from "bcrypt";
 import { paginate } from '../common/pagination';
@@ -36,6 +37,10 @@ export class UserService {
 
     if (query.avatarUrl) {
       filters.avatarUrl = query.avatarUrl;
+    }
+
+    if (query.isDefaultView !== undefined) {
+      filters.isDefaultView = query.isDefaultView;
     }
 
     const where: FindOptionsWhere<User> | FindOptionsWhere<User>[] = query.search
@@ -71,7 +76,8 @@ export class UserService {
         username: true, 
         email: true,
         password: true,
-        avatarUrl: true
+        avatarUrl: true,
+        isDefaultView: true
       }
     });
     return data
@@ -91,6 +97,20 @@ export class UserService {
       }
     } catch (error: any) {
       throw new BadRequestException(error.message)
+    }
+  }
+
+  async updateDefaultView(id: number, { isDefaultView }: UpdateDefaultViewDto) {
+    await this.findOne(id);
+    if (isDefaultView) {
+      const currentDefault = await this.userRepo.findOne({ where: { isDefaultView: true } });
+      if (currentDefault) {
+        await this.userRepo.update(currentDefault.id, { isDefaultView: false });
+      }
+    }
+    await this.userRepo.update(id, { isDefaultView });
+    return {
+      message: "User default view updated successfully",
     }
   }
 

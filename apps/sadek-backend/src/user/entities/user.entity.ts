@@ -6,8 +6,10 @@ import { Skill } from "../../skills/entities/skill.entity";
 import { UserInfo } from "../../user-info/entities/user-info.entity";
 import { UserCompany } from "../../user-company/entities/user-company.entity";
 import { WhatCanDo } from "../../what-can-do/entities/what-can-do.entity";
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, Index, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
+// Partial unique index: at most one user can be the default view.
+@Index("UQ_users_is_default_view", ["isDefaultView"], { unique: true, where: '"isDefaultView" = true' })
 @Entity("users")
 export class User {
     @PrimaryGeneratedColumn({
@@ -71,6 +73,13 @@ export class User {
         nullable: true,
     })
     lastLogoutAt!: Date;
+
+    @Column({
+        type: "boolean",
+        default: false,
+        nullable: false,
+    })
+    isDefaultView!: boolean;
 
     @BeforeInsert()
     @BeforeUpdate()

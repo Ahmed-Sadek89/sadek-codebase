@@ -1,4 +1,3 @@
 
 
--- allow also in profile page to change password
 -- make isAdmin col in user entity

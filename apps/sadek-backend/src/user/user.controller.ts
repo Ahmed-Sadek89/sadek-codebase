@@ -1,9 +1,10 @@
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FilterUserDto } from './dto/filter-user.dto';
+import { UpdateDefaultViewDto } from './dto/update-default-view.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth/jwt-auth.guard';
 
 @ApiTags('Users')
@@ -46,6 +47,16 @@ export class UserController {
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return await this.userService.update(+id, updateUserDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Patch(':id/default-view')
+  async updateDefaultView(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateDefaultViewDto: UpdateDefaultViewDto
+  ) {
+    return await this.userService.updateDefaultView(id, updateDefaultViewDto);
   }
 
   @UseGuards(JwtAuthGuard)
