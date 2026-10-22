@@ -33,6 +33,8 @@ export const nextJsConfig = [
     rules: {
       ...pluginNext.configs.recommended.rules,
       ...pluginNext.configs["core-web-vitals"].rules,
+      // Pages Router only; the apps use the App Router.
+      "@next/next/no-html-link-for-pages": "off",
     },
   },
   pluginReactHooks.configs.flat.recommended,
