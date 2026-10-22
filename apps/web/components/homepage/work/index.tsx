@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { cn } from "@repo/ui/utils";
 import { SectionTitle } from "../components/section-title";
 import { SectionStatus } from "../components/section-status";
@@ -7,6 +8,7 @@ import { CategoryFilter, ProjectCard } from "./components";
 import { useWork } from "./hooks";
 
 export function Work() {
+  const t = useTranslations();
   const {
     projects,
     categories,
@@ -20,10 +22,7 @@ export function Work() {
       id="work"
       className="mx-auto w-full max-w-[1440px] px-4 py-[76px] max-[700px]:py-[54px] bg-background"
     >
-      <SectionTitle
-        title="Selected Work"
-        copy="A closer look at a few projects and the impact they made"
-      />
+      <SectionTitle title={t("workTitle")} copy={t("workCopy")} />
       <CategoryFilter
         categories={categories}
         selectedId={categoryId}
@@ -46,7 +45,7 @@ export function Work() {
           ))}
         </div>
       ) : (
-        <SectionStatus isPending={isPending} emptyText="No projects yet." />
+        <SectionStatus isPending={isPending} emptyText={t("workEmpty")} />
       )}
     </section>
   );

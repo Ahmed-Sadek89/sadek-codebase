@@ -8,7 +8,7 @@ import { skillsService } from "@repo/services/skills";
 import { userCompanyService } from "@repo/services/user-company";
 import { whatCanDoService } from "@repo/services/what-can-do";
 import { queryKeys } from "@repo/utils/query-keys";
-import { HomePage } from "../components/homepage";
+import { HomePage } from "../../../components/homepage";
 import {
   categoryProjectsQuery,
   categorySkillsQuery,
@@ -17,14 +17,20 @@ import {
   userCompanyQuery,
   userInfoQuery,
   whatCanDoQuery,
-} from "../components/homepage/utils";
-import { Footer } from "../components/layout/footer/index";
-import { Header } from "../components/layout/header/index";
-import { getPublicUserInfos, getUserInfoMetadata } from "../utils/user-info";
+} from "../../../components/homepage/utils";
+import { Footer } from "../../../components/layout/footer/index";
+import { Header } from "../../../components/layout/header/index";
+import {
+  getPublicUserInfos,
+  getUserInfoMetadata,
+} from "../../../utils/user-info";
 
 // Title and description come from the default-view user's info.
-export async function generateMetadata(): Promise<Metadata> {
-  return (await getUserInfoMetadata()) ?? {};
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]">): Promise<Metadata> {
+  const { locale } = await params;
+  return (await getUserInfoMetadata(locale)) ?? {};
 }
 
 export default async function Page() {

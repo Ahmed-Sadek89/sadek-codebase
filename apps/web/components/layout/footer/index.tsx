@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { navItems } from "../header/utils";
 
-const linkClass =
-  "text-muted-foreground no-underline hover:text-primary";
+const linkClass = "text-muted-foreground no-underline hover:text-primary";
 
 export function Footer() {
+  const t = useTranslations();
   return (
     <footer className="bg-surface pt-14">
       <div className="app-container grid grid-cols-1 gap-9 sm:grid-cols-2 lg:grid-cols-[2.2fr_1fr_1.5fr_1.2fr]">
@@ -16,39 +17,37 @@ export function Footer() {
             <span className="grid size-6 place-items-center rounded-md bg-primary font-black text-primary-foreground">
               W
             </span>
-            Workfolio
+            {t("brandName")}
           </Link>
           <p className="my-2 max-w-[250px] leading-5 text-muted-foreground">
-            Product designer and front-end developer crafting meaningful digital
-            experiences that people love.
+            {t("footerTagline")}
           </p>
-          <div className="text-sm text-muted-foreground">◉　in　◎</div>
         </div>
         <div className="flex flex-col gap-2">
-          <b className="mb-1 text-xl text-foreground">Navigate</b>
+          <b className="mb-1 text-xl text-foreground">{t("footerNavigate")}</b>
           {navItems.map((item) => (
             <Link className={linkClass} key={item.href} href={item.href}>
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           ))}
         </div>
         <div className="flex flex-col gap-2">
-          <b className="mb-1 text-xl text-foreground">What I Do</b>
+          <b className="mb-1 text-xl text-foreground">{t("footerWhatIDo")}</b>
           <Link className={linkClass} href="#skills">
-            UI / UX Design
+            {t("footerUiUx")}
           </Link>
           <Link className={linkClass} href="#skills">
-            Front-End Development
+            {t("footerFrontEnd")}
           </Link>
           <Link className={linkClass} href="#services">
-            Design Systems
+            {t("footerDesignSystems")}
           </Link>
           <Link className={linkClass} href="#services">
-            Brand & Visual Identity
+            {t("footerBrand")}
           </Link>
         </div>
         <div className="flex flex-col gap-2">
-          <b className="mb-1 text-xl text-foreground">Say Hello</b>
+          <b className="mb-1 text-xl text-foreground">{t("footerSayHello")}</b>
           <Link className={linkClass} href="mailto:hello@danielmercer.com">
             hello@danielmercer.com
           </Link>
@@ -59,7 +58,7 @@ export function Footer() {
         </div>
       </div>
       <div className="mt-11 border-t border-border py-4 text-center text-[10px] text-muted-foreground">
-        © Copyright Workfolio. All Rights Reserved.
+        {t("footerCopyright")}
       </div>
     </footer>
   );

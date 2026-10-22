@@ -1,7 +1,10 @@
 import Image from "next/image";
+import { useLocale } from "next-intl";
 import type { Skill } from "@repo/types/skills";
+import { localize } from "../../../../utils/localize";
 
 export function SkillChip({ skill }: { skill: Skill }) {
+  const locale = useLocale();
   return (
     <span className="flex items-center gap-[5px] rounded-[20px] bg-secondary px-[9px] py-[5px] text-[9px] text-secondary-foreground">
       {skill.avatar_url && (
@@ -14,7 +17,7 @@ export function SkillChip({ skill }: { skill: Skill }) {
           width={12}
         />
       )}
-      {skill.nameEn}
+      {localize(locale, skill.nameEn, skill.nameAr)}
     </span>
   );
 }

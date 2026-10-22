@@ -7,12 +7,6 @@ export function sortByStartDate(companies: UserCompany[]) {
   );
 }
 
-const monthYear = new Intl.DateTimeFormat("en", {
-  month: "short",
-  year: "numeric",
-  timeZone: "UTC",
-});
-
 /** "example.com" for a company site link; the raw value if it is not a URL. */
 export function getHostname(url: string) {
   try {
@@ -22,11 +16,23 @@ export function getHostname(url: string) {
   }
 }
 
-/** "Mar 2022 — Present" (`startWorkTo: null` means a current job). */
-export function formatWorkPeriod(company: UserCompany) {
+/**
+ * "Mar 2022 — Present" in the page's language (`startWorkTo: null` means a
+ * current job, shown as `presentLabel`).
+ */
+export function formatWorkPeriod(
+  company: UserCompany,
+  locale: string,
+  presentLabel: string,
+) {
+  const monthYear = new Intl.DateTimeFormat(locale, {
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
   const from = monthYear.format(new Date(company.startWorkFrom));
   const to = company.startWorkTo
     ? monthYear.format(new Date(company.startWorkTo))
-    : "Present";
+    : presentLabel;
   return `${from} — ${to}`;
 }

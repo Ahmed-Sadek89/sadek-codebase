@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { MobileNavigation, ThemeToggle } from "./components";
+import { useTranslations } from "next-intl";
+import { LanguageSelect, MobileNavigation, ThemeToggle } from "./components";
 import { navItems } from "./utils";
 
 export function Header() {
+  const t = useTranslations();
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur">
       <div className="app-container relative flex h-17.5 items-center justify-between gap-6">
@@ -13,21 +15,24 @@ export function Header() {
           <span className="grid size-6 place-items-center rounded-md bg-primary font-black text-primary-foreground">
             W
           </span>
-          Workfolio
+          {t("brandName")}
         </Link>
         <MobileNavigation />
-        <nav aria-label="Main navigation" className="hidden gap-6 md:flex">
+        <nav aria-label={t("navMainLabel")} className="hidden gap-6 md:flex">
           {navItems.map((item) => (
             <Link
               className="text-muted-foreground no-underline hover:text-primary"
               key={item.href}
               href={item.href}
             >
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           ))}
         </nav>
-        <ThemeToggle />
+        <div className="flex shrink-0 items-center gap-2">
+          <LanguageSelect />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

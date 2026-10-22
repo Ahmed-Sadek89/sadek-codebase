@@ -2,6 +2,7 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { userInfoService } from "@repo/services/user-info";
 import { userInfoQuery } from "../components/homepage/utils";
+import { localize } from "./localize";
 
 /**
  * GET /user-info/public, once per server request: generateMetadata and the
@@ -12,14 +13,20 @@ export const getPublicUserInfos = cache(() =>
 );
 
 /** Page metadata from the default-view user's info; `null` keeps the layout's defaults. */
-export async function getUserInfoMetadata(): Promise<Metadata | null> {
+export async function getUserInfoMetadata(
+  locale: string,
+): Promise<Metadata | null> {
   const info = await getPublicUserInfos()
     .then((response) => response.data[0])
     .catch(() => undefined);
   if (!info) return null;
 
-  const title = info.headTitle_en;
-  const description = info.shortDescription_en;
+  const title = localize(locale, info.headTitle_en, info.headTitle_ar);
+  const description = localize(
+    locale,
+    info.shortDescription_en,
+    info.shortDescription_ar,
+  );
   const profiles = [info.github, info.linkedin].filter((url): url is string =>
     Boolean(url),
   );
@@ -28,7 +35,7 @@ export async function getUserInfoMetadata(): Promise<Metadata | null> {
     title,
     description,
     authors: profiles.map((url) => ({ url })),
-    openGraph: { type: "profile", title, description },
+    openGraph: { type: "profile", locale, title, description },
     twitter: { card: "summary", title, description },
   };
 }
