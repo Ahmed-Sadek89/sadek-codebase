@@ -22,6 +22,8 @@
   "statusLoading": "Wird geladen…",
   "statusError": "Dieser Bereich konnte nicht geladen werden. Bitte versuche es später erneut.",
   "heroAvailable": "✦ Verfügbar für neue Projekte",
+  "heroGreeting": "Hallo, ich bin {name}",
+  "heroAvatarAlt": "Foto von {name}",
   "heroWelcome": "Willkommen",
   "heroViewWork": "Meine Arbeiten ansehen",
   "heroLetsTalk": "Lass uns reden",

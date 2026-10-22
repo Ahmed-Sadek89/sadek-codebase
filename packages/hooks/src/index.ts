@@ -67,7 +67,7 @@ export {
   useUpdateUserInfo,
   useUserInfo,
   useUserInfos,
-  usePublicUserInfos,
+  usePublicUserInfo,
 } from "./user-info";
 
 export {

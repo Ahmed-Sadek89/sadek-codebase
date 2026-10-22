@@ -4,7 +4,6 @@ export {
   projectsQuery,
   skillsQuery,
   userCompanyQuery,
-  userInfoQuery,
   whatCanDoQuery,
 } from "./queries";
 export { toQueryState, type QueryState } from "./query-state";

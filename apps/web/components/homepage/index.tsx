@@ -27,7 +27,7 @@ export function HomePage() {
   } = useHomePageData();
 
   return (
-    <div className="overflow-hidden">
+    < >
       <Hero userInfo={userInfo} companies={companies} />
       <About userInfo={userInfo} />
       <Services services={services} />
@@ -42,6 +42,6 @@ export function HomePage() {
       <Reviews />
       <HowItWorks />
       <Contact userInfo={userInfo} />
-    </div>
+    </>
   );
 }

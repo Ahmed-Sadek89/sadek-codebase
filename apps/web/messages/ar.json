@@ -22,6 +22,8 @@
   "statusLoading": "جارٍ التحميل…",
   "statusError": "تعذّر تحميل هذا القسم. يُرجى المحاولة لاحقاً.",
   "heroAvailable": "✦ متاح لمشاريع جديدة",
+  "heroGreeting": "مرحباً، أنا {name}",
+  "heroAvatarAlt": "صورة {name}",
   "heroWelcome": "أهلاً بك",
   "heroViewWork": "شاهد أعمالي",
   "heroLetsTalk": "لنتحدث",

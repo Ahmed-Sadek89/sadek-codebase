@@ -11,11 +11,10 @@ import {
   projectsQuery,
   skillsQuery,
   userCompanyQuery,
-  userInfoQuery,
   whatCanDoQuery,
 } from "../../../components/homepage/utils";
 import {
-  getPublicUserInfos,
+  getPublicUserInfo,
   getUserInfoMetadata,
 } from "../../../utils/user-info";
 import { Suspense } from "react";
@@ -34,8 +33,8 @@ export default async function Page() {
   await Promise.all([
     queryClient
       .query({
-        queryKey: queryKeys.userInfo.publicList(userInfoQuery),
-        queryFn: getPublicUserInfos,
+        queryKey: queryKeys.userInfo.public(),
+        queryFn: getPublicUserInfo,
       })
       .catch(() => { }),
     queryClient

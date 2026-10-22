@@ -32,13 +32,11 @@ export function useUserInfos(query: UserInfoQuery = {}) {
   });
 }
 
-/** GET /user-info/public: the default-view user's info, paginated. No sign-in needed. */
-export function usePublicUserInfos(query: UserInfoQuery = {}) {
+/** GET /user-info/public: the default-view user's row (404 when there is none). No sign-in needed. */
+export function usePublicUserInfo() {
   return usePublicQuery({
-    queryKey: queryKeys.userInfo.publicList(query),
-    queryFn: () => userInfoService.findAllPublic(query),
-    // Keep the current rows on screen while a new page or search loads.
-    placeholderData: keepPreviousData,
+    queryKey: queryKeys.userInfo.public(),
+    queryFn: () => userInfoService.findPublic(),
   });
 }
 

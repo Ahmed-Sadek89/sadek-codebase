@@ -23,10 +23,10 @@ export class UserInfoController {
     return await this.userInfoService.create(createUserInfoDto, userId);
   }
 
-  // Public: the default-view user's rows. Declared before ':id' so "public" is not parsed as an id.
+  // Public: the default-view user's info. Declared before ':id' so "public" is not parsed as an id.
   @Get('public')
-  async findAllPublic(@Query() query: FilterUserInfoDto) {
-    return await this.userInfoService.findAllPublic(query);
+  async findPublic() {
+    return await this.userInfoService.findPublic();
   }
 
   @UseGuards(JwtAuthGuard)

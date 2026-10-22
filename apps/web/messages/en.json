@@ -22,6 +22,8 @@
   "statusLoading": "Loading…",
   "statusError": "Couldn't load this section. Please try again later.",
   "heroAvailable": "✦ Available for new projects",
+  "heroGreeting": "Hi, I'm {name}",
+  "heroAvatarAlt": "Photo of {name}",
   "heroWelcome": "Welcome",
   "heroViewWork": "View My Work",
   "heroLetsTalk": "Let's Talk",

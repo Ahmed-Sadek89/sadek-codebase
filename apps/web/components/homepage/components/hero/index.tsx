@@ -5,32 +5,38 @@ import { ArrowRight } from "@repo/ui/icons";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { UserCompany } from "@repo/types/user-company";
-import type { UserInfoDetails } from "@repo/types/user-info";
+import type { PublicUserInfoResponse } from "@repo/types/user-info";
 import type { QueryState } from "../../utils";
-import { SocialLinks, TrustedBy } from "./components";
+import { HeroAvatar, HeroCover, SocialLinks, TrustedBy } from "./components";
 import { useHeroContent } from "./hooks";
 
 export function Hero({
   userInfo,
   companies,
 }: {
-  userInfo: QueryState<UserInfoDetails | undefined>;
+  userInfo: QueryState<PublicUserInfoResponse | undefined>;
   companies: QueryState<UserCompany[]>;
 }) {
   const t = useTranslations();
-  const { headline, summary, socialLinks, companyNames } = useHeroContent(
-    userInfo.data,
-    companies.data,
-  );
+  const { profile, headline, summary, socialLinks, companyNames } =
+    useHeroContent(userInfo.data, companies.data);
   return (
     <section
       id="home"
       className="mx-auto w-full max-w-[1440px] px-4 py-[76px] max-[700px]:py-[54px] relative min-h-[650px] text-center bg-radial-[circle_at_50%_13%] from-primary-muted from-0% to-transparent to-27% max-[700px]:min-h-[590px] max-[700px]:pt-[62px]"
     >
+      <HeroCover src={profile?.coverPhotoUrl} />
       <div className="absolute top-[45px] left-1/2 h-[170px] w-[300px] -translate-x-1/2 bg-glow blur-[45px]" />
-      <div className="relative mx-auto mb-3 grid size-[100px] place-items-center rounded-full border-[3px] border-border-strong bg-linear-135/srgb from-accent-soft to-accent-strong font-extrabold">
-        DM
-      </div>
+      <HeroAvatar
+        name={profile?.name}
+        initials={profile?.initials}
+        avatarUrl={profile?.avatarUrl}
+      />
+      {profile && (
+        <p className="relative mb-1 text-sm font-semibold text-foreground">
+          {t("heroGreeting", { name: profile.name })}
+        </p>
+      )}
       <p className="relative text-[10px] text-primary">{t("heroAvailable")}</p>
       <h1 className="relative mx-auto my-[14px] max-w-[900px] text-6xl leading-[1.1] tracking-[-0.04em] max-[700px]:text-[26px]">
         {headline ?? (userInfo.isLoading ? "…" : t("heroWelcome"))}

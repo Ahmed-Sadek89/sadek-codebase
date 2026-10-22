@@ -5,6 +5,7 @@ import type {
   CreateUserInfoResponse,
   DeleteUserInfoResponse,
   MyUserInfoResponse,
+  PublicUserInfoResponse,
   UpdateUserInfoRequest,
   UpdateUserInfoResponse,
   UserInfoDetails,
@@ -45,11 +46,10 @@ export const userInfoService = {
     );
     return data;
   },
-  /** GET /user-info/public (no token): the default-view user's rows. */
-  async findAllPublic(query: UserInfoQuery): Promise<UserInfoResponse> {
-    const { data } = await apiClient.get<UserInfoResponse>(
+  /** GET /user-info/public (no token): the default-view user's row; 404 when there is none. */
+  async findPublic(): Promise<PublicUserInfoResponse> {
+    const { data } = await apiClient.get<PublicUserInfoResponse>(
       userInfoEndpoints.public,
-      { params: query },
     );
     return data;
   },

@@ -33,9 +33,26 @@ export class UserInfoService {
     return await this.findAllFor(query);
   }
 
-  /** Public list: only the info of the user whose `isDefaultView` is true. */
-  async findAllPublic(query: FilterUserInfoDto) {
-    return await this.findAllFor(query, { isDefaultView: true });
+  /** Public: the info row of the user whose `isDefaultView` is true (at most one such user). */
+  async findPublic(): Promise<UserInfo> {
+    const userInfo = await this.userInfoRepository.findOne({
+      where: { user: { isDefaultView: true } },
+      relations: { user: true },
+      // The owner's public profile; password and login dates stay out.
+      select: {
+        user: {
+          id: true,
+          username: true,
+          email: true,
+          avatarUrl: true,
+          coverPhotoUrl: true,
+        },
+      },
+    });
+    if (!userInfo) {
+      throw new NotFoundException('No default-view user info found');
+    }
+    return userInfo;
   }
 
   private async findAllFor(query: FilterUserInfoDto, user?: FindOptionsWhere<User>) {

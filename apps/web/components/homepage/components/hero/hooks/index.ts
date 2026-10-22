@@ -2,17 +2,27 @@
 
 import { useLocale } from "next-intl";
 import type { UserCompany } from "@repo/types/user-company";
-import type { UserInfoDetails } from "@repo/types/user-info";
+import type { PublicUserInfoResponse } from "@repo/types/user-info";
 import { localize } from "../../../../../utils/localize";
-import { getSocialLinks } from "../utils";
+import { hasText } from "../../../utils";
+import { getInitials, getSocialLinks } from "../utils";
 
-/** Headline, social links and "trusted by" names in the page's language. */
+/** Profile, headline, social links and "trusted by" names in the page's language. */
 export function useHeroContent(
-  info: UserInfoDetails | undefined,
+  info: PublicUserInfoResponse | undefined,
   companies: UserCompany[],
 ) {
   const locale = useLocale();
+  const user = info?.user;
   return {
+    profile: user && {
+      name: user.username,
+      initials: getInitials(user.username),
+      avatarUrl: hasText(user.avatarUrl) ? user.avatarUrl : undefined,
+      coverPhotoUrl: hasText(user.coverPhotoUrl)
+        ? user.coverPhotoUrl
+        : undefined,
+    },
     headline: info && localize(locale, info.headTitle_en, info.headTitle_ar),
     summary:
       info &&

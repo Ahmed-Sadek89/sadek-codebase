@@ -22,6 +22,8 @@
   "statusLoading": "Загрузка…",
   "statusError": "Не удалось загрузить этот раздел. Попробуйте позже.",
   "heroAvailable": "✦ Открыт для новых проектов",
+  "heroGreeting": "Привет, я {name}",
+  "heroAvatarAlt": "Фото: {name}",
   "heroWelcome": "Добро пожаловать",
   "heroViewWork": "Мои работы",
   "heroLetsTalk": "Давайте обсудим",

@@ -1,4 +1,5 @@
 import type { MessageResponse } from "./auth";
+import type { User } from "./users";
 import type {
   IsoDateString,
   PaginatedResponse,
@@ -74,10 +75,15 @@ type OptionalUserInfoFields = {
 export type CreateUserInfoResponse = Omit<UserInfo, OptionalUserInfoField> &
   OptionalUserInfoFields;
 
-/** GET /user-info and GET /user-info/public; `order` sorts by `createdAt` (default DESC). */
+/** GET /user-info; `order` sorts by `createdAt` (default DESC). */
 export interface UserInfoQuery extends PaginationQuery {
   /** Matches the English or Arabic headTitle or shortDescription (case-insensitive). Max 20 characters. */
   search?: string;
+}
+
+/** GET /user-info/public: the default-view user's row with their public profile; 404 if no user is the default. */
+export interface PublicUserInfoResponse extends UserInfoDetails {
+  user: Pick<User, "id" | "username" | "email" | "avatarUrl" | "coverPhotoUrl">;
 }
 
 /** Every user's row, not only the signed-in user's. */
