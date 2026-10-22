@@ -31,7 +31,6 @@ export function ChangePasswordDialog({
     onSuccess: () => onOpenChange(false),
   });
   const { errors, isSubmitting } = form.formState;
-
   // Start blank each time the dialog opens; not on close, so the fields
   // don't flash empty during the close animation.
   useEffect(() => {
