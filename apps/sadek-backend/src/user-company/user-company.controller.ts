@@ -22,6 +22,12 @@ export class UserCompanyController {
     return await this.userCompanyService.create(createUserCompanyDto, req.user.userId);
   }
 
+  // Public: the default-view user's rows. Declared before ':id' so "public" is not parsed as an id.
+  @Get('public')
+  async findAllPublic(@Query() query: FilterUserCompanyDto) {
+    return await this.userCompanyService.findAllPublic(query);
+  }
+
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get()

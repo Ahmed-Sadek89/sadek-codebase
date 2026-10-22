@@ -5,7 +5,7 @@ import { CreateUserInfoDto } from './dto/create-user-info.dto';
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
 import { RequestUserDto } from '../auth/dto/request-user.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth/jwt-auth.guard';
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { FilterUserInfoDto } from './dto/filter-user-info.dto';
 
 @ApiTags('User Info')
 @Controller('user-info')
@@ -23,10 +23,16 @@ export class UserInfoController {
     return await this.userInfoService.create(createUserInfoDto, userId);
   }
 
+  // Public: the default-view user's rows. Declared before ':id' so "public" is not parsed as an id.
+  @Get('public')
+  async findAllPublic(@Query() query: FilterUserInfoDto) {
+    return await this.userInfoService.findAllPublic(query);
+  }
+
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get()
-  async findAll(@Query() query: PaginationQueryDto) {
+  async findAll(@Query() query: FilterUserInfoDto) {
     return await this.userInfoService.findAll(query);
   }
 

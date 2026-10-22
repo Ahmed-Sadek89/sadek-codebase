@@ -6,6 +6,7 @@ import { CreateUserCompanyDto } from './dto/create-user-company.dto';
 import { UpdateUserCompanyDto } from './dto/update-user-company.dto';
 import { FilterUserCompanyDto } from './dto/filter-user-company.dto';
 import { paginate } from '../common/pagination';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class UserCompanyService {
@@ -25,9 +26,18 @@ export class UserCompanyService {
   }
 
   async findAll(query: FilterUserCompanyDto, userId: number) {
+    return this.findAllFor(query, { id: userId });
+  }
+
+  /** Public list: always the rows of the user whose `isDefaultView` is true. */
+  async findAllPublic(query: FilterUserCompanyDto) {
+    return this.findAllFor(query, { isDefaultView: true });
+  }
+
+  private async findAllFor(query: FilterUserCompanyDto, owner: FindOptionsWhere<User>) {
     return await paginate({
       repository: this.userCompanyRepository,
-      where: this.ownedWhere(userId, query.search),
+      where: this.ownedWhere(owner, query.search),
       page: query.page,
       limit: query.limit,
       relations: { user: true },
@@ -42,7 +52,7 @@ export class UserCompanyService {
   async findByUser(query: FilterUserCompanyDto, userId: number) {
     return await paginate({
       repository: this.userCompanyRepository,
-      where: this.ownedWhere(userId, query.search),
+      where: this.ownedWhere({ id: userId }, query.search),
       page: query.page,
       limit: query.limit,
       order: query.order
@@ -72,8 +82,8 @@ export class UserCompanyService {
   }
 
   /** The user's rows, optionally narrowed by `search` on the English or Arabic name or description. */
-  private ownedWhere(userId: number, search?: string): FindOptionsWhere<UserCompany> | FindOptionsWhere<UserCompany>[] {
-    const owner: FindOptionsWhere<UserCompany> = { user: { id: userId } };
+  private ownedWhere(user: FindOptionsWhere<User>, search?: string): FindOptionsWhere<UserCompany> | FindOptionsWhere<UserCompany>[] {
+    const owner: FindOptionsWhere<UserCompany> = { user };
     search = search?.trim();
     if (!search) return owner;
     return [

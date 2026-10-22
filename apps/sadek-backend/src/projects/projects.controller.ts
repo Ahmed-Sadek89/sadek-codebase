@@ -23,6 +23,12 @@ export class ProjectsController {
     return await this.projectsService.create(createProjectDto, userId);
   }
 
+  // Public: the default-view user's rows. Declared before ':id' so "public" is not parsed as an id.
+  @Get('public')
+  async findAllPublic(@Query() query: FilterProjectDto) {
+    return await this.projectsService.findAllPublic(query);
+  }
+
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get()

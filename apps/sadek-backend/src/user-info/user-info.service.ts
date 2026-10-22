@@ -1,10 +1,11 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { UserInfo } from './entities/user-info.entity';
 import { CreateUserInfoDto } from './dto/create-user-info.dto';
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { FilterUserInfoDto } from './dto/filter-user-info.dto';
+import { User } from '../user/entities/user.entity';
 import { paginate } from '../common/pagination';
 
 @Injectable()
@@ -28,9 +29,30 @@ export class UserInfoService {
     return await this.userInfoRepository.save(userInfo);
   }
 
-  async findAll(query: PaginationQueryDto) {
+  async findAll(query: FilterUserInfoDto) {
+    return this.findAllFor(query);
+  }
+
+  /** Public list: only the info of the user whose `isDefaultView` is true. */
+  async findAllPublic(query: FilterUserInfoDto) {
+    return this.findAllFor(query, { isDefaultView: true });
+  }
+
+  private async findAllFor(query: FilterUserInfoDto, user?: FindOptionsWhere<User>) {
+    const filters: FindOptionsWhere<UserInfo> = user ? { user } : {};
+    const search = query.search?.trim();
+    const where: FindOptionsWhere<UserInfo> | FindOptionsWhere<UserInfo>[] = search
+      ? [
+        { ...filters, headTitle_en: ILike(`%${search}%`) },
+        { ...filters, headTitle_ar: ILike(`%${search}%`) },
+        { ...filters, shortDescription_en: ILike(`%${search}%`) },
+        { ...filters, shortDescription_ar: ILike(`%${search}%`) },
+      ]
+      : filters;
+
     return await paginate({
       repository: this.userInfoRepository,
+      where,
       page: query.page,
       limit: query.limit,
       relations: { user: true },

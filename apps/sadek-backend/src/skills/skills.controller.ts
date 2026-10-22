@@ -31,6 +31,12 @@ export class SkillsController {
     return await this.skillsService.create(createSkillDto, req.user.userId);
   }
 
+  // Public: the default-view user's rows. Declared before ':id' so "public" is not parsed as an id.
+  @Get('public')
+  async findAllPublic(@Query() query: FilterSkillDto) {
+    return await this.skillsService.findAllPublic(query);
+  }
+
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get()

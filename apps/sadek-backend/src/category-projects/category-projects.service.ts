@@ -6,6 +6,7 @@ import { CreateCategoryProjectDto } from './dto/create-category-project.dto';
 import { UpdateCategoryProjectDto } from './dto/update-category-project.dto';
 import { FilterCategoryProjectDto } from './dto/filter-category_projects.dto';
 import { paginate } from '../common/pagination';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class CategoryProjectsService {
@@ -27,12 +28,18 @@ export class CategoryProjectsService {
     return await this.categoryProjectRepository.save(categoryProject);
   }
 
-  async findAll(
-    filterCategoryProjectDto: FilterCategoryProjectDto,
-    userId: number
-  ) {
+  async findAll(filterCategoryProjectDto: FilterCategoryProjectDto, userId: number) {
+    return this.findAllFor(filterCategoryProjectDto, { id: userId });
+  }
+
+  /** Public list: always the rows of the user whose `isDefaultView` is true. */
+  async findAllPublic(filterCategoryProjectDto: FilterCategoryProjectDto) {
+    return this.findAllFor(filterCategoryProjectDto, { isDefaultView: true });
+  }
+
+  private async findAllFor(filterCategoryProjectDto: FilterCategoryProjectDto, owner: FindOptionsWhere<User>) {
     const filters: FindOptionsWhere<CategoryProject> = {
-      user: { id: userId },
+      user: owner,
     };
 
     if (filterCategoryProjectDto.isActive !== undefined) {

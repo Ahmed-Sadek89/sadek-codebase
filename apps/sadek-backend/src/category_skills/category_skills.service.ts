@@ -7,6 +7,7 @@ import { CategorySkill } from './entities/category_skill.entity';
 import { FilterCategorySkillDto } from './dto/filter-category_skills.dto';
 import { paginate } from '../common/pagination';
 import { SkillsService } from '../skills/skills.service';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class CategorySkillsService {
@@ -34,12 +35,18 @@ export class CategorySkillsService {
     return await this.categorySkillRepository.save(categorySkill);
   }
 
-  async findAll(
-    filterCategorySkillDto: FilterCategorySkillDto,
-    userId: number
-  ) {
+  async findAll(filterCategorySkillDto: FilterCategorySkillDto, userId: number) {
+    return this.findAllFor(filterCategorySkillDto, { id: userId });
+  }
+
+  /** Public list: always the rows of the user whose `isDefaultView` is true. */
+  async findAllPublic(filterCategorySkillDto: FilterCategorySkillDto) {
+    return this.findAllFor(filterCategorySkillDto, { isDefaultView: true });
+  }
+
+  private async findAllFor(filterCategorySkillDto: FilterCategorySkillDto, owner: FindOptionsWhere<User>) {
     const filters: FindOptionsWhere<CategorySkill> = {
-      user: { id: userId },
+      user: owner,
     };
 
     if (filterCategorySkillDto.isActive !== undefined) {

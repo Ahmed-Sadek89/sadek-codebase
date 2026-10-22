@@ -7,6 +7,7 @@ import { FilterProjectDto } from './dto/filter-projects.dto';
 import { Project } from './entities/project.entity';
 import { CategoryProjectsService } from '../category-projects/category-projects.service';
 import { paginate } from '../common/pagination';
+import { User } from '../user/entities/user.entity';
 
 const projectRelations = {
   user: true,
@@ -52,8 +53,17 @@ export class ProjectsService {
    * and `categoryId`.
    */
   async findAll(query: FilterProjectDto, userId: number) {
+    return this.findAllFor(query, { id: userId });
+  }
+
+  /** Public list: always the rows of the user whose `isDefaultView` is true. */
+  async findAllPublic(query: FilterProjectDto) {
+    return this.findAllFor(query, { isDefaultView: true });
+  }
+
+  private async findAllFor(query: FilterProjectDto, owner: FindOptionsWhere<User>) {
     const filters: FindOptionsWhere<Project> = {
-      user: { id: userId },
+      user: owner,
     };
 
     if (query.isActive !== undefined) {

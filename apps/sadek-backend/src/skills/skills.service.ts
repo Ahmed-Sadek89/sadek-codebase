@@ -7,6 +7,7 @@ import { UpdateSkillDto } from './dto/update-skill.dto';
 import { FilterSkillDto } from './dto/filter-skill.dto';
 import { CategorySkillsService } from '../category_skills/category_skills.service';
 import { paginate } from '../common/pagination';
+import { User } from '../user/entities/user.entity';
 
 const skillRelations = {
   user: true,
@@ -51,8 +52,17 @@ export class SkillsService {
   }
 
   async findAll(query: FilterSkillDto, userId: number) {
+    return this.findAllFor(query, { id: userId });
+  }
+
+  /** Public list: always the rows of the user whose `isDefaultView` is true. */
+  async findAllPublic(query: FilterSkillDto) {
+    return this.findAllFor(query, { isDefaultView: true });
+  }
+
+  private async findAllFor(query: FilterSkillDto, owner: FindOptionsWhere<User>) {
     const filters: FindOptionsWhere<Skill> = {
-      user: { id: userId },
+      user: owner,
     };
 
     if (query.isActive !== undefined) {
