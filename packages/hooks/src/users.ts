@@ -4,6 +4,7 @@ import { keepPreviousData, useQueryClient } from "@repo/libs/query";
 import { usersService } from "@repo/services/users";
 import type {
   CreateUserRequest,
+  UpdateUserDefaultViewRequest,
   UpdateUserRequest,
   UsersQuery,
 } from "@repo/types/users";
@@ -62,6 +63,25 @@ export function useUpdateUser() {
         client.invalidateQueries({ queryKey: queryKeys.users.lists() }),
         client.invalidateQueries({ queryKey: queryKeys.users.detail(id) }),
         client.invalidateQueries({ queryKey: queryKeys.users.byEmails() }),
+        client.invalidateQueries({ queryKey: queryKeys.auth.me() }),
+      ]),
+  });
+}
+
+/**
+ * PATCH /users/:id/default-view; setting `true` also flips the previous
+ * default-view user to `false`, so every user query is refreshed.
+ */
+export function useUpdateUserDefaultView() {
+  const client = useQueryClient();
+  return useGuardedMutation({
+    mutationFn: (
+      { id, data }: { id: number; data: UpdateUserDefaultViewRequest },
+      auth,
+    ) => usersService.updateDefaultView(id, data, auth),
+    onSuccess: () =>
+      Promise.all([
+        client.invalidateQueries({ queryKey: queryKeys.users.all }),
         client.invalidateQueries({ queryKey: queryKeys.auth.me() }),
       ]),
   });

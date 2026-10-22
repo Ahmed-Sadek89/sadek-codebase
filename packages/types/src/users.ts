@@ -17,6 +17,8 @@ export interface User {
   createdAt: IsoDateString;
   lastLoginAt: IsoDateString | null;
   lastLogoutAt: IsoDateString | null;
+  /** At most one user is the default view; `false` by default. */
+  isDefaultView: boolean;
 }
 
 /** POST /users (public). */
@@ -43,6 +45,8 @@ export interface UsersQuery extends PaginationQuery {
   search?: string;
   /** Exact avatar URL match. */
   avatarUrl?: string;
+  /** Only the default-view user (`true`) or everyone else (`false`). */
+  isDefaultView?: boolean;
 }
 
 export type UsersResponse = PaginatedResponse<User>;
@@ -53,9 +57,11 @@ export type UsersResponse = PaginatedResponse<User>;
  */
 export interface UserByEmail {
   id: number;
+  username: string;
   email: string;
   password: string;
   avatarUrl: string | null;
+  isDefaultView: boolean;
 }
 
 export type UserByEmailResponse = UserByEmail | null;
@@ -75,3 +81,13 @@ export type UpdateUserRequest = Partial<
 export type UpdateUserResponse = MessageResponse;
 
 export type DeleteUserResponse = MessageResponse;
+
+/**
+ * PATCH /users/:id/default-view: `true` makes this the only default-view user
+ * (the current one is set to `false`); `false` just clears it on this user.
+ */
+export interface UpdateUserDefaultViewRequest {
+  isDefaultView: boolean;
+}
+
+export type UpdateUserDefaultViewResponse = MessageResponse;

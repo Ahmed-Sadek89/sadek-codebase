@@ -87,6 +87,7 @@ export {
   useCreateUser,
   useDeleteUser,
   useUpdateUser,
+  useUpdateUserDefaultView,
   useUser,
   useUserByEmail,
   useUsers,

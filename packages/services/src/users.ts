@@ -4,6 +4,8 @@ import type {
   CreateUserRequest,
   CreateUserResponse,
   DeleteUserResponse,
+  UpdateUserDefaultViewRequest,
+  UpdateUserDefaultViewResponse,
   UpdateUserRequest,
   UpdateUserResponse,
   User,
@@ -17,6 +19,7 @@ export const usersEndpoints = {
   collection: "/users",
   byEmail: "/users/email",
   byId: (id: number) => `/users/${id}`,
+  defaultView: (id: number) => `/users/${id}/default-view`,
 } as const;
 
 // Sign-up (POST /users) is public; every other users route sits behind JwtAuthGuard.
@@ -62,6 +65,18 @@ export const usersService = {
   ): Promise<UpdateUserResponse> {
     const { data } = await apiClient.patch<UpdateUserResponse>(
       usersEndpoints.byId(id),
+      request,
+      { headers: authHeaders(auth) },
+    );
+    return data;
+  },
+  async updateDefaultView(
+    id: number,
+    request: UpdateUserDefaultViewRequest,
+    auth: AuthorizedRequest,
+  ): Promise<UpdateUserDefaultViewResponse> {
+    const { data } = await apiClient.patch<UpdateUserDefaultViewResponse>(
+      usersEndpoints.defaultView(id),
       request,
       { headers: authHeaders(auth) },
     );
