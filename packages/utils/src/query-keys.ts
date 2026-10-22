@@ -4,6 +4,7 @@ import type { ProjectsQuery } from "@repo/types/projects";
 import type { SkillsQuery } from "@repo/types/skills";
 import type { UserCompaniesQuery } from "@repo/types/user-company";
 import type { UserInfoQuery } from "@repo/types/user-info";
+import type { UsersQuery } from "@repo/types/users";
 import type { WhatCanDosQuery } from "@repo/types/what-can-do";
 
 /**
@@ -84,5 +85,15 @@ export const queryKeys = {
       [...queryKeys.whatCanDo.mines(), query] as const,
     details: () => [...queryKeys.whatCanDo.all, "detail"] as const,
     detail: (id: number) => [...queryKeys.whatCanDo.details(), id] as const,
+  },
+  users: {
+    all: ["users"] as const,
+    lists: () => [...queryKeys.users.all, "list"] as const,
+    list: (query: UsersQuery) => [...queryKeys.users.lists(), query] as const,
+    byEmails: () => [...queryKeys.users.all, "by-email"] as const,
+    byEmail: (email: string) =>
+      [...queryKeys.users.byEmails(), email] as const,
+    details: () => [...queryKeys.users.all, "detail"] as const,
+    detail: (id: number) => [...queryKeys.users.details(), id] as const,
   },
 };

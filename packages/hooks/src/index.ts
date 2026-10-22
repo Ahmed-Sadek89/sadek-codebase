@@ -82,3 +82,12 @@ export {
   useWhatCanDo,
   useWhatCanDos,
 } from "./what-can-do";
+
+export {
+  useCreateUser,
+  useDeleteUser,
+  useUpdateUser,
+  useUser,
+  useUserByEmail,
+  useUsers,
+} from "./users";

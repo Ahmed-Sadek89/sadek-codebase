@@ -1,4 +1,4 @@
-import type { IsoDateString } from "./common";
+import type { User } from "./users";
 
 export interface LoginRequest {
   email: string;
@@ -48,18 +48,7 @@ export interface MessageResponse {
 }
 
 /** GET /auth/me: the user whose id is the access token's `sub`. Never includes the password. */
-export interface CurrentUser {
-  id: number;
-  /** Max 50 characters. */
-  username: string;
-  /** Max 70 characters. */
-  email: string;
-  avatarUrl: string | null;
-  coverPhotoUrl: string | null;
-  createdAt: IsoDateString;
-  lastLoginAt: IsoDateString | null;
-  lastLogoutAt: IsoDateString | null;
-}
+export type CurrentUser = User;
 
 export type ChangePasswordResponse = MessageResponse;
 export type LogoutRequest = AuthorizedRequest;

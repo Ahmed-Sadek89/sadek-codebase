@@ -13,7 +13,8 @@
     "./projects": "./src/projects.ts",
     "./user-info": "./src/user-info.ts",
     "./user-company": "./src/user-company.ts",
-    "./what-can-do": "./src/what-can-do.ts"
+    "./what-can-do": "./src/what-can-do.ts",
+    "./users": "./src/users.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

@@ -7,3 +7,4 @@ export type * from "./projects";
 export type * from "./user-info";
 export type * from "./user-company";
 export type * from "./what-can-do";
+export type * from "./users";
