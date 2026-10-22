@@ -463,5 +463,6 @@
   "profileSectionImages": "الصور",
   "profileSectionImagesHint": "الصورة الشخصية وصورة الغلاف في بطاقة ملفك.",
   "profileUnsaved": "لديك تغييرات غير محفوظة",
-  "profileNoChanges": "لا توجد تغييرات بعد"
+  "profileNoChanges": "لا توجد تغييرات بعد",
+  "profileUpdated": "تم تحديث الملف الشخصي بنجاح"
 }

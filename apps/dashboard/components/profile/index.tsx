@@ -30,7 +30,11 @@ export default function ProfilePage() {
       {!data ? (
         <ProfileError onRetry={() => void refetch()} isRetrying={isFetching} />
       ) : isEditing ? (
-        <ProfileForm user={data} onCancel={() => setIsEditing(false)} />
+        <ProfileForm
+          user={data}
+          onCancel={() => setIsEditing(false)}
+          onSaved={() => setIsEditing(false)}
+        />
       ) : (
         <>
           <ProfileHero

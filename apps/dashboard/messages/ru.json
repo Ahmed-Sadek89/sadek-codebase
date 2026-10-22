@@ -463,5 +463,6 @@
   "profileSectionImages": "Изображения",
   "profileSectionImagesHint": "Аватар и обложка в карточке профиля.",
   "profileUnsaved": "Есть несохранённые изменения",
-  "profileNoChanges": "Изменений пока нет"
+  "profileNoChanges": "Изменений пока нет",
+  "profileUpdated": "Профиль успешно обновлён"
 }

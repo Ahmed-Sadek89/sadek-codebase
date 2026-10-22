@@ -463,5 +463,6 @@
   "profileSectionImages": "Images",
   "profileSectionImagesHint": "The avatar and cover shown on your profile card.",
   "profileUnsaved": "You have unsaved changes",
-  "profileNoChanges": "No changes yet"
+  "profileNoChanges": "No changes yet",
+  "profileUpdated": "Profile updated successfully"
 }

@@ -463,5 +463,6 @@
   "profileSectionImages": "Bilder",
   "profileSectionImagesHint": "Profilbild und Titelbild deiner Profilkarte.",
   "profileUnsaved": "Du hast ungespeicherte Änderungen",
-  "profileNoChanges": "Noch keine Änderungen"
+  "profileNoChanges": "Noch keine Änderungen",
+  "profileUpdated": "Profil erfolgreich aktualisiert"
 }

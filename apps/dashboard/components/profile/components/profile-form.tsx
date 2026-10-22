@@ -18,15 +18,20 @@ type ProfileFormProps = {
   user: CurrentUser;
   /** Leaves the form without saving. */
   onCancel: () => void;
+  /** Runs after a successful save. */
+  onSaved: () => void;
 };
 
 /**
- * Edit form for the signed-in user, under a live preview of the profile card.
- * Submitting only logs the values for now.
+ * Edit form for the signed-in user (PATCH /users/:id), under a live preview of
+ * the profile card.
  */
-export function ProfileForm({ user, onCancel }: ProfileFormProps) {
+export function ProfileForm({ user, onCancel, onSaved }: ProfileFormProps) {
   const t = useTranslations();
-  const { form, onSubmit, preview, isPending } = useProfileForm({ user });
+  const { form, onSubmit, preview, isPending } = useProfileForm({
+    user,
+    onSuccess: onSaved,
+  });
   const { errors, isDirty } = form.formState;
 
   return (

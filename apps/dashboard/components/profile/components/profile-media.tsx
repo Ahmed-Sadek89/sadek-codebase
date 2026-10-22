@@ -34,7 +34,7 @@ export function ProfileCover({ src, alt }: ProfileCoverProps) {
   const image = useImageSrc(src);
 
   return (
-    <div className="relative h-32 overflow-hidden bg-primary-muted sm:h-44">
+    <div className="relative h-52 overflow-hidden bg-primary-muted sm:h-96">
       {image.src ? (
         <Image
           src={image.src}
