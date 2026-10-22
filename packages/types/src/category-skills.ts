@@ -39,7 +39,10 @@ export type CreateCategorySkillResponse = Omit<
   descriptionEn?: string | null;
 };
 
-/** GET /category-skills/private: the signed-in user's categories. */
+/**
+ * GET /category-skills/private: the signed-in user's categories.
+ * GET /category-skills/public takes the same query for the default-view user's.
+ */
 export interface CategorySkillsQuery extends PaginationQuery {
   /** Matches nameAr or nameEn (case-insensitive). Max 20 characters. */
   search?: string;

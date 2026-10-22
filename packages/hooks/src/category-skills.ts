@@ -8,7 +8,7 @@ import type {
   UpdateCategorySkillRequest,
 } from "@repo/types/category-skills";
 import { queryKeys } from "@repo/utils/query-keys";
-import { useGuardedMutation, useGuardedQuery } from "./api";
+import { useGuardedMutation, useGuardedQuery, usePublicQuery } from "./api";
 
 /**
  * GET /category-skills/private: the signed-in user's categories, paginated.
@@ -23,6 +23,16 @@ export function useCategorySkills(
     queryFn: (auth) => categorySkillsService.findAll(query, auth),
     enabled,
     // Keep the current rows on screen while a new search loads.
+    placeholderData: keepPreviousData,
+  });
+}
+
+/** GET /category-skills/public: the default-view user's categories, paginated. No sign-in needed. */
+export function usePublicCategorySkills(query: CategorySkillsQuery = {}) {
+  return usePublicQuery({
+    queryKey: queryKeys.categorySkills.publicList(query),
+    queryFn: () => categorySkillsService.findAllPublic(query),
+    // Keep the current rows on screen while a new page or search loads.
     placeholderData: keepPreviousData,
   });
 }

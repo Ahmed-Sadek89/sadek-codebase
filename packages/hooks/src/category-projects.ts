@@ -8,7 +8,7 @@ import type {
   UpdateCategoryProjectRequest,
 } from "@repo/types/category-projects";
 import { queryKeys } from "@repo/utils/query-keys";
-import { useGuardedMutation, useGuardedQuery } from "./api";
+import { useGuardedMutation, useGuardedQuery, usePublicQuery } from "./api";
 
 /**
  * GET /category-projects: the signed-in user's categories, paginated.
@@ -23,6 +23,16 @@ export function useCategoryProjects(
     queryFn: (auth) => categoryProjectsService.findAll(query, auth),
     enabled,
     // Keep the current rows on screen while a new search loads.
+    placeholderData: keepPreviousData,
+  });
+}
+
+/** GET /category-projects/public: the default-view user's categories, paginated. No sign-in needed. */
+export function usePublicCategoryProjects(query: CategoryProjectsQuery = {}) {
+  return usePublicQuery({
+    queryKey: queryKeys.categoryProjects.publicList(query),
+    queryFn: () => categoryProjectsService.findAllPublic(query),
+    // Keep the current rows on screen while a new page or search loads.
     placeholderData: keepPreviousData,
   });
 }

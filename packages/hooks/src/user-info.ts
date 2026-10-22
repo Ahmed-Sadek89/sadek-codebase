@@ -12,7 +12,7 @@ import type {
   UserInfoQuery,
 } from "@repo/types/user-info";
 import { queryKeys } from "@repo/utils/query-keys";
-import { useGuardedMutation, useGuardedQuery } from "./api";
+import { useGuardedMutation, useGuardedQuery, usePublicQuery } from "./api";
 
 // GET /user-info/me returns the same rows as the list, so refresh both.
 function invalidateUserInfoLists(client: QueryClient) {
@@ -28,6 +28,16 @@ export function useUserInfos(query: UserInfoQuery = {}) {
     queryKey: queryKeys.userInfo.list(query),
     queryFn: (auth) => userInfoService.findAll(query, auth),
     // Keep the current rows on screen while a new page loads.
+    placeholderData: keepPreviousData,
+  });
+}
+
+/** GET /user-info/public: the default-view user's info, paginated. No sign-in needed. */
+export function usePublicUserInfos(query: UserInfoQuery = {}) {
+  return usePublicQuery({
+    queryKey: queryKeys.userInfo.publicList(query),
+    queryFn: () => userInfoService.findAllPublic(query),
+    // Keep the current rows on screen while a new page or search loads.
     placeholderData: keepPreviousData,
   });
 }

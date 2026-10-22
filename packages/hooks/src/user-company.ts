@@ -12,7 +12,7 @@ import type {
   UserCompaniesQuery,
 } from "@repo/types/user-company";
 import { queryKeys } from "@repo/utils/query-keys";
-import { useGuardedMutation, useGuardedQuery } from "./api";
+import { useGuardedMutation, useGuardedQuery, usePublicQuery } from "./api";
 
 // GET /user-company/me returns the same rows as the list, so refresh both.
 function invalidateUserCompanyLists(client: QueryClient) {
@@ -28,6 +28,16 @@ export function useUserCompanies(query: UserCompaniesQuery = {}) {
     queryKey: queryKeys.userCompany.list(query),
     queryFn: (auth) => userCompanyService.findAll(query, auth),
     // Keep the current rows on screen while a new page loads.
+    placeholderData: keepPreviousData,
+  });
+}
+
+/** GET /user-company/public: the default-view user's companies, paginated. No sign-in needed. */
+export function usePublicUserCompanies(query: UserCompaniesQuery = {}) {
+  return usePublicQuery({
+    queryKey: queryKeys.userCompany.publicList(query),
+    queryFn: () => userCompanyService.findAllPublic(query),
+    // Keep the current rows on screen while a new page or search loads.
     placeholderData: keepPreviousData,
   });
 }

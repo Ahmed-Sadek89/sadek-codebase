@@ -37,7 +37,10 @@ export type CreateCategoryProjectResponse = Omit<
   descriptionEn?: string | null;
 };
 
-/** GET /category-projects: the signed-in user's categories. */
+/**
+ * GET /category-projects: the signed-in user's categories.
+ * GET /category-projects/public takes the same query for the default-view user's.
+ */
 export interface CategoryProjectsQuery extends PaginationQuery {
   /** Matches nameAr or nameEn (case-insensitive). Max 20 characters. */
   search?: string;

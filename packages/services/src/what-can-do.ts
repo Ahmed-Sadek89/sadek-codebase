@@ -15,12 +15,13 @@ import { authHeaders } from "./auth-headers";
 
 export const whatCanDoEndpoints = {
   collection: "/what-can-do",
+  public: "/what-can-do/public",
   me: "/what-can-do/me",
   byId: (id: number) => `/what-can-do/${id}`,
 } as const;
 
-// Every what-can-do route sits behind JwtAuthGuard and only sees the
-// signed-in user's items.
+// GET /what-can-do/public is public; every other route sits behind JwtAuthGuard
+// and only sees the signed-in user's items.
 export const whatCanDoService = {
   async create(
     request: CreateWhatCanDoRequest,
@@ -40,6 +41,14 @@ export const whatCanDoService = {
     const { data } = await apiClient.get<WhatCanDosResponse>(
       whatCanDoEndpoints.collection,
       { params: query, headers: authHeaders(auth) },
+    );
+    return data;
+  },
+  /** GET /what-can-do/public (no token): the default-view user's rows. */
+  async findAllPublic(query: WhatCanDosQuery): Promise<WhatCanDosResponse> {
+    const { data } = await apiClient.get<WhatCanDosResponse>(
+      whatCanDoEndpoints.public,
+      { params: query },
     );
     return data;
   },

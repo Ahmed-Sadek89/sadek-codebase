@@ -59,7 +59,7 @@ export type CreateProjectResponse = Omit<
   repoUrl?: string | null;
 };
 
-/** GET /projects; `order` sorts by `createdAt` (default DESC, newest first). */
+/** GET /projects and GET /projects/public; `order` sorts by `createdAt` (default DESC, newest first). */
 export interface ProjectsQuery extends PaginationQuery {
   /** Matches nameAr or nameEn (case-insensitive). Max 20 characters. */
   search?: string;

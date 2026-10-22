@@ -1,3 +1,0 @@
-
-
--- make isAdmin col in user entity

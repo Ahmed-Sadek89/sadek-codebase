@@ -83,6 +83,18 @@ export function useUpdateUserDefaultView() {
       Promise.all([
         client.invalidateQueries({ queryKey: queryKeys.users.all }),
         client.invalidateQueries({ queryKey: queryKeys.auth.me() }),
+        // The /public lists show the default-view user's rows, so they all change.
+        ...[
+          queryKeys.categorySkills,
+          queryKeys.skills,
+          queryKeys.categoryProjects,
+          queryKeys.projects,
+          queryKeys.userInfo,
+          queryKeys.userCompany,
+          queryKeys.whatCanDo,
+        ].map((keys) =>
+          client.invalidateQueries({ queryKey: keys.publicLists() }),
+        ),
       ]),
   });
 }

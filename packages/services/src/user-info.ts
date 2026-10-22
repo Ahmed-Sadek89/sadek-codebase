@@ -15,12 +15,14 @@ import { authHeaders } from "./auth-headers";
 
 export const userInfoEndpoints = {
   collection: "/user-info",
+  public: "/user-info/public",
   me: "/user-info/me",
   byId: (id: number) => `/user-info/${id}`,
 } as const;
 
-// Every user-info route sits behind JwtAuthGuard. GET /user-info lists every
-// user's row; GET /user-info/me returns only the signed-in user's.
+// GET /user-info/public is public; every other route sits behind JwtAuthGuard.
+// GET /user-info lists every user's row; GET /user-info/me returns only the
+// signed-in user's.
 export const userInfoService = {
   async create(
     request: CreateUserInfoRequest,
@@ -40,6 +42,14 @@ export const userInfoService = {
     const { data } = await apiClient.get<UserInfoResponse>(
       userInfoEndpoints.collection,
       { params: query, headers: authHeaders(auth) },
+    );
+    return data;
+  },
+  /** GET /user-info/public (no token): the default-view user's rows. */
+  async findAllPublic(query: UserInfoQuery): Promise<UserInfoResponse> {
+    const { data } = await apiClient.get<UserInfoResponse>(
+      userInfoEndpoints.public,
+      { params: query },
     );
     return data;
   },

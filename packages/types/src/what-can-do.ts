@@ -57,8 +57,9 @@ export type CreateWhatCanDoResponse = Omit<WhatCanDo, OptionalWhatCanDoField> &
   OptionalWhatCanDoFields;
 
 /**
- * GET /what-can-do and GET /what-can-do/me (`FilterWhatCanDoDto`). `order` sorts the
- * list by `createdAt` (default DESC) and `/me` by `rank` (default ASC; ties by `id`).
+ * GET /what-can-do, GET /what-can-do/public and GET /what-can-do/me (`FilterWhatCanDoDto`).
+ * `order` sorts the two lists by `createdAt` (default DESC) and `/me` by `rank`
+ * (default ASC; ties by `id`).
  */
 export interface WhatCanDosQuery extends PaginationQuery {
   /** Matches the English or Arabic title, shortDescription or description (case-insensitive). Max 20 characters. */

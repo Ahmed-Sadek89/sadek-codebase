@@ -12,7 +12,7 @@ import type {
   WhatCanDosQuery,
 } from "@repo/types/what-can-do";
 import { queryKeys } from "@repo/utils/query-keys";
-import { useGuardedMutation, useGuardedQuery } from "./api";
+import { useGuardedMutation, useGuardedQuery, usePublicQuery } from "./api";
 
 // GET /what-can-do/me returns the same rows as the list, so refresh both.
 function invalidateWhatCanDoLists(client: QueryClient) {
@@ -28,6 +28,16 @@ export function useWhatCanDos(query: WhatCanDosQuery = {}) {
     queryKey: queryKeys.whatCanDo.list(query),
     queryFn: (auth) => whatCanDoService.findAll(query, auth),
     // Keep the current rows on screen while a new page loads.
+    placeholderData: keepPreviousData,
+  });
+}
+
+/** GET /what-can-do/public: the default-view user's items, paginated. No sign-in needed. */
+export function usePublicWhatCanDos(query: WhatCanDosQuery = {}) {
+  return usePublicQuery({
+    queryKey: queryKeys.whatCanDo.publicList(query),
+    queryFn: () => whatCanDoService.findAllPublic(query),
+    // Keep the current rows on screen while a new page or search loads.
     placeholderData: keepPreviousData,
   });
 }

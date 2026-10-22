@@ -63,8 +63,8 @@ export type CreateUserCompanyResponse = Omit<
   OptionalUserCompanyFields;
 
 /**
- * GET /user-company and GET /user-company/me (`FilterUserCompanyDto`). `order` sorts the
- * list by `createdAt` and `/me` by `startWorkFrom`; both default to DESC.
+ * GET /user-company, GET /user-company/public and GET /user-company/me (`FilterUserCompanyDto`).
+ * `order` sorts the two lists by `createdAt` and `/me` by `startWorkFrom`; all default to DESC.
  */
 export interface UserCompaniesQuery extends PaginationQuery {
   /** Matches the English or Arabic name or description (case-insensitive). Max 20 characters. */

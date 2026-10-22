@@ -8,13 +8,23 @@ import type {
   UpdateProjectRequest,
 } from "@repo/types/projects";
 import { queryKeys } from "@repo/utils/query-keys";
-import { useGuardedMutation, useGuardedQuery } from "./api";
+import { useGuardedMutation, useGuardedQuery, usePublicQuery } from "./api";
 
 /** GET /projects: the signed-in user's projects, paginated and filtered. */
 export function useProjects(query: ProjectsQuery = {}) {
   return useGuardedQuery({
     queryKey: queryKeys.projects.list(query),
     queryFn: (auth) => projectsService.findAll(query, auth),
+    // Keep the current rows on screen while a new page or search loads.
+    placeholderData: keepPreviousData,
+  });
+}
+
+/** GET /projects/public: the default-view user's projects, paginated. No sign-in needed. */
+export function usePublicProjects(query: ProjectsQuery = {}) {
+  return usePublicQuery({
+    queryKey: queryKeys.projects.publicList(query),
+    queryFn: () => projectsService.findAllPublic(query),
     // Keep the current rows on screen while a new page or search loads.
     placeholderData: keepPreviousData,
   });

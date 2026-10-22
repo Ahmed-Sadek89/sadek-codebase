@@ -12,7 +12,7 @@ import type {
   UpdateSkillRequest,
 } from "@repo/types/skills";
 import { queryKeys } from "@repo/utils/query-keys";
-import { useGuardedMutation, useGuardedQuery } from "./api";
+import { useGuardedMutation, useGuardedQuery, usePublicQuery } from "./api";
 
 // Category details show how many skills use them, so refresh those too.
 function invalidateSkillLists(client: QueryClient) {
@@ -28,6 +28,16 @@ export function useSkills(query: SkillsQuery = {}) {
     queryKey: queryKeys.skills.list(query),
     queryFn: (auth) => skillsService.findAll(query, auth),
     // Keep the current rows on screen while a new search loads.
+    placeholderData: keepPreviousData,
+  });
+}
+
+/** GET /skills/public: the default-view user's skills, paginated. No sign-in needed. */
+export function usePublicSkills(query: SkillsQuery = {}) {
+  return usePublicQuery({
+    queryKey: queryKeys.skills.publicList(query),
+    queryFn: () => skillsService.findAllPublic(query),
+    // Keep the current rows on screen while a new page or search loads.
     placeholderData: keepPreviousData,
   });
 }

@@ -14,10 +14,11 @@ import { authHeaders } from "./auth-headers";
 
 export const categoryProjectsEndpoints = {
   collection: "/category-projects",
+  public: "/category-projects/public",
   byId: (id: number) => `/category-projects/${id}`,
 } as const;
 
-// Every category-projects route sits behind JwtAuthGuard.
+// GET /category-projects/public is public; every other route sits behind JwtAuthGuard.
 export const categoryProjectsService = {
   async create(
     request: CreateCategoryProjectRequest,
@@ -37,6 +38,16 @@ export const categoryProjectsService = {
     const { data } = await apiClient.get<CategoryProjectsResponse>(
       categoryProjectsEndpoints.collection,
       { params: query, headers: authHeaders(auth) },
+    );
+    return data;
+  },
+  /** GET /category-projects/public (no token): the default-view user's rows. */
+  async findAllPublic(
+    query: CategoryProjectsQuery,
+  ): Promise<CategoryProjectsResponse> {
+    const { data } = await apiClient.get<CategoryProjectsResponse>(
+      categoryProjectsEndpoints.public,
+      { params: query },
     );
     return data;
   },

@@ -74,8 +74,11 @@ type OptionalUserInfoFields = {
 export type CreateUserInfoResponse = Omit<UserInfo, OptionalUserInfoField> &
   OptionalUserInfoFields;
 
-/** GET /user-info; `order` sorts by `createdAt` (default DESC). */
-export type UserInfoQuery = PaginationQuery;
+/** GET /user-info and GET /user-info/public; `order` sorts by `createdAt` (default DESC). */
+export interface UserInfoQuery extends PaginationQuery {
+  /** Matches the English or Arabic headTitle or shortDescription (case-insensitive). Max 20 characters. */
+  search?: string;
+}
 
 /** Every user's row, not only the signed-in user's. */
 export type UserInfoResponse = PaginatedResponse<UserInfo>;

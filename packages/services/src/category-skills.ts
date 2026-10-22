@@ -15,9 +15,11 @@ import { authHeaders } from "./auth-headers";
 export const categorySkillsEndpoints = {
   create: "/category-skills",
   findAll: "/category-skills/private",
+  public: "/category-skills/public",
   byId: (id: number) => `/category-skills/${id}`,
 } as const;
 
+// GET /category-skills/public is public; every other route sits behind JwtAuthGuard.
 export const categorySkillsService = {
   async create(
     request: CreateCategorySkillRequest,
@@ -37,6 +39,16 @@ export const categorySkillsService = {
     const { data } = await apiClient.get<CategorySkillsResponse>(
       categorySkillsEndpoints.findAll,
       { params: query, headers: authHeaders(auth) },
+    );
+    return data;
+  },
+  /** GET /category-skills/public (no token): the default-view user's rows. */
+  async findAllPublic(
+    query: CategorySkillsQuery,
+  ): Promise<CategorySkillsResponse> {
+    const { data } = await apiClient.get<CategorySkillsResponse>(
+      categorySkillsEndpoints.public,
+      { params: query },
     );
     return data;
   },

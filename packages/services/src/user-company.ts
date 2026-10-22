@@ -15,12 +15,13 @@ import { authHeaders } from "./auth-headers";
 
 export const userCompanyEndpoints = {
   collection: "/user-company",
+  public: "/user-company/public",
   me: "/user-company/me",
   byId: (id: number) => `/user-company/${id}`,
 } as const;
 
-// Every user-company route sits behind JwtAuthGuard and only sees the
-// signed-in user's companies.
+// GET /user-company/public is public; every other route sits behind JwtAuthGuard
+// and only sees the signed-in user's companies.
 export const userCompanyService = {
   async create(
     request: CreateUserCompanyRequest,
@@ -40,6 +41,16 @@ export const userCompanyService = {
     const { data } = await apiClient.get<UserCompaniesResponse>(
       userCompanyEndpoints.collection,
       { params: query, headers: authHeaders(auth) },
+    );
+    return data;
+  },
+  /** GET /user-company/public (no token): the default-view user's rows. */
+  async findAllPublic(
+    query: UserCompaniesQuery,
+  ): Promise<UserCompaniesResponse> {
+    const { data } = await apiClient.get<UserCompaniesResponse>(
+      userCompanyEndpoints.public,
+      { params: query },
     );
     return data;
   },
