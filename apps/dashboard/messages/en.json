@@ -464,5 +464,18 @@
   "profileSectionImagesHint": "The avatar and cover shown on your profile card.",
   "profileUnsaved": "You have unsaved changes",
   "profileNoChanges": "No changes yet",
-  "profileUpdated": "Profile updated successfully"
+  "profileUpdated": "Profile updated successfully",
+  "profileChangePassword": "Change password",
+  "profileChangePasswordHint": "Enter your current password, then choose a new one.",
+  "profileCurrentPasswordLabel": "Current password",
+  "profileNewPasswordLabel": "New password",
+  "profileConfirmPasswordLabel": "Confirm new password",
+  "profilePasswordRules": "8–32 characters with an uppercase letter, a lowercase letter, a number, and one of @$!%*?&.",
+  "profilePasswordMin": "Use at least {min} characters.",
+  "profilePasswordMax": "Use at most {max} characters.",
+  "profilePasswordWeak": "Include an uppercase letter, a lowercase letter, a number, and one of @$!%*?&.",
+  "profilePasswordSame": "The new password must differ from the current one.",
+  "profilePasswordMismatch": "Passwords don't match.",
+  "profilePasswordSubmit": "Update password",
+  "profilePasswordChanged": "Password changed successfully"
 }

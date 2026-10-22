@@ -464,5 +464,18 @@
   "profileSectionImagesHint": "الصورة الشخصية وصورة الغلاف في بطاقة ملفك.",
   "profileUnsaved": "لديك تغييرات غير محفوظة",
   "profileNoChanges": "لا توجد تغييرات بعد",
-  "profileUpdated": "تم تحديث الملف الشخصي بنجاح"
+  "profileUpdated": "تم تحديث الملف الشخصي بنجاح",
+  "profileChangePassword": "تغيير كلمة المرور",
+  "profileChangePasswordHint": "أدخل كلمة المرور الحالية، ثم اختر كلمة مرور جديدة.",
+  "profileCurrentPasswordLabel": "كلمة المرور الحالية",
+  "profileNewPasswordLabel": "كلمة المرور الجديدة",
+  "profileConfirmPasswordLabel": "تأكيد كلمة المرور الجديدة",
+  "profilePasswordRules": "من 8 إلى 32 حرفًا، تتضمن حرفًا كبيرًا وحرفًا صغيرًا ورقمًا وأحد الرموز @$!%*?&.",
+  "profilePasswordMin": "استخدم {min} أحرف على الأقل.",
+  "profilePasswordMax": "استخدم {max} حرفًا على الأكثر.",
+  "profilePasswordWeak": "يجب أن تتضمن حرفًا كبيرًا وحرفًا صغيرًا ورقمًا وأحد الرموز @$!%*?&.",
+  "profilePasswordSame": "يجب أن تختلف كلمة المرور الجديدة عن الحالية.",
+  "profilePasswordMismatch": "كلمتا المرور غير متطابقتين.",
+  "profilePasswordSubmit": "تحديث كلمة المرور",
+  "profilePasswordChanged": "تم تغيير كلمة المرور بنجاح"
 }

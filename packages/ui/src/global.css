@@ -123,6 +123,11 @@
     color: var(--foreground);
     font-family: var(--font-sans);
   }
+  /* Edge's built-in reveal/clear buttons; PasswordInput has its own toggle. */
+  input[type="password"]::-ms-reveal,
+  input[type="password"]::-ms-clear {
+    display: none;
+  }
   /* Hide the default up/down arrows of number inputs (Chrome, Safari, Edge, Firefox). */
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {

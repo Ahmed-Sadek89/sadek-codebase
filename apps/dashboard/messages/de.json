@@ -464,5 +464,18 @@
   "profileSectionImagesHint": "Profilbild und Titelbild deiner Profilkarte.",
   "profileUnsaved": "Du hast ungespeicherte Änderungen",
   "profileNoChanges": "Noch keine Änderungen",
-  "profileUpdated": "Profil erfolgreich aktualisiert"
+  "profileUpdated": "Profil erfolgreich aktualisiert",
+  "profileChangePassword": "Passwort ändern",
+  "profileChangePasswordHint": "Gib dein aktuelles Passwort ein und wähle dann ein neues.",
+  "profileCurrentPasswordLabel": "Aktuelles Passwort",
+  "profileNewPasswordLabel": "Neues Passwort",
+  "profileConfirmPasswordLabel": "Neues Passwort bestätigen",
+  "profilePasswordRules": "8–32 Zeichen mit Groß- und Kleinbuchstaben, einer Zahl und einem der Zeichen @$!%*?&.",
+  "profilePasswordMin": "Verwende mindestens {min} Zeichen.",
+  "profilePasswordMax": "Verwende höchstens {max} Zeichen.",
+  "profilePasswordWeak": "Verwende Groß- und Kleinbuchstaben, eine Zahl und eines der Zeichen @$!%*?&.",
+  "profilePasswordSame": "Das neue Passwort muss sich vom aktuellen unterscheiden.",
+  "profilePasswordMismatch": "Die Passwörter stimmen nicht überein.",
+  "profilePasswordSubmit": "Passwort aktualisieren",
+  "profilePasswordChanged": "Passwort erfolgreich geändert"
 }

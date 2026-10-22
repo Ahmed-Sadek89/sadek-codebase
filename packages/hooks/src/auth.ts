@@ -17,7 +17,7 @@ import type {
   LogoutResponse,
   RefreshResponse,
 } from "@repo/types/auth";
-import { useGuardedQuery } from "./api";
+import { useGuardedMutation, useGuardedQuery } from "./api";
 
 function requireSession(client: QueryClient): AuthSession {
   const session = client.getQueryData<AuthSession | null>(
@@ -91,14 +91,11 @@ export function useRefreshToken() {
   });
 }
 
+/** PATCH /auth/change-password, with the NextAuth session's access token. */
 export function useChangePassword() {
-  const client = useQueryClient();
-  return useMutation<ChangePasswordResponse, Error, ChangePasswordRequest>({
+  return useGuardedMutation<ChangePasswordResponse, ChangePasswordRequest>({
     mutationKey: queryKeys.auth.changePassword(),
-    mutationFn: (request) =>
-      authService.changePassword(request, {
-        accessToken: requireSession(client).access_token,
-      }),
+    mutationFn: (request, auth) => authService.changePassword(request, auth),
   });
 }
 

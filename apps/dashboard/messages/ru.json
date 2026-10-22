@@ -464,5 +464,18 @@
   "profileSectionImagesHint": "Аватар и обложка в карточке профиля.",
   "profileUnsaved": "Есть несохранённые изменения",
   "profileNoChanges": "Изменений пока нет",
-  "profileUpdated": "Профиль успешно обновлён"
+  "profileUpdated": "Профиль успешно обновлён",
+  "profileChangePassword": "Сменить пароль",
+  "profileChangePasswordHint": "Введите текущий пароль, затем выберите новый.",
+  "profileCurrentPasswordLabel": "Текущий пароль",
+  "profileNewPasswordLabel": "Новый пароль",
+  "profileConfirmPasswordLabel": "Подтвердите новый пароль",
+  "profilePasswordRules": "8–32 символа: заглавная и строчная буквы, цифра и один из символов @$!%*?&.",
+  "profilePasswordMin": "Используйте не менее {min} символов.",
+  "profilePasswordMax": "Используйте не более {max} символов.",
+  "profilePasswordWeak": "Добавьте заглавную и строчную буквы, цифру и один из символов @$!%*?&.",
+  "profilePasswordSame": "Новый пароль должен отличаться от текущего.",
+  "profilePasswordMismatch": "Пароли не совпадают.",
+  "profilePasswordSubmit": "Обновить пароль",
+  "profilePasswordChanged": "Пароль успешно изменён"
 }

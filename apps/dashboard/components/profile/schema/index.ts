@@ -42,3 +42,34 @@ type ProfileSchema = ReturnType<typeof createProfileSchema>;
 export type ProfileFormInput = z.input<ProfileSchema>;
 /** What a valid submit produces; images may be a picked File. */
 export type ProfileFormValues = z.output<ProfileSchema>;
+
+/** Backend limits and rule (ChangePasswordDto). */
+export const PASSWORD_MIN = 8;
+export const PASSWORD_MAX = 32;
+const PASSWORD_PATTERN =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+export const createChangePasswordSchema = (t: Translate) =>
+  z
+    .object({
+      password: z.string().min(1, t("profileFormRequired")),
+      newPassword: z
+        .string()
+        .min(1, t("profileFormRequired"))
+        .min(PASSWORD_MIN, t("profilePasswordMin", { min: PASSWORD_MIN }))
+        .max(PASSWORD_MAX, t("profilePasswordMax", { max: PASSWORD_MAX }))
+        .regex(PASSWORD_PATTERN, t("profilePasswordWeak")),
+      confirmPassword: z.string().min(1, t("profileFormRequired")),
+    })
+    .refine((values) => values.newPassword !== values.password, {
+      path: ["newPassword"],
+      message: t("profilePasswordSame"),
+    })
+    .refine((values) => values.confirmPassword === values.newPassword, {
+      path: ["confirmPassword"],
+      message: t("profilePasswordMismatch"),
+    });
+
+export type ChangePasswordFormValues = z.infer<
+  ReturnType<typeof createChangePasswordSchema>
+>;
