@@ -41,7 +41,8 @@ export type CreateCategorySkillResponse = Omit<
 
 /**
  * GET /category-skills/private: the signed-in user's categories.
- * GET /category-skills/public takes the same query for the default-view user's.
+ * GET /category-skills/public takes the same query for the default-view user's
+ * (each with its skills, see PublicCategorySkill).
  */
 export interface CategorySkillsQuery extends PaginationQuery {
   /** Matches nameAr or nameEn (case-insensitive). Max 20 characters. */
@@ -50,6 +51,22 @@ export interface CategorySkillsQuery extends PaginationQuery {
 }
 
 export type CategorySkillsResponse = PaginatedResponse<CategorySkill>;
+
+/** A skill embedded in a GET /category-skills/public category (active skills only). */
+export interface PublicCategorySkillItem {
+  id: number;
+  nameAr: string;
+  nameEn: string;
+  createdAt: IsoDateString;
+}
+
+/** GET /category-skills/public item: the category with up to 20 of its active skills, newest first. */
+export interface PublicCategorySkill extends CategorySkill {
+  skills: PublicCategorySkillItem[];
+}
+
+export type PublicCategorySkillsResponse =
+  PaginatedResponse<PublicCategorySkill>;
 
 /** GET /category-skills/:id: `skills` is the number of linked skills. */
 export interface CategorySkillDetails extends CategorySkill {

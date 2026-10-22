@@ -53,7 +53,7 @@ Rules that apply to every controller:
 - Entities serialize dates as ISO strings and nullable columns as `null`. Relations to the owner are reduced to `user: { id }` where selected.
 - Validation and not-found failures use Nest's error body `{ statusCode, message, error? }` (`ApiErrorResponse`); `message` may be a string or a string array.
 - Every list route that takes the signed-in user filters by that user.
-- `GET /category-skills/public`, `/skills/public`, `/category-projects/public`, `/projects/public`, `/user-company/public`, and `/what-can-do/public` are **public** (no token) list routes. Each takes the same query DTO as its guarded list and returns the same `PaginatedResponse<T>` shape, scoped to the user whose `isDefaultView` is `true` (an empty page when no user is the default; see `PATCH /users/:id/default-view`). Services expose them as `findAllPublic(query)` (no `auth`), hooks as `usePublic<Entity>(query = {})` built on `usePublicQuery`, keyed by `queryKeys.<feature>.publicList(query)`. Those keys sit under `lists()`, so every mutation that invalidates a feature's lists also refreshes its public lists, and `useUpdateUserDefaultView` invalidates every feature's `publicLists()` plus `queryKeys.userInfo.public()`. `GET /user-info/public` is the exception: it returns one row, not a list (see User info). Routes noted as "no owner check" act on any id, regardless of which user owns it.
+- `GET /category-skills/public`, `/category-projects/public`, `/projects/public`, `/user-company/public`, and `/what-can-do/public` are **public** (no token) list routes. Each takes the same query DTO as its guarded list and returns the same `PaginatedResponse<T>` shape (category-skills items also embed their skills, see Category skills), scoped to the user whose `isDefaultView` is `true` (an empty page when no user is the default; see `PATCH /users/:id/default-view`). Services expose them as `findAllPublic(query)` (no `auth`), hooks as `usePublic<Entity>(query = {})` built on `usePublicQuery`, keyed by `queryKeys.<feature>.publicList(query)`. Those keys sit under `lists()`, so every mutation that invalidates a feature's lists also refreshes its public lists, and `useUpdateUserDefaultView` invalidates every feature's `publicLists()` plus `queryKeys.userInfo.public()`. `GET /user-info/public` is the exception: it returns one row, not a list (see User info). Routes noted as "no owner check" act on any id, regardless of which user owns it.
 
 ### App (`/`)
 
@@ -113,34 +113,35 @@ Source: `apps/sadek-backend/src/category_skills`. Types in `@repo/types/category
 | -------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------- |
 | `POST /category-skills`                | JSON `{ nameAr, nameEn, descriptionAr?, descriptionEn?, isActive }` | Saved category (`CreateCategorySkillResponse`)                      | `categorySkillsService.create` / `useCreateCategorySkill`         |
 | `GET /category-skills/private`         | Query pagination plus `search`, `isActive`                          | `PaginatedResponse<CategorySkill>`                                  | `categorySkillsService.findAll` / `useCategorySkills`             |
-| `GET /category-skills/public` (Public) | Same query as `/private`                                            | `PaginatedResponse<CategorySkill>` of the default-view user         | `categorySkillsService.findAllPublic` / `usePublicCategorySkills` |
+| `GET /category-skills/public` (Public) | Same query as `/private` | `PublicCategorySkillsResponse`: each category plus `skills`, up to 20 of its active skills (`{ id, nameAr, nameEn, createdAt }`), newest first | `categorySkillsService.findAllPublic` / `usePublicCategorySkills` |
 | `GET /category-skills/:id`             | –                                                                   | `CategorySkillDetails`: category plus `skills` (linked-skill count) | `categorySkillsService.findOne` / `useCategorySkill`              |
 | `PATCH /category-skills/:id`           | JSON partial of the create body                                     | `{ message }`                                                       | `categorySkillsService.update` / `useUpdateCategorySkill`         |
 | `DELETE /category-skills/:id`          | –                                                                   | `{ message }`                                                       | `categorySkillsService.remove` / `useDeleteCategorySkill`         |
 
 - Category fields: `id`, `nameAr`, `nameEn` (max 50), `descriptionAr`, `descriptionEn` (nullable), `isActive`, `createdAt`, `user: { id }`.
 - The list path is `/private`, not the collection root. It returns only the signed-in user's categories, and `search` matches `nameAr` or `nameEn` (max 20 characters).
+- `GET /category-skills/public` embeds skills owned by the default-view user that are active, at most 20 per category (`PUBLIC_SKILLS_PER_CATEGORY` in the service), fetched per category on the page with `SkillsService.findPublicByCategory`.
 - `DELETE` returns 400 while any skill still references the category.
 - `GET`, `PATCH`, and `DELETE /:id` have no owner check.
 - Hooks: lists use keys `queryKeys.categorySkills.list(query)` and `placeholderData: keepPreviousData`, so the current rows stay visible while a new search loads (`isFetching` is true, `isPending` is not). Create invalidates lists; update invalidates lists, the detail, and `queryKeys.skills.all` (skills embed category names); delete removes the detail and invalidates lists.
 
 ### Skills (`/skills`)
 
-Source: `apps/sadek-backend/src/skills`. Types in `@repo/types/skills` (`Skill`, `SavedSkill`, `SkillsQuery`, ...), service `skillsService` in `@repo/services/skills`, hooks in `@repo/hooks/skills`. All routes except `GET /skills/public` are guarded and scoped to the signed-in user, so another user's skill returns 404. `:id` must be an integer (`ParseIntPipe`).
+Source: `apps/sadek-backend/src/skills`. Types in `@repo/types/skills` (`Skill`, `SavedSkill`, `SkillsQuery`, ...), service `skillsService` in `@repo/services/skills`, hooks in `@repo/hooks/skills`. All routes are guarded and scoped to the signed-in user, so another user's skill returns 404. `:id` must be an integer (`ParseIntPipe`).
 
 | Backend endpoint              | Request                                                             | Response                                                  |
 | ----------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------- |
 | `POST /skills`                | JSON `{ nameAr, nameEn, avatar_url?, isActive, categorySkillsIds }` | Saved skill with full `categorySkills` and `user: { id }` |
 | `GET /skills`                 | Query `page`, `limit`, `order`, `search`, `isActive`, `categoryId`  | Paginated skills                                          |
-| `GET /skills/public` (Public) | Same query as `GET /skills`                                         | Paginated skills of the default-view user                 |
 | `GET /skills/:id`             | –                                                                   | Skill                                                     |
 | `PATCH /skills/:id`           | JSON partial of the create body                                     | The updated skill (not a message)                         |
 | `DELETE /skills/:id`          | –                                                                   | `{ message: "Skill with id <id> has been removed." }`     |
 
 - Skill fields: `id`, `nameAr`, `nameEn` (max 50), `avatar_url` (snake_case, nullable URL), `isActive`, `createdAt`, `user: { id }`, `categorySkills: [{ id, nameAr, nameEn }]` on reads.
 - `categorySkillsIds` needs at least one id, and every id must be one of the user's own skill categories, or the request returns 400. On `PATCH`, omit it to keep the current categories; an empty array returns 400.
-- `GET /skills` and `GET /skills/public` filter by `isActive` and `categoryId`, search `nameAr`/`nameEn`, and sort by `createdAt` with `order`.
-- Client: `skillsService.create/findAll/findAllPublic/findOne/update/remove`; hooks `useCreateSkill`, `useSkills(query)`, `usePublicSkills(query)`, `useSkill(id)`, `useUpdateSkill` (`{ id, data }`), `useDeleteSkill` (`id`). Every skill mutation invalidates skill lists and `queryKeys.categorySkills.details()`, because category details include a linked-skill count. Update also invalidates the skill detail, and delete removes it.
+- There is no public skills route; public skills come embedded in `GET /category-skills/public`.
+- `GET /skills` filters by `isActive` and `categoryId`, search `nameAr`/`nameEn`, and sort by `createdAt` with `order`.
+- Client: `skillsService.create/findAll/findOne/update/remove`; hooks `useCreateSkill`, `useSkills(query)`, `useSkill(id)`, `useUpdateSkill` (`{ id, data }`), `useDeleteSkill` (`id`). Every skill mutation invalidates skill lists, `queryKeys.categorySkills.details()` (category details include a linked-skill count) and `queryKeys.categorySkills.publicLists()` (public categories embed skills). Update also invalidates the skill detail, and delete removes it.
 
 ### Category projects (`/category-projects`)
 

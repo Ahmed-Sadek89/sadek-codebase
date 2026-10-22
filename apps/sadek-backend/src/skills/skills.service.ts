@@ -55,9 +55,26 @@ export class SkillsService {
     return await this.findAllFor(query, { id: userId });
   }
 
-  /** Public list: always the rows of the user whose `isDefaultView` is true. */
-  async findAllPublic(query: FilterSkillDto) {
-    return await this.findAllFor(query, { isDefaultView: true });
+  /**
+   * Public: up to `limit` active skills of one category, owned by the user
+   * whose `isDefaultView` is true, newest first. Used by GET /category-skills/public.
+   */
+  async findPublicByCategory(categoryId: number, limit: number) {
+    return await this.skillRepository.find({
+      where: {
+        isActive: true,
+        user: { isDefaultView: true },
+        categorySkills: { id: categoryId },
+      },
+      select: {
+        id: true,
+        nameAr: true,
+        nameEn: true,
+        createdAt: true,
+      },
+      order: { createdAt: 'DESC' },
+      take: limit,
+    });
   }
 
   private async findAllFor(query: FilterSkillDto, owner: FindOptionsWhere<User>) {

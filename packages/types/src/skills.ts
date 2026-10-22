@@ -46,7 +46,7 @@ export type SavedSkill = Omit<Skill, "avatar_url"> & {
 
 export type CreateSkillResponse = SavedSkill;
 
-/** GET /skills and GET /skills/public; `order` sorts by `createdAt` (default DESC, newest first). */
+/** GET /skills; `order` sorts by `createdAt` (default DESC, newest first). */
 export interface SkillsQuery extends PaginationQuery {
   /** Matches nameAr or nameEn (case-insensitive). Max 20 characters. */
   search?: string;
@@ -62,7 +62,9 @@ export type SkillsResponse = PaginatedResponse<Skill>;
  * `categorySkillsIds` to keep the current categories; `[]` is rejected.
  * `avatar_url: null` clears the icon (omitting it keeps the current one).
  */
-export type UpdateSkillRequest = Partial<Omit<CreateSkillRequest, "avatar_url">> & {
+export type UpdateSkillRequest = Partial<
+  Omit<CreateSkillRequest, "avatar_url">
+> & {
   avatar_url?: string | null;
 };
 

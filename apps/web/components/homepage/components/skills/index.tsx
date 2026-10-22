@@ -1,24 +1,21 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { CategorySkill } from "@repo/types/category-skills";
-import type { Skill } from "@repo/types/skills";
+import type { PublicCategorySkill } from "@repo/types/category-skills";
 import type { QueryState } from "../../utils";
 import { SectionTitle } from "../../../ui/section-title";
 import { SectionStatus } from "../../../ui/section-status";
 import { SkillChip, SkillGroup } from "./components";
-import { useSkillGroups } from "./hooks";
+import { useSkillsContent } from "./hooks";
 
 export function Skills({
-  skills: skillsQuery,
   categories,
 }: {
-  skills: QueryState<Skill[]>;
-  categories: QueryState<CategorySkill[]>;
+  /** GET /category-skills/public: each category carries its skills. */
+  categories: QueryState<PublicCategorySkill[]>;
 }) {
   const t = useTranslations();
-  const skills = skillsQuery.data;
-  const groups = useSkillGroups(categories.data, skills);
+  const { skills, groups } = useSkillsContent(categories.data);
   return (
     <section id="skills" className="py-[76px] max-[700px]:py-[54px] bg-muted">
       <div className="app-container py-0">
@@ -47,8 +44,8 @@ export function Skills({
           </div>
         ) : (
           <SectionStatus
-            isLoading={skillsQuery.isLoading}
-            isError={skillsQuery.isError}
+            isLoading={categories.isLoading}
+            isError={categories.isError}
             emptyText={t("skillsEmpty")}
           />
         )}

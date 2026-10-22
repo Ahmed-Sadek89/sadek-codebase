@@ -82,7 +82,10 @@ export const usersService = {
     );
     return data;
   },
-  async remove(id: number, auth: AuthorizedRequest): Promise<DeleteUserResponse> {
+  async remove(
+    id: number,
+    auth: AuthorizedRequest,
+  ): Promise<DeleteUserResponse> {
     const { data } = await apiClient.delete<DeleteUserResponse>(
       usersEndpoints.byId(id),
       { headers: authHeaders(auth) },

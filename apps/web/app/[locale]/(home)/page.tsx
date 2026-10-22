@@ -4,7 +4,6 @@ import {
   categoryProjectsService,
   categorySkillsService,
   projectsService,
-  skillsService,
   userCompanyService,
   whatCanDoService,
 } from "@repo/services";
@@ -15,7 +14,6 @@ import {
   categoryProjectsQuery,
   categorySkillsQuery,
   projectsQuery,
-  skillsQuery,
   userCompanyQuery,
   whatCanDoQuery,
 } from "../../../components/homepage/utils";
@@ -53,12 +51,6 @@ export default async function Page() {
           }),
         initialPageParam: 1,
         getNextPageParam,
-      })
-      .catch(() => {}),
-    queryClient
-      .query({
-        queryKey: queryKeys.skills.publicList(skillsQuery),
-        queryFn: () => skillsService.findAllPublic(skillsQuery),
       })
       .catch(() => {}),
     queryClient

@@ -7,6 +7,7 @@ import type {
   CreateCategorySkillRequest,
   CreateCategorySkillResponse,
   DeleteCategorySkillResponse,
+  PublicCategorySkillsResponse,
   UpdateCategorySkillRequest,
   UpdateCategorySkillResponse,
 } from "@repo/types/category-skills";
@@ -42,11 +43,11 @@ export const categorySkillsService = {
     );
     return data;
   },
-  /** GET /category-skills/public (no token): the default-view user's rows. */
+  /** GET /category-skills/public (no token): the default-view user's categories, each with up to 20 skills. */
   async findAllPublic(
     query: CategorySkillsQuery,
-  ): Promise<CategorySkillsResponse> {
-    const { data } = await apiClient.get<CategorySkillsResponse>(
+  ): Promise<PublicCategorySkillsResponse> {
+    const { data } = await apiClient.get<PublicCategorySkillsResponse>(
       categorySkillsEndpoints.public,
       { params: query },
     );

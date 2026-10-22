@@ -39,10 +39,6 @@ export const queryKeys = {
     all: ["skills"] as const,
     lists: () => [...queryKeys.skills.all, "list"] as const,
     list: (query: SkillsQuery) => [...queryKeys.skills.lists(), query] as const,
-    // Under lists(), so every mutation that refreshes lists refreshes these too.
-    publicLists: () => [...queryKeys.skills.lists(), "public"] as const,
-    publicList: (query: SkillsQuery) =>
-      [...queryKeys.skills.publicLists(), query] as const,
     details: () => [...queryKeys.skills.all, "detail"] as const,
     detail: (id: number) => [...queryKeys.skills.details(), id] as const,
   },

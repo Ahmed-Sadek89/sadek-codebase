@@ -20,7 +20,6 @@ export function HomePage() {
     userInfo,
     companies,
     services,
-    skills,
     skillCategories,
     projects,
     projectCategories,
@@ -33,7 +32,7 @@ export function HomePage() {
       <Companies companies={companies} />
       <About userInfo={userInfo} />
       <Services services={services} />
-      <Skills skills={skills} categories={skillCategories} />
+      <Skills categories={skillCategories} />
       <Experience companies={companies} userInfo={userInfo} />
       <Work
         projects={projects}

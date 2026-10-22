@@ -9,6 +9,9 @@ import { paginate } from '../common/pagination';
 import { SkillsService } from '../skills/skills.service';
 import { User } from '../user/entities/user.entity';
 
+/** Most skills embedded per category in GET /category-skills/public. */
+const PUBLIC_SKILLS_PER_CATEGORY = 20;
+
 @Injectable()
 export class CategorySkillsService {
   constructor(
@@ -39,9 +42,22 @@ export class CategorySkillsService {
     return await this.findAllFor(query, { id: userId });
   }
 
-  /** Public list: always the rows of the user whose `isDefaultView` is true. */
+  /**
+   * Public list: the categories of the user whose `isDefaultView` is true,
+   * each with up to PUBLIC_SKILLS_PER_CATEGORY of its active skills (newest first).
+   */
   async findAllPublic(query: FilterCategorySkillDto) {
-    return await this.findAllFor(query, { isDefaultView: true });
+    const page = await this.findAllFor(query, { isDefaultView: true });
+    const data = await Promise.all(
+      page.data.map(async (category) => ({
+        ...category,
+        skills: await this.skillsService.findPublicByCategory(
+          category.id,
+          PUBLIC_SKILLS_PER_CATEGORY,
+        ),
+      })),
+    );
+    return { ...page, data };
   }
 
   private async findAllFor(query: FilterCategorySkillDto, owner: FindOptionsWhere<User>) {

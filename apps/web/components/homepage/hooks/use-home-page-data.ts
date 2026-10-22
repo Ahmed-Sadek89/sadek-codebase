@@ -3,14 +3,12 @@
 import { usePublicCategoryProjects } from "@repo/hooks/category-projects";
 import { usePublicCategorySkills } from "@repo/hooks/category-skills";
 import { usePublicProjects } from "@repo/hooks/projects";
-import { usePublicSkills } from "@repo/hooks/skills";
 import { usePublicUserCompanies } from "@repo/hooks/user-company";
 import { usePublicUserInfo } from "@repo/hooks/user-info";
 import { useInfinitePublicWhatCanDos } from "@repo/hooks/what-can-do";
 import {
   categoryProjectsQuery,
   categorySkillsQuery,
-  skillsQuery,
   toQueryState,
   userCompanyQuery,
   whatCanDoQuery,
@@ -26,7 +24,6 @@ export function useHomePageData() {
   const userInfo = usePublicUserInfo();
   const userCompanies = usePublicUserCompanies(userCompanyQuery);
   const whatCanDos = useInfinitePublicWhatCanDos(whatCanDoQuery);
-  const skills = usePublicSkills(skillsQuery);
   const categorySkills = usePublicCategorySkills(categorySkillsQuery);
   const projects = usePublicProjects(projectsFilter.query);
   const categoryProjects = usePublicCategoryProjects(categoryProjectsQuery);
@@ -44,7 +41,6 @@ export function useHomePageData() {
       isLoadingMore: whatCanDos.isFetchingNextPage,
       loadMore: () => void whatCanDos.fetchNextPage(),
     },
-    skills: toQueryState(skills, listOf),
     skillCategories: toQueryState(categorySkills, listOf),
     projects: {
       ...toQueryState(projects, listOf),

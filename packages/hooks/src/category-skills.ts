@@ -27,7 +27,7 @@ export function useCategorySkills(
   });
 }
 
-/** GET /category-skills/public: the default-view user's categories, paginated. No sign-in needed. */
+/** GET /category-skills/public: the default-view user's categories, each with up to 20 skills. No sign-in needed. */
 export function usePublicCategorySkills(query: CategorySkillsQuery = {}) {
   return usePublicQuery({
     queryKey: queryKeys.categorySkills.publicList(query),

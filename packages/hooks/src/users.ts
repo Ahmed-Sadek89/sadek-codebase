@@ -87,7 +87,6 @@ export function useUpdateUserDefaultView() {
         client.invalidateQueries({ queryKey: queryKeys.userInfo.public() }),
         ...[
           queryKeys.categorySkills,
-          queryKeys.skills,
           queryKeys.categoryProjects,
           queryKeys.projects,
           queryKeys.userCompany,

@@ -38,7 +38,6 @@ export {
   useDeleteSkill,
   useSkill,
   useSkills,
-  usePublicSkills,
   useUpdateSkill,
 } from "./skills";
 

@@ -14,12 +14,10 @@ import { authHeaders } from "./auth-headers";
 
 export const skillsEndpoints = {
   collection: "/skills",
-  public: "/skills/public",
   byId: (id: number) => `/skills/${id}`,
 } as const;
 
-// GET /skills/public is public; every other route is guarded and scoped to the
-// signed-in user.
+// Every skills route is guarded and scoped to the signed-in user.
 export const skillsService = {
   async create(
     request: CreateSkillRequest,
@@ -39,14 +37,6 @@ export const skillsService = {
     const { data } = await apiClient.get<SkillsResponse>(
       skillsEndpoints.collection,
       { params: query, headers: authHeaders(auth) },
-    );
-    return data;
-  },
-  /** GET /skills/public (no token): the default-view user's rows. */
-  async findAllPublic(query: SkillsQuery): Promise<SkillsResponse> {
-    const { data } = await apiClient.get<SkillsResponse>(
-      skillsEndpoints.public,
-      { params: query },
     );
     return data;
   },

@@ -1,14 +1,19 @@
 "use client";
 
 import { useMemo } from "react";
-import type { CategorySkill } from "@repo/types/category-skills";
-import type { Skill } from "@repo/types/skills";
-import { groupSkillsByCategory } from "../utils";
+import type { PublicCategorySkill } from "@repo/types/category-skills";
+import { toSkillGroups, uniqueSkills } from "../utils";
 
-/** Each skill category with its skills, for the right-hand column. */
-export function useSkillGroups(categories: CategorySkill[], skills: Skill[]) {
+/**
+ * GET /category-skills/public already embeds each category's skills: the
+ * chips list every skill once, the groups list them per category.
+ */
+export function useSkillsContent(categories: PublicCategorySkill[]) {
   return useMemo(
-    () => groupSkillsByCategory(categories, skills),
-    [categories, skills],
+    () => ({
+      skills: uniqueSkills(categories),
+      groups: toSkillGroups(categories),
+    }),
+    [categories],
   );
 }

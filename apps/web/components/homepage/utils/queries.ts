@@ -1,7 +1,6 @@
 import type { CategoryProjectsQuery } from "@repo/types/category-projects";
 import type { CategorySkillsQuery } from "@repo/types/category-skills";
 import type { ProjectsQuery } from "@repo/types/projects";
-import type { SkillsQuery } from "@repo/types/skills";
 import type { UserCompaniesQuery } from "@repo/types/user-company";
 import type { WhatCanDosQuery } from "@repo/types/what-can-do";
 
@@ -10,7 +9,6 @@ import type { WhatCanDosQuery } from "@repo/types/what-can-do";
 // 10 is the backend's max limit: a portfolio shows everything on one page.
 /** Services load 5 at a time; "Show more" fetches the next page. */
 export const whatCanDoQuery: Omit<WhatCanDosQuery, "page"> = { limit: 5 };
-export const skillsQuery: SkillsQuery = { limit: 10, isActive: true };
 export const categorySkillsQuery: CategorySkillsQuery = {
   limit: 10,
   isActive: true,
