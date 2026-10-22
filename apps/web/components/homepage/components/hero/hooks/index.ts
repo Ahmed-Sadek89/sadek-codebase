@@ -1,17 +1,13 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import type { UserCompany } from "@repo/types/user-company";
 import type { PublicUserInfoResponse } from "@repo/types/user-info";
 import { localize } from "../../../../../utils/localize";
 import { hasText } from "../../../utils";
-import { getInitials, getSocialLinks } from "../utils";
+import { getHeroLinks, getInitials } from "../utils";
 
-/** Profile, headline, social links and "trusted by" names in the page's language. */
-export function useHeroContent(
-  info: PublicUserInfoResponse | undefined,
-  companies: UserCompany[],
-) {
+/** Profile, headline and social links in the page's language. */
+export function useHeroContent(info: PublicUserInfoResponse | undefined) {
   const locale = useLocale();
   const user = info?.user;
   return {
@@ -27,9 +23,6 @@ export function useHeroContent(
     summary:
       info &&
       localize(locale, info.shortDescription_en, info.shortDescription_ar),
-    socialLinks: info ? getSocialLinks(info) : [],
-    companyNames: companies.map((company) =>
-      localize(locale, company.name_en, company.name_ar),
-    ),
+    socialLinks: info ? getHeroLinks(info) : [],
   };
 }

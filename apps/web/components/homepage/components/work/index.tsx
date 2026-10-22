@@ -4,8 +4,8 @@ import { useTranslations } from "next-intl";
 import type { CategoryProject } from "@repo/types/category-projects";
 import type { Project } from "@repo/types/projects";
 import { cn } from "@repo/ui/utils";
-import { SectionTitle } from "../section-title";
-import { SectionStatus } from "../section-status";
+import { SectionTitle } from "../../../ui/section-title";
+import { SectionStatus } from "../../../ui/section-status";
 import type { QueryState } from "../../utils";
 import { CategoryFilter, ProjectCard } from "./components";
 

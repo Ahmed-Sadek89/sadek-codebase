@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@repo/ui/card";
-import { SectionTitle } from "../section-title";
+import { SectionTitle } from "../../../ui/section-title";
 import { steps } from "./utils";
 
 export function HowItWorks() {

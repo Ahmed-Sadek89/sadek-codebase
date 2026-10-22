@@ -3,8 +3,8 @@
 import { useTranslations } from "next-intl";
 import type { WhatCanDo } from "@repo/types/what-can-do";
 import type { QueryState } from "../../utils";
-import { SectionTitle } from "../section-title";
-import { SectionStatus } from "../section-status";
+import { SectionTitle } from "../../../ui/section-title";
+import { SectionStatus } from "../../../ui/section-status";
 import { ServiceRow } from "./components";
 import { useSortedServices } from "./hooks";
 

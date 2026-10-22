@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import type { UserInfoDetails } from "@repo/types/user-info";
 import { ArrowRight, Send } from "@repo/ui/icons";
 import { Button } from "@repo/ui/button";
-import { SectionTitle } from "../section-title";
+import { SectionTitle } from "../../../ui/section-title";
 import type { QueryState } from "../../utils";
 import { ContactDetails } from "./components";
 import { useContactDetails } from "./hooks";

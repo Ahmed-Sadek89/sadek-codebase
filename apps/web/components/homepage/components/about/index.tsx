@@ -3,8 +3,8 @@
 import { useTranslations } from "next-intl";
 import type { UserInfoDetails } from "@repo/types/user-info";
 import type { QueryState } from "../../utils";
-import { SectionTitle } from "../section-title";
-import { SectionStatus } from "../section-status";
+import { SectionTitle } from "../../../ui/section-title";
+import { SectionStatus } from "../../../ui/section-status";
 import { StatCard } from "./components";
 import { useAboutContent } from "./hooks";
 

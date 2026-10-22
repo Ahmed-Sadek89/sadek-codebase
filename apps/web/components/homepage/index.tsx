@@ -2,6 +2,7 @@
 
 import {
   About,
+  Companies,
   Contact,
   Experience,
   Hero,
@@ -27,8 +28,9 @@ export function HomePage() {
   } = useHomePageData();
 
   return (
-    < >
-      <Hero userInfo={userInfo} companies={companies} />
+    <>
+      <Hero userInfo={userInfo} />
+      <Companies companies={companies} />
       <About userInfo={userInfo} />
       <Services services={services} />
       <Skills skills={skills} categories={skillCategories} />

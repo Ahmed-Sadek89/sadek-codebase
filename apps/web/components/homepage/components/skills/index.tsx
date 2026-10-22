@@ -4,8 +4,8 @@ import { useTranslations } from "next-intl";
 import type { CategorySkill } from "@repo/types/category-skills";
 import type { Skill } from "@repo/types/skills";
 import type { QueryState } from "../../utils";
-import { SectionTitle } from "../section-title";
-import { SectionStatus } from "../section-status";
+import { SectionTitle } from "../../../ui/section-title";
+import { SectionStatus } from "../../../ui/section-status";
 import { SkillChip, SkillGroup } from "./components";
 import { useSkillGroups } from "./hooks";
 
