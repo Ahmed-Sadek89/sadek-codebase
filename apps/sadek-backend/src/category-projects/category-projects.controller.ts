@@ -33,11 +33,11 @@ export class CategoryProjectsController {
   @ApiBearerAuth()
   @Get()
   async findAll(
-    @Query() filterCategoryProjectDto: FilterCategoryProjectDto,
+    @Query() query: FilterCategoryProjectDto,
     @Request() req: RequestUserDto
   ) {
     const userId = req.user.userId;
-    return await this.categoryProjectsService.findAll(filterCategoryProjectDto, userId);
+    return await this.categoryProjectsService.findAll(query, userId);
   }
 
   @UseGuards(JwtAuthGuard)

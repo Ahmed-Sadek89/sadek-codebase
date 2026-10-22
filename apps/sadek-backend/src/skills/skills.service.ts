@@ -52,12 +52,12 @@ export class SkillsService {
   }
 
   async findAll(query: FilterSkillDto, userId: number) {
-    return this.findAllFor(query, { id: userId });
+    return await this.findAllFor(query, { id: userId });
   }
 
   /** Public list: always the rows of the user whose `isDefaultView` is true. */
   async findAllPublic(query: FilterSkillDto) {
-    return this.findAllFor(query, { isDefaultView: true });
+    return await this.findAllFor(query, { isDefaultView: true });
   }
 
   private async findAllFor(query: FilterSkillDto, owner: FindOptionsWhere<User>) {
@@ -97,7 +97,7 @@ export class SkillsService {
       }
     }
 
-    return paginate({
+    return await paginate({
       repository: this.skillRepository,
       where,
       page: query.page,

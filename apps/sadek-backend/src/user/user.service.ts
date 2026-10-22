@@ -50,7 +50,7 @@ export class UserService {
       ]
       : filters;
 
-    return paginate({
+    return await paginate({
       repository: this.userRepo,
       where,
       page: query.page,

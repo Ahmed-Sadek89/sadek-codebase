@@ -32,10 +32,10 @@ export class CategorySkillsController {
   @ApiBearerAuth()
   @Get("private")
   async findAll(
-    @Query() filterCategorySkillDto: FilterCategorySkillDto,
+    @Query() query: FilterCategorySkillDto,
     @Request() req: RequestUserDto
   ) {
-    return await this.categorySkillsService.findAll(filterCategorySkillDto, req.user.userId);
+    return await this.categorySkillsService.findAll(query, req.user.userId);
   }
 
 

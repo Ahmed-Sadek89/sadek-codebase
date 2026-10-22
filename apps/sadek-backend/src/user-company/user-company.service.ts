@@ -26,18 +26,19 @@ export class UserCompanyService {
   }
 
   async findAll(query: FilterUserCompanyDto, userId: number) {
-    return this.findAllFor(query, { id: userId });
+    return await this.findAllFor(query, { id: userId });
   }
 
   /** Public list: always the rows of the user whose `isDefaultView` is true. */
   async findAllPublic(query: FilterUserCompanyDto) {
-    return this.findAllFor(query, { isDefaultView: true });
+    return await this.findAllFor(query, { isDefaultView: true });
   }
 
   private async findAllFor(query: FilterUserCompanyDto, owner: FindOptionsWhere<User>) {
+    const where = this.ownedWhere(owner, query.search);
     return await paginate({
       repository: this.userCompanyRepository,
-      where: this.ownedWhere(owner, query.search),
+      where,
       page: query.page,
       limit: query.limit,
       relations: { user: true },
@@ -50,12 +51,13 @@ export class UserCompanyService {
 
   /** The user's companies, paginated by `startWorkFrom`: latest job first unless `order` is ASC. */
   async findByUser(query: FilterUserCompanyDto, userId: number) {
+    const where = this.ownedWhere({ id: userId }, query.search);
     return await paginate({
       repository: this.userCompanyRepository,
-      where: this.ownedWhere({ id: userId }, query.search),
+      where,
       page: query.page,
       limit: query.limit,
-      order: query.order
+      order: query.order,
     });
   }
 

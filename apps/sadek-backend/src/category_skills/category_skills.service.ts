@@ -35,25 +35,25 @@ export class CategorySkillsService {
     return await this.categorySkillRepository.save(categorySkill);
   }
 
-  async findAll(filterCategorySkillDto: FilterCategorySkillDto, userId: number) {
-    return this.findAllFor(filterCategorySkillDto, { id: userId });
+  async findAll(query: FilterCategorySkillDto, userId: number) {
+    return await this.findAllFor(query, { id: userId });
   }
 
   /** Public list: always the rows of the user whose `isDefaultView` is true. */
-  async findAllPublic(filterCategorySkillDto: FilterCategorySkillDto) {
-    return this.findAllFor(filterCategorySkillDto, { isDefaultView: true });
+  async findAllPublic(query: FilterCategorySkillDto) {
+    return await this.findAllFor(query, { isDefaultView: true });
   }
 
-  private async findAllFor(filterCategorySkillDto: FilterCategorySkillDto, owner: FindOptionsWhere<User>) {
+  private async findAllFor(query: FilterCategorySkillDto, owner: FindOptionsWhere<User>) {
     const filters: FindOptionsWhere<CategorySkill> = {
       user: owner,
     };
 
-    if (filterCategorySkillDto.isActive !== undefined) {
-      filters.isActive = filterCategorySkillDto.isActive;
+    if (query.isActive !== undefined) {
+      filters.isActive = query.isActive;
     }
 
-    const search = filterCategorySkillDto.search?.trim();
+    const search = query.search?.trim();
 
     let where: FindOptionsWhere<CategorySkill> | FindOptionsWhere<CategorySkill>[];
     if (search) {
@@ -65,16 +65,16 @@ export class CategorySkillsService {
       where = filters;
     }
 
-    return paginate({
+    return await paginate({
       repository: this.categorySkillRepository,
       where,
-      page: filterCategorySkillDto.page,
-      limit: filterCategorySkillDto.limit,
+      page: query.page,
+      limit: query.limit,
       relations: { user: true },
       select: {
         user: { id: true },
       },
-      order: filterCategorySkillDto.order,
+      order: query.order,
     });
   }
 

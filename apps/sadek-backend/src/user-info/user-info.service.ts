@@ -30,12 +30,12 @@ export class UserInfoService {
   }
 
   async findAll(query: FilterUserInfoDto) {
-    return this.findAllFor(query);
+    return await this.findAllFor(query);
   }
 
   /** Public list: only the info of the user whose `isDefaultView` is true. */
   async findAllPublic(query: FilterUserInfoDto) {
-    return this.findAllFor(query, { isDefaultView: true });
+    return await this.findAllFor(query, { isDefaultView: true });
   }
 
   private async findAllFor(query: FilterUserInfoDto, user?: FindOptionsWhere<User>) {

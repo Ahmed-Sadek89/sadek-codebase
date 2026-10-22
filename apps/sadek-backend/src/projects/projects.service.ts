@@ -53,12 +53,12 @@ export class ProjectsService {
    * and `categoryId`.
    */
   async findAll(query: FilterProjectDto, userId: number) {
-    return this.findAllFor(query, { id: userId });
+    return await this.findAllFor(query, { id: userId });
   }
 
   /** Public list: always the rows of the user whose `isDefaultView` is true. */
   async findAllPublic(query: FilterProjectDto) {
-    return this.findAllFor(query, { isDefaultView: true });
+    return await this.findAllFor(query, { isDefaultView: true });
   }
 
   private async findAllFor(query: FilterProjectDto, owner: FindOptionsWhere<User>) {
@@ -82,7 +82,7 @@ export class ProjectsService {
       ]
       : filters;
 
-    return paginate({
+    return await paginate({
       repository: this.projectRepository,
       where,
       page: query.page,

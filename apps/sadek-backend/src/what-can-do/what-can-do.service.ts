@@ -24,18 +24,19 @@ export class WhatCanDoService {
   }
 
   async findAll(query: FilterWhatCanDoDto, userId: number) {
-    return this.findAllFor(query, { id: userId });
+    return await this.findAllFor(query, { id: userId });
   }
 
   /** Public list: always the rows of the user whose `isDefaultView` is true. */
   async findAllPublic(query: FilterWhatCanDoDto) {
-    return this.findAllFor(query, { isDefaultView: true });
+    return await this.findAllFor(query, { isDefaultView: true });
   }
 
   private async findAllFor(query: FilterWhatCanDoDto, owner: FindOptionsWhere<User>) {
+    const where = this.ownedWhere(owner, query.search);
     return await paginate({
       repository: this.whatCanDoRepository,
-      where: this.ownedWhere(owner, query.search),
+      where,
       page: query.page,
       limit: query.limit,
       relations: { user: true },
@@ -48,9 +49,10 @@ export class WhatCanDoService {
 
   /** The user's items, paginated by `rank`: lowest rank first unless `order` is DESC. */
   async findByUser(query: FilterWhatCanDoDto, userId: number) {
+    const where = this.ownedWhere({ id: userId }, query.search);
     return await paginate({
       repository: this.whatCanDoRepository,
-      where: this.ownedWhere({ id: userId }, query.search),
+      where,
       page: query.page,
       limit: query.limit,
       order: query.order,

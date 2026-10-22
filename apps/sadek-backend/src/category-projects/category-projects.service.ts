@@ -28,25 +28,25 @@ export class CategoryProjectsService {
     return await this.categoryProjectRepository.save(categoryProject);
   }
 
-  async findAll(filterCategoryProjectDto: FilterCategoryProjectDto, userId: number) {
-    return this.findAllFor(filterCategoryProjectDto, { id: userId });
+  async findAll(query: FilterCategoryProjectDto, userId: number) {
+    return await this.findAllFor(query, { id: userId });
   }
 
   /** Public list: always the rows of the user whose `isDefaultView` is true. */
-  async findAllPublic(filterCategoryProjectDto: FilterCategoryProjectDto) {
-    return this.findAllFor(filterCategoryProjectDto, { isDefaultView: true });
+  async findAllPublic(query: FilterCategoryProjectDto) {
+    return await this.findAllFor(query, { isDefaultView: true });
   }
 
-  private async findAllFor(filterCategoryProjectDto: FilterCategoryProjectDto, owner: FindOptionsWhere<User>) {
+  private async findAllFor(query: FilterCategoryProjectDto, owner: FindOptionsWhere<User>) {
     const filters: FindOptionsWhere<CategoryProject> = {
       user: owner,
     };
 
-    if (filterCategoryProjectDto.isActive !== undefined) {
-      filters.isActive = filterCategoryProjectDto.isActive;
+    if (query.isActive !== undefined) {
+      filters.isActive = query.isActive;
     }
 
-    const search = filterCategoryProjectDto.search?.trim();
+    const search = query.search?.trim();
 
     let where: FindOptionsWhere<CategoryProject> | FindOptionsWhere<CategoryProject>[];
     if (search) {
@@ -61,15 +61,14 @@ export class CategoryProjectsService {
     return await paginate({
       repository: this.categoryProjectRepository,
       where,
-      page: filterCategoryProjectDto.page,
-      limit: filterCategoryProjectDto.limit,
+      page: query.page,
+      limit: query.limit,
       relations: { user: true },
       select: {
         user: { id: true },
       },
-      order: filterCategoryProjectDto.order,
+      order: query.order,
     });
-
   }
 
   async findOne(id: number): Promise<CategoryProject> {
