@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserService } from '../../user/user.service';
 import refreshJwtConfig from '../config/refresh-jwt.config';
 
-type JwtPayload = { sub: number; email: string; iat?: number; typ?: 'access' | 'refresh' };
+type JwtPayload = { sub: number; iat?: number; exp?: number };
 
 @Injectable()
 export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
@@ -22,10 +22,6 @@ export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
   }
 
   async validate(payload: JwtPayload) {
-    if (payload.typ !== 'refresh') {
-      throw new UnauthorizedException('Refresh token required');
-    }
-
     const user = await this.userService.findOne(payload.sub);
     if (
       user.lastLogoutAt &&
@@ -35,7 +31,6 @@ export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
       throw new UnauthorizedException('Token revoked');
     }
 
-    // The user's current avatar, so a refreshed access token picks up changes.
-    return { userId: payload.sub, email: payload.email, avatar: user.avatarUrl ?? null };
+    return { userId: payload.sub };
   }
 }

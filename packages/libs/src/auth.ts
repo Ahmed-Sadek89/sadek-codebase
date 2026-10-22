@@ -73,7 +73,9 @@ export function createAuth(
               return null;
             return {
               id: String(result.user.sub),
+              name: result.user.username,
               email: result.user.email,
+              image: result.user.avatar,
               accessToken: result.access_token,
               refreshToken: result.refresh_token,
             };
@@ -84,7 +86,15 @@ export function createAuth(
       }),
     ],
     callbacks: {
-      async jwt({ token, user }) {
+      async jwt({ token, user, trigger, session }) {
+        // `update({ user })` on the client copies the changed profile fields
+        // into the session cookie; no backend request is made.
+        if (trigger === "update" && session?.user) {
+          const { name, email, image } = session.user;
+          if (typeof name === "string") token.name = name;
+          if (typeof email === "string") token.email = email;
+          if (typeof image === "string" || image === null) token.picture = image;
+        }
         if (user?.accessToken && user.refreshToken) {
           token.accessToken = user.accessToken;
           token.refreshToken = user.refreshToken;
@@ -95,6 +105,9 @@ export function createAuth(
       },
       session({ session, token }) {
         session.user.id = token.sub!;
+        session.user.name = token.name;
+        session.user.email = token.email ?? "";
+        session.user.image = token.picture;
         session.accessToken = token.accessToken;
         session.accessTokenExpires = token.accessTokenExpires;
         session.refreshTokenExpires = token.refreshTokenExpires;

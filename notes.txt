@@ -1,6 +1,4 @@
 
 
--- use GET /auth/me to get current user, 
-    and allow in profile page to see his username email cover and logo and edit 
 -- allow also in profile page to change password
 -- make isAdmin col in user entity

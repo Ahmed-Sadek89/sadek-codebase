@@ -37,7 +37,7 @@ function mockRequest(
 test("login sends credentials and preserves the backend user/token contract", async () => {
   const request = { email: "test@example.com", password: "test-password" };
   const response = {
-    user: { sub: 1, email: request.email, avatar: null },
+    user: { sub: 1, email: request.email, username: "user", avatar: null },
     access_token: "access",
     refresh_token: "refresh",
   };

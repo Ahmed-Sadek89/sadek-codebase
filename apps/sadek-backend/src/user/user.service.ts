@@ -68,6 +68,7 @@ export class UserService {
       where: { email },
       select: {
         id: true,
+        username: true, 
         email: true,
         password: true,
         avatarUrl: true

@@ -19,16 +19,19 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     try {
       const user = await this.userService.login(loginDto)
-      // The avatar rides in the access token so clients can show it without
-      // another request; the refresh token needs only the identity.
-      const payload = { sub: user.id, email: user.email, avatar: user.avatarUrl ?? null };
-      const refreshPayload = { sub: user.id, email: user.email, typ: 'refresh' };
+      // Tokens carry only `sub` (plus `iat`/`exp`); the profile fields are in `user`.
+      // Access and refresh tokens use different secrets, so neither passes for the other.
+      const payload = { sub: user.id };
       const refreshOptions: JwtSignOptions = { ...this.refreshJwt };
-
       return {
-        user: payload,
-        access_token: this.jwtService.sign({ ...payload, avatar: user.avatarUrl ?? null }),
-        refresh_token: this.jwtService.sign(refreshPayload, refreshOptions),
+        user: {
+          sub: user.id,
+          email: user.email,
+          username: user.username,
+          avatar: user.avatarUrl ?? null,
+        },
+        access_token: this.jwtService.sign(payload),
+        refresh_token: this.jwtService.sign(payload, refreshOptions),
       };
     } catch (error: any) {
       throw new BadRequestException(error.message)
@@ -39,10 +42,10 @@ export class AuthService {
     return await this.userService.findOne(userId);
   }
 
-  /** `user` comes from RefreshJwtStrategy, which reads the current avatar from the DB. */
-  refreshAccess(user: { userId: number; email: string; avatar: string | null }) {
+  /** `user` comes from RefreshJwtStrategy. */
+  refreshAccess(user: { userId: number }) {
     return {
-      access_token: this.jwtService.sign({ sub: user.userId, email: user.email, avatar: user.avatar }),
+      access_token: this.jwtService.sign({ sub: user.userId }),
     };
   }
 
@@ -65,15 +68,14 @@ export class AuthService {
   async logout(user: { userId: number; email: string }) {
     await this.userService.logout(user.userId);
 
-    const payload = { sub: user.userId, email: user.email };
-    const refreshPayload = { ...payload, typ: 'refresh' };
+    const payload = { sub: user.userId };
     const expiredIn = '1s';
 
     const accessOptions: JwtSignOptions = { expiresIn: expiredIn };
     const refreshOptions: JwtSignOptions = { ...this.refreshJwt, expiresIn: expiredIn };
 
     this.jwtService.sign(payload, accessOptions);
-    this.jwtService.sign(refreshPayload, refreshOptions);
+    this.jwtService.sign(payload, refreshOptions);
 
     return {
       message: 'Logout successfully',

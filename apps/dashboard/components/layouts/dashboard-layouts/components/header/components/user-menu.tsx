@@ -21,7 +21,7 @@ import { PROFILE_PATH } from "../utils/constants";
 
 export function UserMenu() {
   const t = useTranslations();
-  const { email, image, initial } = useCurrentUser();
+  const { name, image, initial } = useCurrentUser();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   return (
@@ -39,10 +39,10 @@ export function UserMenu() {
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
-          {email && (
+          {name && (
             <>
               <DropdownMenuLabel className="truncate font-normal text-muted-foreground">
-                {email}
+                {name}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
             </>

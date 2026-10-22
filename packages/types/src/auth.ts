@@ -5,16 +5,18 @@ export interface LoginRequest {
   password: string;
 }
 
-/** The backend returns the JWT subject as `sub`, not `id` or `userId`. */
+/** The login response's user; its id is returned as `sub`, not `id` or `userId`. */
 export interface AuthUser {
   sub: number;
   email: string;
-  /** The user's `avatarUrl`; `null` when none is set. Also in the access token's payload. */
+  username: string;
+  /** The user's `avatarUrl`; `null` when none is set. */
   avatar: string | null;
 }
 
-/** Claims in the access token's payload (`refresh` re-reads the avatar from the DB). */
-export interface AccessTokenPayload extends AuthUser {
+/** Claims in the access and refresh tokens' payload: only the user id and timestamps. */
+export interface AccessTokenPayload {
+  sub: number;
   iat: number;
   exp: number;
 }

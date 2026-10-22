@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserService } from '../../user/user.service';
 
-type JwtPayload = { sub: number; email: string; avatar?: string, iat?: number; typ?: 'access' | 'refresh' };
+type JwtPayload = { sub: number; iat?: number; exp?: number };
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -16,21 +16,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
-    if (payload.typ === 'refresh') {
-      throw new UnauthorizedException('Access token required');
-    }
+    const user = await this.userService.findOne(payload.sub);
+    this.assertNotRevoked(payload, user.lastLogoutAt);
 
-    await this.assertNotRevoked(payload);
-
-    return { userId: payload.sub, email: payload.email, avatar: payload.avatar };
+    // The token carries only the id; the email comes from the DB.
+    return { userId: payload.sub, email: user.email };
   }
 
-  private async assertNotRevoked(payload: JwtPayload) {
-    const user = await this.userService.findOne(payload.sub);
+  private assertNotRevoked(payload: JwtPayload, lastLogoutAt: Date | null) {
     if (
-      user.lastLogoutAt &&
+      lastLogoutAt &&
       payload.iat !== undefined &&
-      payload.iat < Math.floor(user.lastLogoutAt.getTime() / 1000)
+      payload.iat < Math.floor(lastLogoutAt.getTime() / 1000)
     ) {
       throw new UnauthorizedException('Token revoked');
     }
