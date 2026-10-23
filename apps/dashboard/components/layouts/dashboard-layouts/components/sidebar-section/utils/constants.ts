@@ -35,7 +35,11 @@ export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
     labelKey: "navOverview",
     items: [
       { titleKey: "navDashboard", href: "/dashboard", icon: LayoutDashboard },
-      { titleKey: "navContacts", href: "/dashboard/contacts", icon: MessageSquare },
+      {
+        titleKey: "navContacts",
+        href: "/dashboard/contacts",
+        icon: MessageSquare,
+      },
     ],
   },
   {
