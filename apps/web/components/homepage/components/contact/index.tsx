@@ -2,11 +2,9 @@
 
 import { useTranslations } from "next-intl";
 import type { UserInfoDetails } from "@repo/types/user-info";
-import { Send } from "@repo/ui/icons";
-import { Button } from "@repo/ui/button";
 import { SectionTitle } from "../../../ui/section-title";
 import type { QueryState } from "../../utils";
-import { ContactDetails } from "./components";
+import { ContactDetails, ContactForm } from "./components";
 import { useContactDetails } from "./hooks";
 
 export function Contact({
@@ -17,47 +15,38 @@ export function Contact({
   const t = useTranslations();
   const details = useContactDetails(userInfo.data);
   return (
-
     <section
       id="contact"
       aria-labelledby="contact-title"
-      className="py-[76px] max-[700px]:py-[54px] bg-muted"
+      className="relative isolate overflow-hidden bg-muted py-[76px] max-[700px]:py-[54px]"
     >
+      <div
+        aria-hidden="true"
+        className="absolute -start-32 bottom-0 -z-10 size-96 rounded-full bg-primary/10 blur-3xl"
+      />
       <div className="app-container py-0">
         <SectionTitle
           id="contact-title"
           title={t("contactTitle")}
           copy={t("contactCopy")}
         />
-        <ContactDetails details={details} />
-        <form
-          className="mx-auto grid max-w-[560px] grid-cols-2 gap-2 rounded-[7px] bg-card p-4"
-          id="form"
-        >
-          <input
-            className="rounded-[3px] border border-input bg-background p-2.5 font-[inherit] text-[10px] text-foreground"
-            placeholder={t("contactNamePlaceholder")}
-          />
-          <input
-            className="rounded-[3px] border border-input bg-background p-2.5 font-[inherit] text-[10px] text-foreground"
-            placeholder={t("contactEmailPlaceholder")}
-          />
-          <input
-            className="col-span-2 rounded-[3px] border border-input bg-background p-2.5 font-[inherit] text-[10px] text-foreground"
-            placeholder={t("contactSubjectPlaceholder")}
-          />
-          <textarea
-            className="col-span-2 resize-y rounded-[3px] border border-input bg-background p-2.5 font-[inherit] text-[10px] text-foreground"
-            placeholder={t("contactMessagePlaceholder")}
-            rows={5}
-          />
-          <Button
-            className="col-span-2 justify-self-center text-[10px]"
-            type="submit"
-          >
-            {t("contactSend")} <Send className="rtl:-scale-x-100" />
-          </Button>
-        </form>
+        {/* Details beside the form on large screens; stacked below. */}
+        <div className="mx-auto grid max-w-6xl items-start gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-8">
+          <aside className="rounded-3xl border border-border bg-card/70 p-6 shadow-sm backdrop-blur sm:p-8">
+            <h3 className="mb-5 text-lg font-bold text-foreground sm:text-xl">
+              {t("contactInfoTitle")}
+            </h3>
+            <ContactDetails details={details} />
+            <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1.5 text-xs font-medium text-success">
+              <span
+                aria-hidden="true"
+                className="size-1.5 rounded-full bg-success"
+              />
+              {t("contactReplyTime")}
+            </p>
+          </aside>
+          <ContactForm />
+        </div>
       </div>
     </section>
   );

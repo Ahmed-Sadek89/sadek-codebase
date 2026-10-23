@@ -5,3 +5,10 @@ import { getProfileLinks, type ProfileLink } from "../../../utils";
 export function getContactDetails(info: UserInfoDetails): ProfileLink[] {
   return getProfileLinks(info);
 }
+
+export const CONTACT_FORM_DEFAULT_VALUES = {
+  name: "",
+  email: "",
+  subject: "",
+  message: "",
+};

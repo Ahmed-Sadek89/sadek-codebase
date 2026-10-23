@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { QueryProvider } from "@repo/provider/query-provider";
 import { ThemeProvider } from "@repo/provider/theme-provider";
+import { ToastProvider } from "@repo/provider/toast-provider";
 import { DirectionProvider } from "@repo/ui/direction";
 import "../styles.css";
 import { getDirection, isLocale, LOCALES } from "../../i18n/config";
@@ -50,6 +51,8 @@ export default async function RootLayout({
           <DirectionProvider dir={dir}>
             <ThemeProvider defaultTheme="dark" enableSystem={false}>
               <QueryProvider>{children}</QueryProvider>
+              {/* Sonner toasts from @repo/libs/toast (e.g. the contact form). */}
+              <ToastProvider dir={dir} />
             </ThemeProvider>
           </DirectionProvider>
         </NextIntlClientProvider>
