@@ -1,14 +1,19 @@
 "use client";
 
-import { keepPreviousData, useQueryClient } from "@repo/libs/query";
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQueryClient,
+} from "@repo/libs/query";
 import { categoryProjectsService } from "@repo/services/category-projects";
 import type {
   CategoryProjectsQuery,
   CreateCategoryProjectRequest,
   UpdateCategoryProjectRequest,
 } from "@repo/types/category-projects";
+import { getNextPageParam } from "@repo/utils/pagination";
 import { queryKeys } from "@repo/utils/query-keys";
-import { useGuardedMutation, useGuardedQuery, usePublicQuery } from "./api";
+import { useGuardedMutation, useGuardedQuery } from "./api";
 
 /**
  * GET /category-projects: the signed-in user's categories, paginated.
@@ -27,12 +32,20 @@ export function useCategoryProjects(
   });
 }
 
-/** GET /category-projects/public: the default-view user's categories, paginated. No sign-in needed. */
-export function usePublicCategoryProjects(query: CategoryProjectsQuery = {}) {
-  return usePublicQuery({
+/**
+ * GET /category-projects/public, page by page: `fetchNextPage()` appends the
+ * next `query.limit` categories and `hasNextPage` turns false after the last
+ * page. No sign-in needed.
+ */
+export function usePublicCategoryProjects(
+  query: Omit<CategoryProjectsQuery, "page"> = {},
+) {
+  return useInfiniteQuery({
     queryKey: queryKeys.categoryProjects.publicList(query),
-    queryFn: () => categoryProjectsService.findAllPublic(query),
-    // Keep the current rows on screen while a new page or search loads.
+    queryFn: ({ pageParam }) =>
+      categoryProjectsService.findAllPublic({ ...query, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam,
     placeholderData: keepPreviousData,
   });
 }

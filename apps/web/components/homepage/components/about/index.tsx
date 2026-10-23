@@ -27,7 +27,6 @@ export function About({
       />
       <div className="app-container py-0">
         <SectionTitle
-          eyebrow={t("navAbout")}
           id="about-title"
           title={t("aboutTitle")}
           copy={t("aboutCopy")}

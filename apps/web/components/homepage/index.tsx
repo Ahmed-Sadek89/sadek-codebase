@@ -7,7 +7,6 @@ import {
   Experience,
   Hero,
   HowItWorks,
-  Reviews,
   Services,
   Skills,
   Work,
@@ -41,8 +40,7 @@ export function HomePage() {
         categoryId={projectsFilter.categoryId}
         onCategoryChange={projectsFilter.setCategoryId}
       />
-      <Reviews />
-      <HowItWorks />
+      <HowItWorks userInfo={userInfo} />
       <Contact userInfo={userInfo} />
     </>
   );

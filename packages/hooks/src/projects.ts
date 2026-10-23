@@ -1,14 +1,19 @@
 "use client";
 
-import { keepPreviousData, useQueryClient } from "@repo/libs/query";
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQueryClient,
+} from "@repo/libs/query";
 import { projectsService } from "@repo/services/projects";
 import type {
   CreateProjectRequest,
   ProjectsQuery,
   UpdateProjectRequest,
 } from "@repo/types/projects";
+import { getNextPageParam } from "@repo/utils/pagination";
 import { queryKeys } from "@repo/utils/query-keys";
-import { useGuardedMutation, useGuardedQuery, usePublicQuery } from "./api";
+import { useGuardedMutation, useGuardedQuery } from "./api";
 
 /** GET /projects: the signed-in user's projects, paginated and filtered. */
 export function useProjects(query: ProjectsQuery = {}) {
@@ -20,12 +25,19 @@ export function useProjects(query: ProjectsQuery = {}) {
   });
 }
 
-/** GET /projects/public: the default-view user's projects, paginated. No sign-in needed. */
-export function usePublicProjects(query: ProjectsQuery = {}) {
-  return usePublicQuery({
+/**
+ * GET /projects/public, page by page: `fetchNextPage()` appends the next
+ * `query.limit` projects and `hasNextPage` turns false after the last page.
+ * Changing the filters (e.g. `categoryId`) keeps the previous pages on screen
+ * (`isPlaceholderData`) until the new first page arrives. No sign-in needed.
+ */
+export function usePublicProjects(query: Omit<ProjectsQuery, "page"> = {}) {
+  return useInfiniteQuery({
     queryKey: queryKeys.projects.publicList(query),
-    queryFn: () => projectsService.findAllPublic(query),
-    // Keep the current rows on screen while a new page or search loads.
+    queryFn: ({ pageParam }) =>
+      projectsService.findAllPublic({ ...query, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam,
     placeholderData: keepPreviousData,
   });
 }

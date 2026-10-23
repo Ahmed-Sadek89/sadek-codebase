@@ -1,8 +1,7 @@
 import { cn } from "@repo/ui/utils";
 
 /**
- * A section heading: optional eyebrow pill, large gradient title, accent bar
- * and subtitle. Give it an `id` and point the section's `aria-labelledby` at
+ * A section heading: large gradient title, accent bar and subtitle. Give it an `id` and point the section's `aria-labelledby` at
  * it so screen readers announce the section by its title.
  */
 export const SectionTitle = ({

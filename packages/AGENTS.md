@@ -156,7 +156,7 @@ Source: `apps/sadek-backend/src/category-projects`. Types in `@repo/types/catego
 | `PATCH /category-projects/:id`           | JSON partial of the create body                                     | `{ message: "Category project updated successfully" }` |
 | `DELETE /category-projects/:id`          | –                                                                   | `{ message: "Category project deleted successfully" }` |
 
-- Client: `categoryProjectsService.create/findAll/findAllPublic/findOne/update/remove`; hooks `useCreateCategoryProject`, `useCategoryProjects(query)`, `usePublicCategoryProjects(query)`, `useCategoryProject(id)` (`CategoryProjectDetails`, no `user`), `useUpdateCategoryProject` (`{ id, data }`), `useDeleteCategoryProject` (`id`). Update and delete also invalidate `queryKeys.projects.all`, because projects embed category names.
+- Client: `categoryProjectsService.create/findAll/findAllPublic/findOne/update/remove`; hooks `useCreateCategoryProject`, `useCategoryProjects(query)`, `usePublicCategoryProjects(query)` (infinite: `useInfiniteQuery` pages via `fetchNextPage`, key `publicList(query)` without `page`), `useCategoryProject(id)` (`CategoryProjectDetails`, no `user`), `useUpdateCategoryProject` (`{ id, data }`), `useDeleteCategoryProject` (`id`). Update and delete also invalidate `queryKeys.projects.all`, because projects embed category names.
 - Same fields and rules as category skills: `nameAr`/`nameEn` max 50, nullable descriptions, `isActive`, `createdAt`. Unlike category skills, the list is at the collection root, and `DELETE` does not check for linked projects.
 - `GET`, `PATCH`, and `DELETE /:id` have no owner check.
 
@@ -176,7 +176,7 @@ Source: `apps/sadek-backend/src/projects`. Types in `@repo/types/projects` (`Pro
 - Project fields: `id`, `nameAr`, `nameEn` (max 100), `descriptionAr`, `descriptionEn` (required), `isActive`, `mainImageUrl`, `liveUrl`, `repoUrl` (nullable, max 255), `createdAt`, `user: { id }`, `categoryProjects` (`[{ id, nameAr, nameEn }]` in the list).
 - `categoryProjectsIds` must be a non-empty array of unique integers, all owned by the signed-in user, or the request returns 400.
 - `GET /projects` returns only the signed-in user's projects. `search` matches `nameAr`/`nameEn`, `isActive` and `categoryId` filter, and `order` sorts by `createdAt`.
-- Client: `projectsService.create/findAll/findAllPublic/findOne/update/remove`; hooks `useCreateProject`, `useProjects(query)`, `usePublicProjects(query)`, `useProject(id)`, `useUpdateProject` (`{ id, data }`), `useDeleteProject` (`id`).
+- Client: `projectsService.create/findAll/findAllPublic/findOne/update/remove`; hooks `useCreateProject`, `useProjects(query)`, `usePublicProjects(query)` (infinite: `useInfiniteQuery` pages via `fetchNextPage`, key `publicList(query)` without `page`; keeps the previous pages while filters change), `useProject(id)`, `useUpdateProject` (`{ id, data }`), `useDeleteProject` (`id`).
 - `GET`, `PATCH` (except the category ownership check), and `DELETE /:id` have no owner check.
 
 ### User info (`/user-info`)

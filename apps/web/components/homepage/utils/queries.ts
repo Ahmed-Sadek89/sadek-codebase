@@ -17,8 +17,15 @@ export const categorySkillsQuery: Omit<CategorySkillsQuery, "page"> = {
 export const userCompanyQuery: UserCompaniesQuery = { limit: 10 };
 /** The Experience timeline loads 5 jobs at a time; "Show more" fetches the next page. */
 export const experienceQuery: Omit<UserCompaniesQuery, "page"> = { limit: 5 };
-export const categoryProjectsQuery: CategoryProjectsQuery = {
+/**
+ * Work: 10 category chips and 6 projects per page; each has its own "show
+ * more". 6 = the featured card (2×2) + 5 cards, which fills 3 rows of 3.
+ */
+export const categoryProjectsQuery: Omit<CategoryProjectsQuery, "page"> = {
   limit: 10,
   isActive: true,
 };
-export const projectsQuery: ProjectsQuery = { limit: 10, isActive: true };
+export const projectsQuery: Omit<ProjectsQuery, "page"> = {
+  limit: 6,
+  isActive: true,
+};

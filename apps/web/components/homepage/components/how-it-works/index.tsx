@@ -1,37 +1,48 @@
+"use client";
+
 import { useTranslations } from "next-intl";
-import { Card, CardContent } from "@repo/ui/card";
+import type { PublicUserInfoResponse } from "@repo/types/user-info";
 import { SectionTitle } from "../../../ui/section-title";
+import type { QueryState } from "../../utils";
+import { CoverBackdrop, StepCard, WorkTogether } from "./components";
+import { useCoverPhoto } from "./hooks";
 import { steps } from "./utils";
 
-export function HowItWorks() {
+/**
+ * How I work, set on the owner's cover photo: the process steps as glass
+ * cards, then the "let's work together" call to action.
+ */
+export function HowItWorks({
+  userInfo,
+}: {
+  userInfo: QueryState<PublicUserInfoResponse | undefined>;
+}) {
   const t = useTranslations();
+  const coverPhoto = useCoverPhoto(userInfo.data);
   return (
     <section
       aria-labelledby="how-it-works-title"
-      className="py-[76px] max-[700px]:py-[54px] bg-surface"
+      className="relative isolate overflow-hidden py-24 sm:py-32"
     >
-      <div className="app-container py-0">
+      <CoverBackdrop src={coverPhoto} />
+      {/* Dark tokens over the photo, in light and dark mode alike. */}
+      <div className="dark app-container py-0 text-foreground">
         <SectionTitle
           id="how-it-works-title"
           title={t("howTitle")}
           copy={t("howCopy")}
         />
-        <div className="grid grid-cols-4 gap-3 max-[700px]:grid-cols-2">
-          {steps.map(({ Icon, titleKey, copyKey }, i) => (
-            <Card className="border-0 bg-card" key={titleKey}>
-              <CardContent className="relative p-[17px]">
-                <span className="absolute top-3 end-[13px] text-xl font-bold text-muted-foreground">
-                  0{i + 1}
-                </span>
-                <Icon className="w-[17px] text-primary" />
-                <h3 className="mt-[13px] text-xs">{t(titleKey)}</h3>
-                <p className="text-[10px] leading-[1.6] text-muted-foreground">
-                  {t(copyKey)}
-                </p>
-              </CardContent>
-            </Card>
+        <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          {steps.map((step, index) => (
+            <StepCard
+              index={index}
+              isLast={index === steps.length - 1}
+              key={step.titleKey}
+              step={step}
+            />
           ))}
-        </div>
+        </ol>
+        <WorkTogether />
       </div>
     </section>
   );

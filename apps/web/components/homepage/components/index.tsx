@@ -4,7 +4,6 @@ export { Contact } from "./contact";
 export { Experience } from "./experience";
 export { Hero } from "./hero";
 export { HowItWorks } from "./how-it-works";
-export { Reviews } from "./reviews";
 export { Services } from "./services";
 export { Skills } from "./skills";
 export { Work } from "./work";

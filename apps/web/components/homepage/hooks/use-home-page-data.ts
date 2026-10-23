@@ -44,13 +44,13 @@ export function useHomePageData() {
     services: toInfiniteState(whatCanDos),
     skillCategories: toInfiniteState(categorySkills),
     projects: {
-      ...toQueryState(projects, listOf),
+      ...toInfiniteState(projects),
       // True only while another category loads behind the previous rows
       // (keepPreviousData). Unlike isFetching, it is false on the server and
       // on the first client render, so hydration matches.
       isSwitching: projects.isPlaceholderData,
     },
-    projectCategories: toQueryState(categoryProjects, listOf),
+    projectCategories: toInfiniteState(categoryProjects),
     projectsFilter,
   };
 }

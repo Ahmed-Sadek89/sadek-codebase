@@ -1,13 +1,22 @@
 import type { Project } from "@repo/types/projects";
 import { localize } from "../../../../../utils/localize";
 
-/** "WEB · MOBILE · 2024": the project's categories and the year it was added. */
-export function getProjectEyebrow(project: Project, locale: string) {
-  const year = new Date(project.createdAt).getUTCFullYear();
-  const categories = project.categoryProjects.map((category) =>
-    localize(locale, category.nameEn, category.nameAr).toLocaleUpperCase(
-      locale,
-    ),
-  );
-  return [...categories, year].join(" · ");
+/**
+ * The project's categories in the page's language, with their ids: two
+ * categories can share a name, so the id is what keys them.
+ */
+export function getProjectCategories(project: Project, locale: string) {
+  return project.categoryProjects.map((category) => ({
+    id: category.id,
+    name: localize(locale, category.nameEn, category.nameAr),
+  }));
+}
+
+/** "Mar 2026" for the date a project was added, in the page's language. */
+export function formatProjectDate(project: Project, locale: string) {
+  return new Intl.DateTimeFormat(locale, {
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(project.createdAt));
 }

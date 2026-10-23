@@ -1,16 +1,30 @@
 import { useLocale, useTranslations } from "next-intl";
 import type { CategoryProject } from "@repo/types/category-projects";
+import { LoaderCircle, Plus } from "@repo/ui/icons";
 import { cn } from "@repo/ui/utils";
 import { localize } from "../../../../../utils/localize";
 
+const chipClass =
+  "inline-flex h-9 items-center gap-1.5 rounded-full px-4 text-[13px] font-medium whitespace-nowrap transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
+
+/**
+ * "All" plus one chip per loaded category; a dashed "More categories" chip
+ * loads the next page of categories until there are none left.
+ */
 export function CategoryFilter({
   categories,
   selectedId,
   onSelect,
+  hasMore,
+  isLoadingMore,
+  onLoadMore,
 }: {
   categories: CategoryProject[];
   selectedId: number | undefined;
   onSelect: (id: number | undefined) => void;
+  hasMore: boolean;
+  isLoadingMore: boolean;
+  onLoadMore: () => void;
 }) {
   const t = useTranslations();
   const locale = useLocale();
@@ -25,25 +39,47 @@ export function CategoryFilter({
   return (
     <div
       aria-label={t("workFilterLabel")}
-      className="mb-[27px] flex flex-wrap justify-center gap-[7px]"
+      className="mx-auto mb-12 flex max-w-4xl flex-wrap justify-center gap-2.5"
       role="group"
     >
-      {options.map((option) => (
+      {options.map((option) => {
+        const active = option.id === selectedId;
+        return (
+          <button
+            aria-pressed={active}
+            className={cn(
+              chipClass,
+              active
+                ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                : "border border-border bg-card text-muted-foreground shadow-sm hover:-translate-y-0.5 hover:border-primary/40 hover:text-foreground",
+            )}
+            key={option.id ?? "all"}
+            onClick={() => onSelect(option.id)}
+            type="button"
+          >
+            {option.label}
+          </button>
+        );
+      })}
+      {hasMore && (
         <button
-          aria-pressed={option.id === selectedId}
+          aria-busy={isLoadingMore}
           className={cn(
-            "rounded-[20px] px-[11px] py-[5px] text-[10px]",
-            option.id === selectedId
-              ? "bg-primary text-primary-foreground"
-              : "bg-secondary text-secondary-foreground hover:text-primary",
+            chipClass,
+            "border border-dashed border-primary/50 bg-primary/5 text-primary hover:bg-primary/10 disabled:opacity-70",
           )}
-          key={option.id ?? "all"}
-          onClick={() => onSelect(option.id)}
+          disabled={isLoadingMore}
+          onClick={onLoadMore}
           type="button"
         >
-          {option.label}
+          {isLoadingMore ? (
+            <LoaderCircle aria-hidden="true" className="size-4 animate-spin" />
+          ) : (
+            <Plus aria-hidden="true" className="size-4" />
+          )}
+          {t("workMoreCategories")}
         </button>
-      ))}
+      )}
     </div>
   );
 }

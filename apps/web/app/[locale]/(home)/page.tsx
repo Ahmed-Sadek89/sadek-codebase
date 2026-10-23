@@ -86,17 +86,26 @@ export default async function Page() {
         getNextPageParam,
       })
       .catch(() => {}),
+    // Work's categories and projects are infinite lists: first page only.
     queryClient
-      .query({
+      .infiniteQuery({
         queryKey: queryKeys.categoryProjects.publicList(categoryProjectsQuery),
-        queryFn: () =>
-          categoryProjectsService.findAllPublic(categoryProjectsQuery),
+        queryFn: ({ pageParam }: { pageParam: number }) =>
+          categoryProjectsService.findAllPublic({
+            ...categoryProjectsQuery,
+            page: pageParam,
+          }),
+        initialPageParam: 1,
+        getNextPageParam,
       })
       .catch(() => {}),
     queryClient
-      .query({
+      .infiniteQuery({
         queryKey: queryKeys.projects.publicList(projectsQuery),
-        queryFn: () => projectsService.findAllPublic(projectsQuery),
+        queryFn: ({ pageParam }: { pageParam: number }) =>
+          projectsService.findAllPublic({ ...projectsQuery, page: pageParam }),
+        initialPageParam: 1,
+        getNextPageParam,
       })
       .catch(() => {}),
   ]);
