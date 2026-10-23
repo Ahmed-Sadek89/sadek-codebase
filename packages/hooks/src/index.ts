@@ -101,3 +101,10 @@ export {
   useUserByEmail,
   useUsers,
 } from "./users";
+
+export {
+  useContact,
+  useContacts,
+  useCreateContact,
+  useDeleteContact,
+} from "./contacts";

@@ -1,4 +1,5 @@
 import type { CategoryProjectsQuery } from "@repo/types/category-projects";
+import type { ContactsQuery } from "@repo/types/contacts";
 import type { CategorySkillsQuery } from "@repo/types/category-skills";
 import type { ProjectsQuery } from "@repo/types/projects";
 import type { SkillsQuery } from "@repo/types/skills";
@@ -126,5 +127,13 @@ export const queryKeys = {
     byEmail: (email: string) => [...queryKeys.users.byEmails(), email] as const,
     details: () => [...queryKeys.users.all, "detail"] as const,
     detail: (id: number) => [...queryKeys.users.details(), id] as const,
+  },
+  contacts: {
+    all: ["contacts"] as const,
+    lists: () => [...queryKeys.contacts.all, "list"] as const,
+    list: (query: ContactsQuery) =>
+      [...queryKeys.contacts.lists(), query] as const,
+    details: () => [...queryKeys.contacts.all, "detail"] as const,
+    detail: (id: number) => [...queryKeys.contacts.details(), id] as const,
   },
 };

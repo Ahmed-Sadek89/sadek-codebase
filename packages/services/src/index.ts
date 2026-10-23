@@ -13,3 +13,4 @@ export { userInfoEndpoints, userInfoService } from "./user-info";
 export { userCompanyEndpoints, userCompanyService } from "./user-company";
 export { whatCanDoEndpoints, whatCanDoService } from "./what-can-do";
 export { usersEndpoints, usersService } from "./users";
+export { contactsEndpoints, contactsService } from "./contacts";
