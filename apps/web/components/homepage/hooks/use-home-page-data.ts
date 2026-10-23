@@ -1,7 +1,7 @@
 "use client";
 
 import { usePublicCategoryProjects } from "@repo/hooks/category-projects";
-import { usePublicCategorySkills } from "@repo/hooks/category-skills";
+import { useInfinitePublicCategorySkills } from "@repo/hooks/category-skills";
 import { usePublicProjects } from "@repo/hooks/projects";
 import { usePublicUserCompanies } from "@repo/hooks/user-company";
 import { usePublicUserInfo } from "@repo/hooks/user-info";
@@ -9,6 +9,7 @@ import { useInfinitePublicWhatCanDos } from "@repo/hooks/what-can-do";
 import {
   categoryProjectsQuery,
   categorySkillsQuery,
+  toInfiniteState,
   toQueryState,
   userCompanyQuery,
   whatCanDoQuery,
@@ -24,7 +25,7 @@ export function useHomePageData() {
   const userInfo = usePublicUserInfo();
   const userCompanies = usePublicUserCompanies(userCompanyQuery);
   const whatCanDos = useInfinitePublicWhatCanDos(whatCanDoQuery);
-  const categorySkills = usePublicCategorySkills(categorySkillsQuery);
+  const categorySkills = useInfinitePublicCategorySkills(categorySkillsQuery);
   const projects = usePublicProjects(projectsFilter.query);
   const categoryProjects = usePublicCategoryProjects(categoryProjectsQuery);
 
@@ -32,16 +33,9 @@ export function useHomePageData() {
     // GET /user-info/public: the default-view user's row (404 when there is none).
     userInfo: toQueryState(userInfo, (response) => response),
     companies: toQueryState(userCompanies, listOf),
-    services: {
-      // Every loaded page, in order; "Show more" appends the next one.
-      ...toQueryState(whatCanDos, (data) =>
-        data ? data.pages.flatMap((page) => page.data) : [],
-      ),
-      hasMore: whatCanDos.hasNextPage,
-      isLoadingMore: whatCanDos.isFetchingNextPage,
-      loadMore: () => void whatCanDos.fetchNextPage(),
-    },
-    skillCategories: toQueryState(categorySkills, listOf),
+    // Infinite lists: every loaded page plus "show more".
+    services: toInfiniteState(whatCanDos),
+    skillCategories: toInfiniteState(categorySkills),
     projects: {
       ...toQueryState(projects, listOf),
       // True only while another category loads behind the previous rows

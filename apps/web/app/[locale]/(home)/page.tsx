@@ -53,10 +53,17 @@ export default async function Page() {
         getNextPageParam,
       })
       .catch(() => {}),
+    // Skill categories are an infinite list: prefetch the first page only.
     queryClient
-      .query({
-        queryKey: queryKeys.categorySkills.publicList(categorySkillsQuery),
-        queryFn: () => categorySkillsService.findAllPublic(categorySkillsQuery),
+      .infiniteQuery({
+        queryKey: queryKeys.categorySkills.publicInfinite(categorySkillsQuery),
+        queryFn: ({ pageParam }: { pageParam: number }) =>
+          categorySkillsService.findAllPublic({
+            ...categorySkillsQuery,
+            page: pageParam,
+          }),
+        initialPageParam: 1,
+        getNextPageParam,
       })
       .catch(() => {}),
     queryClient

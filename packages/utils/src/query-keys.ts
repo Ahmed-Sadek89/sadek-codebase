@@ -31,6 +31,9 @@ export const queryKeys = {
     publicLists: () => [...queryKeys.categorySkills.lists(), "public"] as const,
     publicList: (query: CategorySkillsQuery) =>
       [...queryKeys.categorySkills.publicLists(), query] as const,
+    // The "show more" list: pages of `query` (without `page`), one cache entry.
+    publicInfinite: (query: Omit<CategorySkillsQuery, "page">) =>
+      [...queryKeys.categorySkills.publicLists(), "infinite", query] as const,
     details: () => [...queryKeys.categorySkills.all, "detail"] as const,
     detail: (id: number) =>
       [...queryKeys.categorySkills.details(), id] as const,

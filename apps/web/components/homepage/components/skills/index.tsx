@@ -2,51 +2,72 @@
 
 import { useTranslations } from "next-intl";
 import type { PublicCategorySkill } from "@repo/types/category-skills";
-import type { QueryState } from "../../utils";
+import type { InfiniteQueryState } from "../../utils";
 import { SectionTitle } from "../../../ui/section-title";
 import { SectionStatus } from "../../../ui/section-status";
-import { SkillChip, SkillGroup } from "./components";
-import { useSkillsContent } from "./hooks";
+import { ShowMoreButton } from "../../../ui/show-more-button";
+import { SkillStream } from "./components";
+import { useSkillGroups } from "./hooks";
 
 export function Skills({
   categories,
 }: {
-  /** GET /category-skills/public: each category carries its skills. */
-  categories: QueryState<PublicCategorySkill[]>;
+  /**
+   * GET /category-skills/public, 10 categories per page (each carries its
+   * skills), plus "show more".
+   */
+  categories: InfiniteQueryState<PublicCategorySkill>;
 }) {
   const t = useTranslations();
-  const { skills, groups } = useSkillsContent(categories.data);
+  const groups = useSkillGroups(categories.data);
   return (
-    <section id="skills" className="py-[76px] max-[700px]:py-[54px] bg-muted">
+    <section
+      id="skills"
+      className="relative isolate overflow-hidden bg-muted py-[76px] max-[700px]:py-[54px]"
+    >
+      <div
+        aria-hidden="true"
+        className="absolute -start-32 top-1/4 -z-10 size-96 rounded-full bg-primary/10 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -end-24 bottom-0 -z-10 size-80 rounded-full bg-accent-strong/10 blur-3xl"
+      />
       <div className="app-container py-0">
         <SectionTitle title={t("skillsTitle")} copy={t("skillsCopy")} />
-        {skills.length ? (
-          <div className="grid grid-cols-2 items-center gap-[65px] max-[700px]:grid-cols-1 max-[700px]:gap-5">
-            <div>
-              <h3 className="mb-2 text-[17px]">
-                {t("skillsHeadingLine1")}
-                <br /> {t("skillsHeadingLine2")}
-              </h3>
-              <p className="text-[11px] leading-[1.7] text-muted-foreground">
-                {t("skillsBody")}
-              </p>
-              <div className="flex flex-wrap gap-[7px]">
-                {skills.map((skill) => (
-                  <SkillChip key={skill.id} skill={skill} />
-                ))}
-              </div>
-            </div>
-            <div>
-              {groups.map((group) => (
-                <SkillGroup key={group.category.id} group={group} />
-              ))}
-            </div>
+        <div className="mx-auto mb-12 max-w-2xl text-center">
+          <h3 className="text-2xl leading-tight font-bold text-foreground sm:text-3xl">
+            {t("skillsHeadingLine1")}{" "}
+            <span className="bg-linear-to-r from-primary to-accent-strong bg-clip-text text-transparent">
+              {t("skillsHeadingLine2")}
+            </span>
+          </h3>
+          <p className="mt-4 text-sm leading-[1.8] text-muted-foreground sm:text-[15px]">
+            {t("skillsBody")}
+          </p>
+        </div>
+        {groups.length ? (
+          // One streaming row per category; rows alternate direction.
+          <div className="flex flex-col gap-4 sm:gap-5">
+            {groups.map((group, index) => (
+              <SkillStream
+                group={group}
+                index={index}
+                key={group.category.id}
+              />
+            ))}
           </div>
         ) : (
           <SectionStatus
             isLoading={categories.isLoading}
             isError={categories.isError}
             emptyText={t("skillsEmpty")}
+          />
+        )}
+        {groups.length > 0 && categories.hasMore && (
+          <ShowMoreButton
+            isLoading={categories.isLoadingMore}
+            onClick={categories.loadMore}
           />
         )}
       </div>

@@ -2,22 +2,18 @@
 
 import { useTranslations } from "next-intl";
 import type { WhatCanDo } from "@repo/types/what-can-do";
-import type { QueryState } from "../../utils";
+import type { InfiniteQueryState } from "../../utils";
 import { SectionTitle } from "../../../ui/section-title";
 import { SectionStatus } from "../../../ui/section-status";
 import { AccordionList } from "../../../ui/accordion";
-import { ShowMoreButton } from "./components";
+import { ShowMoreButton } from "../../../ui/show-more-button";
 import { useServiceItems } from "./hooks";
 
 export function Services({
   services: query,
 }: {
   /** The loaded pages, plus "show more": `hasMore`, `isLoadingMore`, `loadMore`. */
-  services: QueryState<WhatCanDo[]> & {
-    hasMore: boolean;
-    isLoadingMore: boolean;
-    loadMore: () => void;
-  };
+  services: InfiniteQueryState<WhatCanDo>;
 }) {
   const t = useTranslations();
   const services = useServiceItems(query.data);

@@ -28,6 +28,7 @@ export {
   useCategorySkill,
   useCategorySkills,
   usePublicCategorySkills,
+  useInfinitePublicCategorySkills,
   useCreateCategorySkill,
   useDeleteCategorySkill,
   useUpdateCategorySkill,

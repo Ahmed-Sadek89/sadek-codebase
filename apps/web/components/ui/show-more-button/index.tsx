@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@repo/ui/button";
 import { ChevronDown, LoaderCircle } from "@repo/ui/icons";
 
-/** Loads the next page of services; spins while it loads. */
+/** "Show more" for an infinite list: loads the next page and spins while it does. */
 export function ShowMoreButton({
   isLoading,
   onClick,
@@ -26,7 +26,7 @@ export function ShowMoreButton({
         ) : (
           <ChevronDown className="size-4" aria-hidden="true" />
         )}
-        {isLoading ? t("statusLoading") : t("servicesShowMore")}
+        {isLoading ? t("statusLoading") : t("showMore")}
       </Button>
     </div>
   );

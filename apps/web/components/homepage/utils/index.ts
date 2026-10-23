@@ -5,7 +5,12 @@ export {
   userCompanyQuery,
   whatCanDoQuery,
 } from "./queries";
-export { toQueryState, type QueryState } from "./query-state";
+export {
+  toInfiniteState,
+  toQueryState,
+  type InfiniteQueryState,
+  type QueryState,
+} from "./query-state";
 export { hasText } from "./text";
 export {
   getProfileLinks,

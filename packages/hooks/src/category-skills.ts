@@ -1,12 +1,17 @@
 "use client";
 
-import { keepPreviousData, useQueryClient } from "@repo/libs/query";
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQueryClient,
+} from "@repo/libs/query";
 import { categorySkillsService } from "@repo/services/category-skills";
 import type {
   CategorySkillsQuery,
   CreateCategorySkillRequest,
   UpdateCategorySkillRequest,
 } from "@repo/types/category-skills";
+import { getNextPageParam } from "@repo/utils/pagination";
 import { queryKeys } from "@repo/utils/query-keys";
 import { useGuardedMutation, useGuardedQuery, usePublicQuery } from "./api";
 
@@ -34,6 +39,23 @@ export function usePublicCategorySkills(query: CategorySkillsQuery = {}) {
     queryFn: () => categorySkillsService.findAllPublic(query),
     // Keep the current rows on screen while a new page or search loads.
     placeholderData: keepPreviousData,
+  });
+}
+
+/**
+ * GET /category-skills/public, page by page (each category with up to 20
+ * skills): `fetchNextPage()` appends the next `query.limit` categories and
+ * `hasNextPage` turns false after the last page. No sign-in needed.
+ */
+export function useInfinitePublicCategorySkills(
+  query: Omit<CategorySkillsQuery, "page"> = {},
+) {
+  return useInfiniteQuery({
+    queryKey: queryKeys.categorySkills.publicInfinite(query),
+    queryFn: ({ pageParam }) =>
+      categorySkillsService.findAllPublic({ ...query, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam,
   });
 }
 

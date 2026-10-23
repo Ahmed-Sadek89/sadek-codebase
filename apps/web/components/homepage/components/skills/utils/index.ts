@@ -23,15 +23,19 @@ export function toSkillGroups(categories: PublicCategorySkill[]): SkillGroup[] {
     .filter((group) => group.skills.length > 0);
 }
 
-/** Every skill across the categories once (a skill can sit in several). */
-export function uniqueSkills(
-  categories: PublicCategorySkill[],
-): PublicCategorySkillItem[] {
-  const seen = new Map<number, PublicCategorySkillItem>();
-  for (const category of categories) {
-    for (const skill of skillsOf(category)) {
-      if (!seen.has(skill.id)) seen.set(skill.id, skill);
-    }
-  }
-  return [...seen.values()];
+/**
+ * Repeats a short list until it has `min` items, so a ticker row never shows
+ * an empty stretch. Each copy gets its own key.
+ */
+export function fillTrack<T>(items: T[], min = 8) {
+  if (!items.length) return [];
+  const copies = Math.max(1, Math.ceil(min / items.length));
+  return Array.from({ length: copies }, (_, copy) =>
+    items.map((item, index) => ({ item, key: `${copy}-${index}` })),
+  ).flat();
+}
+
+/** ~3.5s per chip (at least 20s): longer rows move at the same pace, not faster. */
+export function tickerDuration(chips: number) {
+  return `${Math.max(20, chips * 3.5)}s`;
 }
