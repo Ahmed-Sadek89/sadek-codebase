@@ -2,6 +2,7 @@
 
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useQueryClient,
   type QueryClient,
 } from "@repo/libs/query";
@@ -11,6 +12,7 @@ import type {
   UpdateUserCompanyRequest,
   UserCompaniesQuery,
 } from "@repo/types/user-company";
+import { getNextPageParam } from "@repo/utils/pagination";
 import { queryKeys } from "@repo/utils/query-keys";
 import { useGuardedMutation, useGuardedQuery, usePublicQuery } from "./api";
 
@@ -39,6 +41,23 @@ export function usePublicUserCompanies(query: UserCompaniesQuery = {}) {
     queryFn: () => userCompanyService.findAllPublic(query),
     // Keep the current rows on screen while a new page or search loads.
     placeholderData: keepPreviousData,
+  });
+}
+
+/**
+ * GET /user-company/public, page by page: `fetchNextPage()` appends the next
+ * `query.limit` companies and `hasNextPage` turns false after the last page.
+ * No sign-in needed.
+ */
+export function useInfinitePublicUserCompanies(
+  query: Omit<UserCompaniesQuery, "page"> = {},
+) {
+  return useInfiniteQuery({
+    queryKey: queryKeys.userCompany.publicInfinite(query),
+    queryFn: ({ pageParam }) =>
+      userCompanyService.findAllPublic({ ...query, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam,
   });
 }
 

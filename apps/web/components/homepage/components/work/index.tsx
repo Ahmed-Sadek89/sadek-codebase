@@ -26,10 +26,16 @@ export function Work({
   return (
     <section
       id="work"
+      aria-labelledby="work-title"
       className="py-[76px] max-[700px]:py-[54px] bg-background"
     >
       <div className="app-container py-0">
-        <SectionTitle title={t("workTitle")} copy={t("workCopy")} />
+        <SectionTitle
+          eyebrow={t("navPortfolio")}
+          id="work-title"
+          title={t("workTitle")}
+          copy={t("workCopy")}
+        />
         <CategoryFilter
           categories={categories.data}
           selectedId={categoryId}

@@ -19,6 +19,7 @@ export function HomePage() {
   const {
     userInfo,
     companies,
+    experience,
     services,
     skillCategories,
     projects,
@@ -33,7 +34,7 @@ export function HomePage() {
       <About userInfo={userInfo} />
       <Services services={services} />
       <Skills categories={skillCategories} />
-      <Experience companies={companies} userInfo={userInfo} />
+      <Experience companies={experience} userInfo={userInfo} />
       <Work
         projects={projects}
         categories={projectCategories}

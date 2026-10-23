@@ -20,6 +20,7 @@ export function Services({
   return (
     <section
       id="services"
+      aria-labelledby="services-title"
       className="relative isolate overflow-hidden bg-surface py-[76px] max-[700px]:py-[54px]"
     >
       <div
@@ -27,7 +28,11 @@ export function Services({
         className="absolute -end-32 top-1/4 -z-10 size-80 rounded-full bg-primary/10 blur-3xl"
       />
       <div className="app-container py-0">
-        <SectionTitle title={t("servicesTitle")} copy={t("servicesCopy")} />
+        <SectionTitle
+          id="services-title"
+          title={t("servicesTitle")}
+          copy={t("servicesCopy")}
+        />
         {services.length ? (
           // One item open at a time; the first starts open and can be closed.
           <AccordionList className="mx-auto max-w-[900px]" items={services} />

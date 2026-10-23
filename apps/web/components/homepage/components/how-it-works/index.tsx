@@ -6,9 +6,16 @@ import { steps } from "./utils";
 export function HowItWorks() {
   const t = useTranslations();
   return (
-    <section className="py-[76px] max-[700px]:py-[54px] bg-surface">
+    <section
+      aria-labelledby="how-it-works-title"
+      className="py-[76px] max-[700px]:py-[54px] bg-surface"
+    >
       <div className="app-container py-0">
-        <SectionTitle title={t("howTitle")} copy={t("howCopy")} />
+        <SectionTitle
+          id="how-it-works-title"
+          title={t("howTitle")}
+          copy={t("howCopy")}
+        />
         <div className="grid grid-cols-4 gap-3 max-[700px]:grid-cols-2">
           {steps.map(({ Icon, titleKey, copyKey }, i) => (
             <Card className="border-0 bg-card" key={titleKey}>

@@ -14,7 +14,9 @@ export const categorySkillsQuery: Omit<CategorySkillsQuery, "page"> = {
   limit: 5,
   isActive: true,
 };
-export const userCompanyQuery: UserCompaniesQuery = { limit: 20 };
+export const userCompanyQuery: UserCompaniesQuery = { limit: 10 };
+/** The Experience timeline loads 5 jobs at a time; "Show more" fetches the next page. */
+export const experienceQuery: Omit<UserCompaniesQuery, "page"> = { limit: 5 };
 export const categoryProjectsQuery: CategoryProjectsQuery = {
   limit: 10,
   isActive: true,

@@ -77,6 +77,7 @@ export {
   useUpdateUserCompany,
   useUserCompanies,
   usePublicUserCompanies,
+  useInfinitePublicUserCompanies,
   useUserCompany,
 } from "./user-company";
 

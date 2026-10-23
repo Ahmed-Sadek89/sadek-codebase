@@ -14,6 +14,7 @@ import {
   categoryProjectsQuery,
   categorySkillsQuery,
   projectsQuery,
+  experienceQuery,
   userCompanyQuery,
   whatCanDoQuery,
 } from "../../../components/homepage/utils";
@@ -70,6 +71,19 @@ export default async function Page() {
       .query({
         queryKey: queryKeys.userCompany.publicList(userCompanyQuery),
         queryFn: () => userCompanyService.findAllPublic(userCompanyQuery),
+      })
+      .catch(() => {}),
+    // The Experience timeline is an infinite list: prefetch its first page only.
+    queryClient
+      .infiniteQuery({
+        queryKey: queryKeys.userCompany.publicInfinite(experienceQuery),
+        queryFn: ({ pageParam }: { pageParam: number }) =>
+          userCompanyService.findAllPublic({
+            ...experienceQuery,
+            page: pageParam,
+          }),
+        initialPageParam: 1,
+        getNextPageParam,
       })
       .catch(() => {}),
     queryClient

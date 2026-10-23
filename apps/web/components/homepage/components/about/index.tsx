@@ -18,6 +18,7 @@ export function About({
   return (
     <section
       id="about"
+      aria-labelledby="about-title"
       className="relative isolate overflow-hidden bg-muted py-[76px] max-[700px]:py-[54px]"
     >
       <div
@@ -25,7 +26,12 @@ export function About({
         className="absolute -start-32 top-1/3 -z-10 size-80 rounded-full bg-primary/10 blur-3xl"
       />
       <div className="app-container py-0">
-        <SectionTitle title={t("aboutTitle")} copy={t("aboutCopy")} />
+        <SectionTitle
+          eyebrow={t("navAbout")}
+          id="about-title"
+          title={t("aboutTitle")}
+          copy={t("aboutCopy")}
+        />
         {description ? (
           // Story beside the numbers on large screens, stacked below.
           <div className="grid items-center gap-8 lg:grid-cols-[1.2fr_1fr] lg:gap-12">

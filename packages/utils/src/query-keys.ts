@@ -91,6 +91,9 @@ export const queryKeys = {
     publicLists: () => [...queryKeys.userCompany.lists(), "public"] as const,
     publicList: (query: UserCompaniesQuery) =>
       [...queryKeys.userCompany.publicLists(), query] as const,
+    // The "show more" list: pages of `query` (without `page`), one cache entry.
+    publicInfinite: (query: Omit<UserCompaniesQuery, "page">) =>
+      [...queryKeys.userCompany.publicLists(), "infinite", query] as const,
     mines: () => [...queryKeys.userCompany.all, "mine"] as const,
     mine: (query: UserCompaniesQuery) =>
       [...queryKeys.userCompany.mines(), query] as const,

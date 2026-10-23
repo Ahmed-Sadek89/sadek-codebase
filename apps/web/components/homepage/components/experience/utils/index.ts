@@ -36,3 +36,30 @@ export function formatWorkPeriod(
     : presentLabel;
   return `${from} — ${to}`;
 }
+
+/**
+ * How long the job lasted (or has lasted), in whole months, written in the
+ * page's language by Intl: "2 yrs, 3 mths", "٨ أشهر"... Empty under a month.
+ */
+export function formatDuration(company: UserCompany, locale: string) {
+  const from = new Date(company.startWorkFrom);
+  const to = company.startWorkTo ? new Date(company.startWorkTo) : new Date();
+  const total =
+    (to.getUTCFullYear() - from.getUTCFullYear()) * 12 +
+    (to.getUTCMonth() - from.getUTCMonth());
+  const years = Math.floor(total / 12);
+  const months = total % 12;
+  const unit = (value: number, kind: "year" | "month") =>
+    new Intl.NumberFormat(locale, {
+      style: "unit",
+      unit: kind,
+      unitDisplay: "short",
+    }).format(value);
+  const parts = [
+    years > 0 ? unit(years, "year") : null,
+    months > 0 ? unit(months, "month") : null,
+  ].filter((part) => part !== null);
+  return new Intl.ListFormat(locale, { type: "unit", style: "short" }).format(
+    parts,
+  );
+}

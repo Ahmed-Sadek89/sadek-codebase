@@ -41,10 +41,16 @@ export function Contact({
       </section>
       <section
         id="contact"
+        aria-labelledby="contact-title"
         className="py-[76px] max-[700px]:py-[54px] bg-muted"
       >
         <div className="app-container py-0">
-          <SectionTitle title={t("contactTitle")} copy={t("contactCopy")} />
+          <SectionTitle
+            eyebrow={t("navContact")}
+            id="contact-title"
+            title={t("contactTitle")}
+            copy={t("contactCopy")}
+          />
           <ContactDetails details={details} />
           <form
             className="mx-auto grid max-w-[560px] grid-cols-2 gap-2 rounded-[7px] bg-card p-4"

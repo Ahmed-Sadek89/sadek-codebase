@@ -6,7 +6,11 @@ import type { UserInfoDetails } from "@repo/types/user-info";
 import { hasText } from "../../../utils";
 import { sortByStartDate } from "../utils";
 
-/** The companies latest first, plus the CV link from user-info. */
+/**
+ * The loaded companies latest job first, plus the CV link from user-info.
+ * Pages are re-sorted together: the timeline stays chronological as
+ * "Show more" adds older (or newer) jobs.
+ */
 export function useExperience(
   companies: UserCompany[],
   info: UserInfoDetails | undefined,

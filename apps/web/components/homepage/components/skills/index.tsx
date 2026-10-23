@@ -23,6 +23,7 @@ export function Skills({
   return (
     <section
       id="skills"
+      aria-labelledby="skills-title"
       className="relative isolate overflow-hidden bg-muted py-[76px] max-[700px]:py-[54px]"
     >
       <div
@@ -34,18 +35,11 @@ export function Skills({
         className="absolute -end-24 bottom-0 -z-10 size-80 rounded-full bg-accent-strong/10 blur-3xl"
       />
       <div className="app-container py-0">
-        <SectionTitle title={t("skillsTitle")} copy={t("skillsCopy")} />
-        <div className="mx-auto mb-12 max-w-2xl text-center">
-          <h3 className="text-2xl leading-tight font-bold text-foreground sm:text-3xl">
-            {t("skillsHeadingLine1")}{" "}
-            <span className="bg-linear-to-r from-primary to-accent-strong bg-clip-text text-transparent">
-              {t("skillsHeadingLine2")}
-            </span>
-          </h3>
-          <p className="mt-4 text-sm leading-[1.8] text-muted-foreground sm:text-[15px]">
-            {t("skillsBody")}
-          </p>
-        </div>
+        <SectionTitle
+          id="skills-title"
+          title={`${t("skillsHeadingLine1")} ${""} ${t("skillsHeadingLine2")}`}
+          copy={t("skillsBody")}
+        />
         {groups.length ? (
           // One streaming row per category; rows alternate direction.
           <div className="flex flex-col gap-4 sm:gap-5">

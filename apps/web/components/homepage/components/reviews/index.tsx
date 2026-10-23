@@ -6,9 +6,16 @@ import { reviews } from "./utils";
 export function Reviews() {
   const t = useTranslations();
   return (
-    <section className="py-[76px] max-[700px]:py-[54px] bg-muted">
+    <section
+      aria-labelledby="reviews-title"
+      className="py-[76px] max-[700px]:py-[54px] bg-muted"
+    >
       <div className="app-container py-0">
-        <SectionTitle title={t("reviewsTitle")} copy={t("reviewsCopy")} />
+        <SectionTitle
+          id="reviews-title"
+          title={t("reviewsTitle")}
+          copy={t("reviewsCopy")}
+        />
         <div className="grid grid-cols-3 gap-3 max-[700px]:grid-cols-1">
           {reviews.map(({ name, quoteKey, roleKey }) => (
             <Card className="border-0 bg-card" key={name}>

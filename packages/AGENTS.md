@@ -217,7 +217,7 @@ Source: `apps/sadek-backend/src/user-company`. Types in `@repo/types/user-compan
 - `search` (max 20 characters, trimmed) matches the English or Arabic `name` or `description` (`name_en`, `name_ar`, `description_en`, `description_ar`) case-insensitively on `GET /user-company`, `GET /user-company/public`, and `GET /user-company/me`.
 - `startWorkTo` before `startWorkFrom` returns 400 on create and update. Send `startWorkTo: null` in a `PATCH` to mark a job as current.
 - A company of another user returns 404 from `GET`, `PATCH`, and `DELETE /:id`.
-- Client: `userCompanyService.create/findAll/findAllPublic/findMine/findOne/update/remove`; hooks `useCreateUserCompany`, `useUserCompanies(query)`, `usePublicUserCompanies(query)`, `useMyUserCompanies(query)`, `useUserCompany(id)`, `useUpdateUserCompany` (`{ id, data }`), `useDeleteUserCompany` (`id`). Every mutation invalidates `queryKeys.userCompany.lists()` and `mines()`; update also refreshes `detail(id)`, delete removes it.
+- Client: `userCompanyService.create/findAll/findAllPublic/findMine/findOne/update/remove`; hooks `useCreateUserCompany`, `useUserCompanies(query)`, `usePublicUserCompanies(query)`, `useInfinitePublicUserCompanies(query)` (pages via `fetchNextPage`, key `queryKeys.userCompany.publicInfinite(query)`), `useMyUserCompanies(query)`, `useUserCompany(id)`, `useUpdateUserCompany` (`{ id, data }`), `useDeleteUserCompany` (`id`). Every mutation invalidates `queryKeys.userCompany.lists()` and `mines()`; update also refreshes `detail(id)`, delete removes it.
 
 ### What can do (`/what-can-do`)
 
