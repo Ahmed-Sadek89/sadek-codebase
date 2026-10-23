@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import type { UserInfoDetails } from "@repo/types/user-info";
 import { SectionTitle } from "../../../ui/section-title";
 import type { QueryState } from "../../utils";
-import { ContactDetails, ContactForm } from "./components";
+import { ContactForm, ContactInfoPanel } from "./components";
 import { useContactDetails } from "./hooks";
 
 export function Contact({
@@ -18,7 +18,7 @@ export function Contact({
     <section
       id="contact"
       aria-labelledby="contact-title"
-      className="relative isolate overflow-hidden bg-muted py-[76px] max-[700px]:py-[54px]"
+      className="relative isolate overflow-hidden bg-muted py-14 sm:py-20 lg:py-24"
     >
       <div
         aria-hidden="true"
@@ -30,21 +30,8 @@ export function Contact({
           title={t("contactTitle")}
           copy={t("contactCopy")}
         />
-        {/* Details beside the form on large screens; stacked below. */}
-        <div className="mx-auto grid max-w-6xl items-start gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-8">
-          <aside className="rounded-3xl border border-border bg-card/70 p-6 shadow-sm backdrop-blur sm:p-8">
-            <h3 className="mb-5 text-lg font-bold text-foreground sm:text-xl">
-              {t("contactInfoTitle")}
-            </h3>
-            <ContactDetails details={details} />
-            <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1.5 text-xs font-medium text-success">
-              <span
-                aria-hidden="true"
-                className="size-1.5 rounded-full bg-success"
-              />
-              {t("contactReplyTime")}
-            </p>
-          </aside>
+        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-8">
+          <ContactInfoPanel details={details} />
           <ContactForm />
         </div>
       </div>

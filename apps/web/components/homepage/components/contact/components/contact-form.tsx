@@ -11,7 +11,7 @@ import { CONTACT_LIMITS } from "../schema";
 
 const fieldClass = "h-11 rounded-xl bg-background";
 
-/** The "send a message" card: name, email, subject and message, posted to POST /contacts. */
+/** Message card: name, email, subject and message, posted to POST /contacts. */
 export function ContactForm() {
   const t = useTranslations();
   const { form, onSubmit, isPending } = useContactForm();
@@ -23,7 +23,7 @@ export function ContactForm() {
   const messageLength = useWatch({ control, name: "message" }).length;
 
   return (
-    <div className="rounded-3xl border border-border bg-card p-6 shadow-xl shadow-primary/5 sm:p-8">
+    <div className="min-w-0 rounded-[2rem] border border-border bg-card p-6 shadow-2xl shadow-primary/10 sm:p-10">
       <h3 className="text-xl font-bold text-foreground sm:text-2xl">
         {t("contactFormTitle")}
       </h3>
@@ -33,7 +33,7 @@ export function ContactForm() {
       {/* id="form": the "Start a Project" buttons link here. */}
       <form
         aria-busy={isPending}
-        className="mt-6 grid gap-5 sm:grid-cols-2"
+        className="mt-5 grid gap-4 sm:mt-6 sm:grid-cols-2 sm:gap-5"
         id="form"
         noValidate
         onSubmit={onSubmit}
@@ -72,7 +72,7 @@ export function ContactForm() {
           <BaseTextarea
             {...register("message")}
             aria-describedby="contact-message-count"
-            className="min-h-40 resize-y rounded-xl bg-background"
+            className="min-h-32 resize-y rounded-xl bg-background sm:min-h-40"
             dir="auto"
             disabled={isPending}
             error={errors.message?.message}

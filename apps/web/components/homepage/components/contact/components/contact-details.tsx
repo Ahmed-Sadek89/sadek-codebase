@@ -3,35 +3,67 @@ import { cn } from "@repo/ui/utils";
 import type { ProfileLink } from "../../../utils";
 import { profileLinkStyles } from "../../../../ui/brand-icon/profile-link-icon";
 
-/** CV, email, LinkedIn and GitHub as full-width rows with their brand icons. */
-export function ContactDetails({ details }: { details: ProfileLink[] }) {
+/**
+ * CV, email, LinkedIn and GitHub as rows with their brand icons.
+ * `tone="inverse"` is for a primary-coloured background: white glass rows
+ * instead of brand-colour hovers.
+ */
+export function ContactDetails({
+  details,
+  tone = "default",
+}: {
+  details: ProfileLink[];
+  tone?: "default" | "inverse";
+}) {
   const t = useTranslations();
   if (!details.length) return null;
+  const inverse = tone === "inverse";
   return (
-    <ul className="flex flex-col gap-3">
+    // One column on phones, two on tablets, one again from lg (side panel).
+    <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
       {details.map(({ kind, labelKey, href, value }) => {
         const { Icon, hover } = profileLinkStyles[kind];
         return (
-          <li key={kind}>
+          <li className="min-w-0" key={kind}>
             <a
               className={cn(
-                "group flex items-center gap-3 rounded-2xl border border-border bg-background/60 p-3 text-sm text-muted-foreground no-underline transition hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md",
-                hover,
+                "group flex min-h-14 min-w-0 items-center gap-2.5 rounded-2xl border p-2.5 text-sm no-underline transition hover:-translate-y-0.5 sm:gap-3 sm:p-3",
+                inverse
+                  ? "border-white/15 bg-white/10 text-white backdrop-blur hover:border-white/30 hover:bg-white/20"
+                  : cn(
+                      "border-border bg-background/60 text-muted-foreground hover:border-border-strong hover:shadow-md",
+                      hover,
+                    ),
               )}
               href={href}
               rel="noreferrer"
               target={kind === "email" ? undefined : "_blank"}
             >
-              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-card shadow-sm ring-1 ring-border">
+              <span
+                className={cn(
+                  "grid size-9 shrink-0 place-items-center rounded-xl shadow-sm sm:size-10",
+                  inverse
+                    ? "bg-white text-primary"
+                    : "bg-card ring-1 ring-border",
+                )}
+              >
                 <Icon className="size-5" />
               </span>
               <span className="min-w-0">
-                <span className="block text-xs font-medium text-muted-foreground">
+                <span
+                  className={cn(
+                    "block text-xs font-medium",
+                    inverse ? "text-white/70" : "text-muted-foreground",
+                  )}
+                >
                   {t(labelKey)}
                 </span>
                 {/* The address itself for email; the link for the others. */}
                 <span
-                  className="block truncate font-semibold text-foreground"
+                  className={cn(
+                    "block wrap-anywhere font-semibold sm:truncate",
+                    inverse ? "text-white" : "text-foreground",
+                  )}
                   dir="ltr"
                 >
                   {kind === "email"
