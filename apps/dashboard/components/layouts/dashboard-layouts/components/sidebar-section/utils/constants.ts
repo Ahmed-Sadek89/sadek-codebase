@@ -2,6 +2,7 @@ import {
   FolderKanban,
   IdCard,
   LayoutDashboard,
+  MessageSquare,
   Sparkles,
   UserRound,
   type LucideIcon,
@@ -24,10 +25,18 @@ export type SidebarNavGroup = {
   items: SidebarNavItem[];
 };
 
+/**
+ * Sidebar order: daily use first (dashboard, messages inbox), then the
+ * portfolio content in the order it appears on the site (about, services,
+ * experience, skills, projects), then the account.
+ */
 export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
   {
     labelKey: "navOverview",
-    items: [{ titleKey: "navDashboard", href: "/dashboard", icon: LayoutDashboard }],
+    items: [
+      { titleKey: "navDashboard", href: "/dashboard", icon: LayoutDashboard },
+      { titleKey: "navContacts", href: "/dashboard/contacts", icon: MessageSquare },
+    ],
   },
   {
     labelKey: "navPortfolio",
@@ -38,8 +47,8 @@ export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
         icon: IdCard,
         items: [
           { titleKey: "navUserInfo", href: "/dashboard/user/info" },
-          { titleKey: "navUserCompanies", href: "/dashboard/user/companies" },
           { titleKey: "navWhatCanIDo", href: "/dashboard/user/what-can-i-do" },
+          { titleKey: "navUserCompanies", href: "/dashboard/user/companies" },
         ],
       },
       {
@@ -60,8 +69,6 @@ export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
           { titleKey: "navCategories", href: "/dashboard/projects/category" },
         ],
       },
-      
-
     ],
   },
   {
@@ -70,5 +77,4 @@ export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
       { titleKey: "navProfile", href: "/dashboard/profile", icon: UserRound },
     ],
   },
- 
 ];

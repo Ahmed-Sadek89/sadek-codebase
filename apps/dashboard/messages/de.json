@@ -477,5 +477,18 @@
   "profilePasswordSame": "Das neue Passwort muss sich vom aktuellen unterscheiden.",
   "profilePasswordMismatch": "Die Passwörter stimmen nicht überein.",
   "profilePasswordSubmit": "Passwort aktualisieren",
-  "profilePasswordChanged": "Passwort erfolgreich geändert"
+  "profilePasswordChanged": "Passwort erfolgreich geändert",
+  "navContacts": "Nachrichten",
+  "metaContactsTitle": "Nachrichten | Sadek Dashboard",
+  "metaContactsDescription": "Lies die Nachrichten aus dem Kontaktformular deines Portfolios.",
+  "contactsTitle": "Nachrichten",
+  "contactsDescription": "Nachrichten, die Besucher über das Kontaktformular deines Portfolios gesendet haben.",
+  "tableColSender": "Absender",
+  "tableColMessage": "Nachricht",
+  "tableColReceivedAt": "Empfangen",
+  "contactDeleteQuestion": "Die Nachricht „{subject}“ von {name} löschen? Das kann nicht rückgängig gemacht werden.",
+  "contactDeleted": "Nachricht erfolgreich gelöscht",
+  "contactDetailsDescription": "Die vollständige Nachricht aus dem Kontaktformular deines Portfolios.",
+  "contactDetailsEmail": "E-Mail",
+  "contactDetailsReply": "Per E-Mail antworten"
 }

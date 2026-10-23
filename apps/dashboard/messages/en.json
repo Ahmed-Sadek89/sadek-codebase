@@ -477,5 +477,18 @@
   "profilePasswordSame": "The new password must differ from the current one.",
   "profilePasswordMismatch": "Passwords don't match.",
   "profilePasswordSubmit": "Update password",
-  "profilePasswordChanged": "Password changed successfully"
+  "profilePasswordChanged": "Password changed successfully",
+  "navContacts": "Messages",
+  "metaContactsTitle": "Messages | Sadek Dashboard",
+  "metaContactsDescription": "Read the messages sent through your portfolio's contact form.",
+  "contactsTitle": "Messages",
+  "contactsDescription": "Messages visitors sent through your portfolio's contact form.",
+  "tableColSender": "Sender",
+  "tableColMessage": "Message",
+  "tableColReceivedAt": "Received",
+  "contactDeleteQuestion": "Delete the message “{subject}” from {name}? This can't be undone.",
+  "contactDeleted": "Message deleted successfully",
+  "contactDetailsDescription": "The full message from your portfolio's contact form.",
+  "contactDetailsEmail": "Email",
+  "contactDetailsReply": "Reply by email"
 }

@@ -477,5 +477,18 @@
   "profilePasswordSame": "يجب أن تختلف كلمة المرور الجديدة عن الحالية.",
   "profilePasswordMismatch": "كلمتا المرور غير متطابقتين.",
   "profilePasswordSubmit": "تحديث كلمة المرور",
-  "profilePasswordChanged": "تم تغيير كلمة المرور بنجاح"
+  "profilePasswordChanged": "تم تغيير كلمة المرور بنجاح",
+  "navContacts": "الرسائل",
+  "metaContactsTitle": "الرسائل | لوحة تحكم صادق",
+  "metaContactsDescription": "اقرأ الرسائل المرسلة عبر نموذج التواصل في معرض أعمالك.",
+  "contactsTitle": "الرسائل",
+  "contactsDescription": "الرسائل التي أرسلها الزوار عبر نموذج التواصل في معرض أعمالك.",
+  "tableColSender": "المرسل",
+  "tableColMessage": "الرسالة",
+  "tableColReceivedAt": "تاريخ الاستلام",
+  "contactDeleteQuestion": "هل تريد حذف الرسالة “{subject}” من {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+  "contactDeleted": "تم حذف الرسالة بنجاح",
+  "contactDetailsDescription": "الرسالة كاملة من نموذج التواصل في معرض أعمالك.",
+  "contactDetailsEmail": "البريد الإلكتروني",
+  "contactDetailsReply": "الرد عبر البريد"
 }

@@ -477,5 +477,18 @@
   "profilePasswordSame": "Новый пароль должен отличаться от текущего.",
   "profilePasswordMismatch": "Пароли не совпадают.",
   "profilePasswordSubmit": "Обновить пароль",
-  "profilePasswordChanged": "Пароль успешно изменён"
+  "profilePasswordChanged": "Пароль успешно изменён",
+  "navContacts": "Сообщения",
+  "metaContactsTitle": "Сообщения | Панель Sadek",
+  "metaContactsDescription": "Читайте сообщения, отправленные через контактную форму вашего портфолио.",
+  "contactsTitle": "Сообщения",
+  "contactsDescription": "Сообщения, которые посетители отправили через контактную форму портфолио.",
+  "tableColSender": "Отправитель",
+  "tableColMessage": "Сообщение",
+  "tableColReceivedAt": "Получено",
+  "contactDeleteQuestion": "Удалить сообщение «{subject}» от {name}? Это действие нельзя отменить.",
+  "contactDeleted": "Сообщение успешно удалено",
+  "contactDetailsDescription": "Полное сообщение из контактной формы вашего портфолио.",
+  "contactDetailsEmail": "Эл. почта",
+  "contactDetailsReply": "Ответить по почте"
 }
