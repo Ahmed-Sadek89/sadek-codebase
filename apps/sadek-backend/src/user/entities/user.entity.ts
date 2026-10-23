@@ -6,6 +6,7 @@ import { Skill } from "../../skills/entities/skill.entity";
 import { UserInfo } from "../../user-info/entities/user-info.entity";
 import { UserCompany } from "../../user-company/entities/user-company.entity";
 import { WhatCanDo } from "../../what-can-do/entities/what-can-do.entity";
+import { Contact } from "../../contacts/entities/contact.entity";
 import { BeforeInsert, BeforeUpdate, Column, Entity, Index, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 // Partial unique index: at most one user can be the default view.
@@ -129,4 +130,10 @@ export class User {
         (whatCanDo) => whatCanDo.user
     )
     whatCanDos!: WhatCanDo[];
+
+    @OneToMany(
+        () => Contact,
+        (contact) => contact.user
+    )
+    contacts!: Contact[];
 }

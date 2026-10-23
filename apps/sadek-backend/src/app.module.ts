@@ -13,6 +13,7 @@ import { CategoryProjectsModule } from './category-projects/category-projects.mo
 import { UserInfoModule } from './user-info/user-info.module';
 import { UserCompanyModule } from './user-company/user-company.module';
 import { WhatCanDoModule } from './what-can-do/what-can-do.module';
+import { ContactModule } from './contacts/contact.module';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { WhatCanDoModule } from './what-can-do/what-can-do.module';
     CategoryProjectsModule,
     UserInfoModule,
     UserCompanyModule,
-    WhatCanDoModule
+    WhatCanDoModule,
+    ContactModule
   ],
   controllers: [AppController],
   providers: [AppService],

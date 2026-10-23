@@ -7,6 +7,7 @@ import { Project } from "../projects/entities/project.entity";
 import { UserInfo } from "../user-info/entities/user-info.entity";
 import { UserCompany } from "../user-company/entities/user-company.entity";
 import { WhatCanDo } from "../what-can-do/entities/what-can-do.entity";
+import { Contact } from "../contacts/entities/contact.entity";
 import "reflect-metadata";
 import { SeederOptions } from 'typeorm-extension';
 import { DataSource, DataSourceOptions } from 'typeorm';
@@ -27,7 +28,7 @@ const options: SeederOptions & DataSourceOptions = {
     ...dbConnectionOptions,
     // Every entity reachable through relations must be registered, or TypeORM
     // cannot build metadata for User (which relates to all of them).
-    entities: [User, CategorySkill, Skill, CategoryProject, Project, UserInfo, UserCompany, WhatCanDo],
+    entities: [User, CategorySkill, Skill, CategoryProject, Project, UserInfo, UserCompany, WhatCanDo, Contact],
     factories: [userFactory, userInfoFactory, userCompanyFactory, whatCanDoFactory],
     // Order matters: users own everything; both category tables come before
     // the skills and projects that link to random category ids.
