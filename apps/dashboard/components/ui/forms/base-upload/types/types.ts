@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { MessageKey } from "../../../../../i18n/types";
 import type { UploadType } from "../../../../../libs/upload/upload-types";
 
@@ -22,6 +23,8 @@ export type UploadFieldOptions = {
 
 export type BaseUploadProps = {
   label: string;
+  /** Short help shown above the file-type hint. */
+  description?: ReactNode;
   /** RHF value: the saved URL ("" when empty), or the picked File(s). */
   value: UploadFieldValue;
   onChange: (value: UploadFieldValue) => void;

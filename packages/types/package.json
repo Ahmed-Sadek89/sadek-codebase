@@ -15,7 +15,8 @@
     "./user-company": "./src/user-company.ts",
     "./what-can-do": "./src/what-can-do.ts",
     "./users": "./src/users.ts",
-    "./contacts": "./src/contacts.ts"
+    "./contacts": "./src/contacts.ts",
+    "./seo": "./src/seo.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -27,5 +28,8 @@
     "@types/node": "26.4.1",
     "typescript": "7.0.2",
     "eslint": "10.9.1"
+  },
+  "dependencies": {
+    "@repo/constants": "workspace:*"
   }
 }

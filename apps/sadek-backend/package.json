@@ -28,7 +28,8 @@
     "seed:projects": "ts-node -r tsconfig-paths/register ./src/database/seed.ts projects",
     "seed:user-info": "ts-node -r tsconfig-paths/register ./src/database/seed.ts user-info",
     "seed:user-company": "ts-node -r tsconfig-paths/register ./src/database/seed.ts user-company",
-    "seed:what-can-do": "ts-node -r tsconfig-paths/register ./src/database/seed.ts what-can-do"
+    "seed:what-can-do": "ts-node -r tsconfig-paths/register ./src/database/seed.ts what-can-do",
+    "seed:seo": "ts-node -r tsconfig-paths/register ./src/database/seed.ts seo"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -41,6 +42,7 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.4.7",
     "@nestjs/typeorm": "11.0.3",
+    "@repo/constants": "workspace:*",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",

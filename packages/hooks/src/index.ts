@@ -108,3 +108,13 @@ export {
   useCreateContact,
   useDeleteContact,
 } from "./contacts";
+
+export {
+  useCreateSeo,
+  useDeleteSeo,
+  usePublicSeo,
+  useSeo,
+  useSeoList,
+  useToggleSeoActive,
+  useUpdateSeo,
+} from "./seo";

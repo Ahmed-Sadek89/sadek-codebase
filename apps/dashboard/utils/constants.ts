@@ -31,6 +31,9 @@ export const ORDER_PARAM = "order";
 /** URL query param for the active-status filter (`true` | `false`), sent as `isActive`. */
 export const IS_ACTIVE_PARAM = "isActive";
 
+/** URL query param for the SEO page filter (a `SeoPageName`), sent as `pageName`. */
+export const SEO_PAGE_NAME_PARAM = "pageName";
+
 /** URL query param for the skill-category filter (a category id), sent as `categoryId`. */
 export const CATEGORY_ID_PARAM = "categoryId";
 
@@ -43,6 +46,7 @@ export const FILTER_PARAMS = [
   ORDER_PARAM,
   IS_ACTIVE_PARAM,
   CATEGORY_ID_PARAM,
+  SEO_PAGE_NAME_PARAM,
 ];
 
 /** Delay between the last keystroke and updating the URL. */

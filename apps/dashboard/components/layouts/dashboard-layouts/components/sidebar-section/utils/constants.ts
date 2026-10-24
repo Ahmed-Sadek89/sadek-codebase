@@ -3,6 +3,7 @@ import {
   IdCard,
   LayoutDashboard,
   MessageSquare,
+  Search,
   Sparkles,
   UserRound,
   type LucideIcon,
@@ -28,7 +29,7 @@ export type SidebarNavGroup = {
 /**
  * Sidebar order: daily use first (dashboard, messages inbox), then the
  * portfolio content in the order it appears on the site (about, services,
- * experience, skills, projects), then the account.
+ * experience, skills, projects), then the website's SEO, then the account.
  */
 export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
   {
@@ -73,6 +74,13 @@ export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
           { titleKey: "navCategories", href: "/dashboard/projects/category" },
         ],
       },
+    ],
+  },
+  {
+    labelKey: "navSeo",
+    items: [
+      // One page for every apps/web page; each row picks its page.
+      { titleKey: "navSeoPages", href: "/dashboard/seo", icon: Search },
     ],
   },
   {

@@ -9,7 +9,7 @@ export type TableAction = {
   label: string;
   icon: LucideIcon;
   onClick: () => void;
-  tone?: "default" | "danger";
+  tone?: "default" | "danger" | "success";
   /** Show the label next to the icon (icon-only by default; the label stays as aria-label). */
   showLabel?: boolean;
   hidden?: boolean;
@@ -59,7 +59,10 @@ export function TableActionsGroup({
               "h-8 gap-1.5",
               !showLabel && "w-8",
               tone === "danger" &&
-                "text-danger hover:bg-danger/10 hover:text-danger",
+              "text-danger hover:bg-danger/10 hover:text-danger",
+              tone === "success" &&
+              "text-success hover:bg-success/10 hover:text-success",
+
             )}
           >
             <Icon className="size-4" aria-hidden />

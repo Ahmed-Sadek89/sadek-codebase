@@ -8,6 +8,7 @@ import { UserInfo } from "../user-info/entities/user-info.entity";
 import { UserCompany } from "../user-company/entities/user-company.entity";
 import { WhatCanDo } from "../what-can-do/entities/what-can-do.entity";
 import { Contact } from "../contacts/entities/contact.entity";
+import { Seo } from "../seo/entities/seo.entity";
 import "reflect-metadata";
 import { SeederOptions } from 'typeorm-extension';
 import { DataSource, DataSourceOptions } from 'typeorm';
@@ -15,6 +16,7 @@ import userFactory from './factories/user.factory';
 import userInfoFactory from './factories/user-info.factory';
 import userCompanyFactory from './factories/user-company.factory';
 import whatCanDoFactory from './factories/what-can-do.factory';
+import seoFactory from './factories/seo.factory';
 import MainSeeder from './seeds/main-seeder';
 import CategorySkillsSeeder from './seeds/category-skills.seeder';
 import SkillsSeeder from './seeds/skills.seeder';
@@ -23,13 +25,14 @@ import ProjectsSeeder from './seeds/projects.seeder';
 import UserInfoSeeder from './seeds/user-info.seeder';
 import UserCompanySeeder from './seeds/user-company.seeder';
 import WhatCanDoSeeder from './seeds/what-can-do.seeder';
+import SeoSeeder from './seeds/seo.seeder';
 
 const options: SeederOptions & DataSourceOptions = {
     ...dbConnectionOptions,
     // Every entity reachable through relations must be registered, or TypeORM
     // cannot build metadata for User (which relates to all of them).
-    entities: [User, CategorySkill, Skill, CategoryProject, Project, UserInfo, UserCompany, WhatCanDo, Contact],
-    factories: [userFactory, userInfoFactory, userCompanyFactory, whatCanDoFactory],
+    entities: [User, CategorySkill, Skill, CategoryProject, Project, UserInfo, UserCompany, WhatCanDo, Contact, Seo],
+    factories: [userFactory, userInfoFactory, userCompanyFactory, whatCanDoFactory, seoFactory],
     // Order matters: users own everything; both category tables come before
     // the skills and projects that link to random category ids.
     seeds: [
@@ -41,6 +44,7 @@ const options: SeederOptions & DataSourceOptions = {
         UserInfoSeeder,
         UserCompanySeeder,
         WhatCanDoSeeder,
+        SeoSeeder,
     ],
 }
 
