@@ -1,2 +1,2 @@
-export * from "./hreflang";
-export * from "./twitter-card";
+export * from "./hreflang.js";
+export * from "./twitter-card.js";

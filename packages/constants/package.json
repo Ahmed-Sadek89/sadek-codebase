@@ -4,11 +4,24 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./twitter-card": "./src/twitter-card.ts",
-    "./hreflang": "./src/hreflang.ts"
+    ".": {
+      "types": "./src/index.ts",
+      "require": "./dist/index.js",
+      "default": "./src/index.ts"
+    },
+    "./twitter-card": {
+      "types": "./src/twitter-card.ts",
+      "require": "./dist/twitter-card.js",
+      "default": "./src/twitter-card.ts"
+    },
+    "./hreflang": {
+      "types": "./src/hreflang.ts",
+      "require": "./dist/hreflang.js",
+      "default": "./src/hreflang.ts"
+    }
   },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
