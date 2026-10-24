@@ -8,8 +8,8 @@ export default setSeederFactory(WhatCanDo, () => {
     whatCanDo.title_en = faker.person.jobArea().concat(' ', faker.hacker.noun()).slice(0, 50);
     // fakerAR has no job-area data (person.jobArea() throws).
     whatCanDo.title_ar = `${fakerAR.commerce.department()} ${fakerAR.lorem.word()}`.slice(0, 50);
-    whatCanDo.shortDescription_en = faker.hacker.phrase().slice(0, 100);
-    whatCanDo.shortDescription_ar = fakerAR.lorem.sentence().slice(0, 100);
+    whatCanDo.shortDescription_en = faker.hacker.phrase().slice(0, 200);
+    whatCanDo.shortDescription_ar = fakerAR.lorem.sentence().slice(0, 200);
     whatCanDo.description_en = faker.lorem.paragraph();
     whatCanDo.description_ar = fakerAR.lorem.paragraph();
     return whatCanDo;

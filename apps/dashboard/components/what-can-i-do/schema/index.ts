@@ -9,7 +9,7 @@ type Translate = (
 
 /** Backend limits (CreateWhatCanDoDto). */
 export const WHAT_CAN_DO_TITLE_MAX = 50;
-export const WHAT_CAN_DO_SHORT_DESCRIPTION_MAX = 100;
+export const WHAT_CAN_DO_SHORT_DESCRIPTION_MAX = 200;
 
 /** Optional text: blank is "not set". */
 const optionalTextSchema = (max?: number, maxMessage?: string) =>

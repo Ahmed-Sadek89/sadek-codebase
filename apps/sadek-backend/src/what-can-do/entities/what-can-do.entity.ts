@@ -12,10 +12,10 @@ export class WhatCanDo {
     @Column({ type: 'varchar', length: 50, nullable: true })
     title_ar!: string;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
+    @Column({ type: 'varchar', length: 200, nullable: true })
     shortDescription_en!: string;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
+    @Column({ type: 'varchar', length: 200, nullable: true })
     shortDescription_ar!: string;
 
     @Column({ type: 'text', nullable: true })

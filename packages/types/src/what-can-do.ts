@@ -11,7 +11,7 @@ export interface WhatCanDoDetails {
   /** Max 50 characters each. English is always set; Arabic is `null` until added. */
   title_en: string;
   title_ar: string | null;
-  /** Max 100 characters each. */
+  /** Max 200 characters each. */
   shortDescription_en: string | null;
   shortDescription_ar: string | null;
   description_en: string | null;
@@ -31,7 +31,7 @@ export interface CreateWhatCanDoRequest {
   /** Max 50 characters each. English is required, Arabic optional. */
   title_en: string;
   title_ar?: string;
-  /** Max 100 characters each. */
+  /** Max 200 characters each. */
   shortDescription_en?: string;
   shortDescription_ar?: string;
   description_en?: string;

@@ -13,12 +13,12 @@ export class CreateWhatCanDoDto {
 
     @IsString()
     @IsOptional()
-    @MaxLength(100)
+    @MaxLength(200)
     shortDescription_en?: string;
 
     @IsString()
     @IsOptional()
-    @MaxLength(100)
+    @MaxLength(200)
     shortDescription_ar?: string;
 
     @IsString()
