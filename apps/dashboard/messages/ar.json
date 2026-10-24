@@ -426,6 +426,8 @@
   "whatCanDoUpdated": "تم تحديث العنصر بنجاح",
   "whatCanDoDeleted": "تم حذف العنصر بنجاح",
   "whatCanDoDeleteQuestion": "هل تريد حذف «{name}»؟ لا يمكن التراجع عن ذلك.",
+  "whatCanDoDetailsTitle": "تفاصيل العنصر",
+  "whatCanDoDetailsDescription": "كل ما تم حفظه لهذا العنصر.",
   "metaProfileTitle": "الملف الشخصي | لوحة صادق",
   "metaProfileDescription": "اعرض حسابك في لوحة التحكم وعدّله.",
   "profileTitle": "الملف الشخصي",

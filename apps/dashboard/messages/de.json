@@ -426,6 +426,8 @@
   "whatCanDoUpdated": "Eintrag erfolgreich aktualisiert",
   "whatCanDoDeleted": "Eintrag erfolgreich gelöscht",
   "whatCanDoDeleteQuestion": "„{name}“ löschen? Dies kann nicht rückgängig gemacht werden.",
+  "whatCanDoDetailsTitle": "Eintragsdetails",
+  "whatCanDoDetailsDescription": "Alles, was zu diesem Eintrag gespeichert ist.",
   "metaProfileTitle": "Profil | Sadek Dashboard",
   "metaProfileDescription": "Dein Dashboard-Konto ansehen und bearbeiten.",
   "profileTitle": "Profil",

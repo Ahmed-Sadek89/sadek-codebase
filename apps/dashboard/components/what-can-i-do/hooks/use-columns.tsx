@@ -6,6 +6,9 @@ import type { WhatCanDoDetails } from "@repo/types/what-can-do";
 import { Eye, Pencil, Trash2 } from "@repo/ui/icons";
 import { DateCell, TableActionsGroup, TextCell } from "../../ui/cells";
 import type { DynamicColumnDef } from "../../ui/dynamic-table/types/types";
+import {
+  WHAT_CAN_DO_SHORT_DESCRIPTION_PREVIEW_MAX,
+} from "../utils/constants";
 
 type UseColumnsOptions = {
   busy?: boolean;
@@ -57,7 +60,9 @@ const useColumns = ({
               value={row.original.shortDescription_ar}
               tone="muted"
               size="sm"
+              maxLength={WHAT_CAN_DO_SHORT_DESCRIPTION_PREVIEW_MAX}
             />
+            
           </div>
         ),
       },
@@ -73,7 +78,9 @@ const useColumns = ({
               value={row.original.shortDescription_en}
               tone="muted"
               size="sm"
+              maxLength={WHAT_CAN_DO_SHORT_DESCRIPTION_PREVIEW_MAX}
             />
+            
           </div>
         ),
       },

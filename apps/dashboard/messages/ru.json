@@ -426,6 +426,8 @@
   "whatCanDoUpdated": "Пункт успешно обновлён",
   "whatCanDoDeleted": "Пункт успешно удалён",
   "whatCanDoDeleteQuestion": "Удалить «{name}»? Это действие нельзя отменить.",
+  "whatCanDoDetailsTitle": "Сведения об элементе",
+  "whatCanDoDetailsDescription": "Всё, что сохранено для этого элемента.",
   "metaProfileTitle": "Профиль | Sadek Dashboard",
   "metaProfileDescription": "Просмотр и изменение вашей учётной записи.",
   "profileTitle": "Профиль",

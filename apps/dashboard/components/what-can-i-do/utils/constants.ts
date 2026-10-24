@@ -8,6 +8,9 @@ import type { WhatCanDoFormInput } from "../schema";
 /** Page size when the URL has no `?limit=`. */
 export const WHAT_CAN_DOS_LIMIT = 10;
 
+/** Longest short description and description shown in a table cell; the full text is in the hover title and the details dialog. */
+export const WHAT_CAN_DO_SHORT_DESCRIPTION_PREVIEW_MAX = 60;
+
 /**
  * The list query for the URL's `search`, `page`, `limit`, and `order` (any
  * combination). Shared by the server prefetch and the client hook so both

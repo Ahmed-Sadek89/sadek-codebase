@@ -426,6 +426,8 @@
   "whatCanDoUpdated": "Item updated successfully",
   "whatCanDoDeleted": "Item deleted successfully",
   "whatCanDoDeleteQuestion": "Delete “{name}”? This can't be undone.",
+  "whatCanDoDetailsTitle": "Item details",
+  "whatCanDoDetailsDescription": "Everything saved for this item.",
   "metaProfileTitle": "Profile | Sadek Dashboard",
   "metaProfileDescription": "View and edit your dashboard account.",
   "profileTitle": "Profile",

@@ -12,6 +12,7 @@ import useColumns from "./hooks/use-columns";
 import { useStaticFilter } from "./hooks/use-static-filter";
 import { useDeleteWhatCanDoAction } from "./hooks/use-delete-what-can-do";
 import { WhatCanDoForm } from "./components/what-can-do-form";
+import { WhatCanDoDetailsDialog } from "./components/what-can-do-details-dialog";
 import { readListQueryParams } from "../../utils/list-query";
 import { getWhatCanDosQuery } from "./utils/constants";
 
@@ -35,6 +36,13 @@ export default function WhatCanIDoPage() {
     setIsOpenDialog(true);
   }, []);
   const isEditing = selectedItem !== null;
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  // Kept after closing so the content doesn't vanish during the close animation.
+  const [viewedItem, setViewedItem] = useState<WhatCanDoDetails | null>(null);
+  const handleView = useCallback((item: WhatCanDoDetails) => {
+    setViewedItem(item);
+    setIsDetailsOpen(true);
+  }, []);
   // Same query as the server prefetch, so the hydrated cache is reused.
   const searchParams = useSearchParams();
   const query = useMemo(
@@ -48,8 +56,10 @@ export default function WhatCanIDoPage() {
   const deleteAction = useDeleteWhatCanDoAction();
   const columns = useColumns({
     busy: deleteAction.isDeleting,
+    canView: true,
     canUpdate: true,
     canDelete: true,
+    onView: handleView,
     onEdit: handleEdit,
     onDelete: deleteAction.requestDelete,
   });
@@ -86,6 +96,11 @@ export default function WhatCanIDoPage() {
         defaultValues={selectedItem}
         // Unfiltered total = the number of items, so a new one goes last.
         nextRank={query.search ? undefined : data?.total}
+      />
+      <WhatCanDoDetailsDialog
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        item={viewedItem}
       />
       <ConfirmAction
         open={deleteAction.isOpen}
