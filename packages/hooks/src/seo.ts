@@ -5,7 +5,6 @@ import { seoService } from "@repo/services/seo";
 import type {
   CreateSeoRequest,
   SeoListQuery,
-  SeoPageName,
   UpdateSeoRequest,
 } from "@repo/types/seo";
 import { queryKeys } from "@repo/utils/query-keys";
@@ -21,11 +20,11 @@ export function useSeoList(query: SeoListQuery = {}) {
   });
 }
 
-/** GET /seo/public/:pageName: the website's active SEO for one page. No sign-in needed. */
-export function usePublicSeo(pageName: SeoPageName) {
+/** GET /seo/public/:pageId: the website's active SEO for one page. No sign-in needed. */
+export function usePublicSeo(pageId: number) {
   return usePublicQuery({
-    queryKey: queryKeys.seo.public(pageName),
-    queryFn: () => seoService.findPublic(pageName),
+    queryKey: queryKeys.seo.public(pageId),
+    queryFn: () => seoService.findPublic(pageId),
   });
 }
 
@@ -66,8 +65,7 @@ export function useUpdateSeo() {
 }
 
 /**
- * PATCH /seo/:id/toggle-active. Going live can deactivate another row of the
- * same page, so every row's detail is refreshed.
+ * PATCH /seo/:id/toggle-active; refreshes the lists and every detail.
  */
 export function useToggleSeoActive() {
   const client = useQueryClient();

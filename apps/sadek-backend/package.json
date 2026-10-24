@@ -29,6 +29,7 @@
     "seed:user-info": "ts-node -r tsconfig-paths/register ./src/database/seed.ts user-info",
     "seed:user-company": "ts-node -r tsconfig-paths/register ./src/database/seed.ts user-company",
     "seed:what-can-do": "ts-node -r tsconfig-paths/register ./src/database/seed.ts what-can-do",
+    "seed:pages": "ts-node -r tsconfig-paths/register ./src/database/seed.ts pages",
     "seed:seo": "ts-node -r tsconfig-paths/register ./src/database/seed.ts seo"
   },
   "dependencies": {

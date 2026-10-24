@@ -1,5 +1,4 @@
 import { setSeederFactory } from 'typeorm-extension';
-import { SeoPageName } from '@repo/constants/seo-pages';
 import { X_DEFAULT_HREFLANG } from '@repo/constants/hreflang';
 import { TWITTER_CARDS } from '@repo/constants/twitter-card';
 import { Seo } from '../../seo/entities/seo.entity';
@@ -7,7 +6,6 @@ import { faker, fakerAR } from '@faker-js/faker';
 
 export default setSeederFactory(Seo, () => {
     const seo = new Seo();
-    seo.pageName = SeoPageName.HOME;
     const name = faker.person.fullName();
     const jobTitle = faker.person.jobTitle();
     seo.metaTitle_en = `${name} – ${jobTitle}`.slice(0, 70);

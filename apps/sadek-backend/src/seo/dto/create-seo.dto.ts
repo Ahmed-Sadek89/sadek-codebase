@@ -5,12 +5,14 @@ import {
     IsArray,
     IsBoolean,
     IsEnum,
+    IsInt,
     IsNotEmpty,
     IsOptional,
     IsString,
     IsUrl,
     Matches,
     MaxLength,
+    Min,
     ValidateNested,
 } from 'class-validator';
 import {
@@ -20,7 +22,6 @@ import {
     SEO_URL_MAX,
     type SeoHreflang,
 } from '@repo/constants/hreflang';
-import { SeoPageName } from '@repo/constants/seo-pages';
 import { TwitterCard } from '@repo/constants/twitter-card';
 
 const URL_OPTIONS = {
@@ -43,8 +44,10 @@ export class SeoHreflangDto implements SeoHreflang {
 
 // isActive is not writable here: PATCH /seo/:id/toggle-active switches it.
 export class CreateSeoDto {
-    @IsEnum(SeoPageName)
-    pageName!: SeoPageName;
+    // One of the signed-in user's pages; each page has at most one SEO row.
+    @IsInt()
+    @Min(1)
+    pageId!: number;
 
     @IsString()
     @IsNotEmpty()

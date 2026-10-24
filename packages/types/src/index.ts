@@ -10,3 +10,4 @@ export type * from "./what-can-do";
 export type * from "./users";
 export type * from "./contacts";
 export type * from "./seo";
+export type * from "./pages";

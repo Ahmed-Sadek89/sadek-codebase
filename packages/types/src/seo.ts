@@ -1,11 +1,8 @@
 import type { MessageResponse } from "./auth";
 import type { IsoDateString, PaginatedResponse, PaginationQuery } from "./common";
 import type { SeoHreflang } from "@repo/constants/hreflang";
-import type { SeoPageName } from "@repo/constants/seo-pages";
 import type { TwitterCard } from "@repo/constants/twitter-card";
-
-/** The website pages that have SEO; the values live in `@repo/constants/seo-pages`. */
-export type { SeoPageName };
+import type { PageRef } from "./pages";
 
 /** Share card size for `twitter:card`; the values live in `@repo/constants/twitter-card`. */
 export type { TwitterCard };
@@ -13,10 +10,12 @@ export type { TwitterCard };
 /** One language alternate: `{ lang: "en" | "ar" | "x-default" | …, url }`. */
 export type { SeoHreflang };
 
-/** One page's SEO row without its owner (GET /seo/:id and /seo/public/:pageName). */
+/** One page's SEO row without its owner (GET /seo/:id and /seo/public/:pageId). */
 export interface SeoDetails {
   id: number;
-  pageName: SeoPageName;
+  /** The page (pages.id); unique: one SEO row per page. */
+  pageId: number;
+  page: PageRef;
   /** Max 70 characters. */
   metaTitle_en: string;
   /** Max 70 characters. */
@@ -64,7 +63,8 @@ export interface Seo extends SeoDetails {
 
 /** POST /seo. `isActive` is not writable: a page's first row goes live; PATCH /seo/:id/toggle-active switches it. */
 export interface CreateSeoRequest {
-  pageName: SeoPageName;
+  /** One of the user's pages without SEO yet (404 if not theirs, 409 if taken). */
+  pageId: number;
   metaTitle_en: string;
   metaTitle_ar: string;
   metaDescription_en: string;
@@ -95,7 +95,7 @@ export interface CreateSeoRequest {
 /** Fields always present on a saved row. */
 type SavedSeoField =
   | "id"
-  | "pageName"
+  | "pageId"
   | "metaTitle_en"
   | "metaTitle_ar"
   | "metaDescription_en"
@@ -115,15 +115,15 @@ export interface SeoListQuery extends PaginationQuery {
   /** Matches metaTitle_en or metaTitle_ar (case-insensitive). Max 20 characters. */
   search?: string;
   isActive?: boolean;
-  /** Only this page's rows. (Not `page`: that is the pagination page.) */
-  pageName?: SeoPageName;
+  /** Only this page's row. (Not `page`: that is the pagination page.) */
+  pageId?: number;
 }
 
 export type SeoListResponse = PaginatedResponse<Seo>;
 
 type NullableCreateField = Exclude<
   keyof CreateSeoRequest,
-  | "pageName"
+  | "pageId"
   | "metaTitle_en"
   | "metaTitle_ar"
   | "metaDescription_en"
@@ -136,7 +136,6 @@ type NullableCreateField = Exclude<
 
 /**
  * PATCH /seo/:id: any subset of the create fields; `null` clears an optional one.
- * Moving a live row to another page keeps it live only if that page has none.
  */
 export type UpdateSeoRequest = Partial<
   Omit<CreateSeoRequest, NullableCreateField>

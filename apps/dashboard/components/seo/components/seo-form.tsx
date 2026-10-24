@@ -66,7 +66,11 @@ export function SeoForm({
         className="space-y-6"
         aria-busy={isSubmitting}
       >
-        <PageSection form={form} disabled={isSubmitting} />
+        <PageSection
+          form={form}
+          disabled={isSubmitting}
+          currentPageId={defaultValues?.pageId}
+        />
         <SearchSection form={form} disabled={isSubmitting} />
         <UrlsSection form={form} disabled={isSubmitting} />
         <SocialSection form={form} disabled={isSubmitting} />

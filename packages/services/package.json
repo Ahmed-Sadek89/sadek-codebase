@@ -15,7 +15,8 @@
     "./what-can-do": "./src/what-can-do.ts",
     "./users": "./src/users.ts",
     "./contacts": "./src/contacts.ts",
-    "./seo": "./src/seo.ts"
+    "./seo": "./src/seo.ts",
+    "./pages": "./src/pages.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

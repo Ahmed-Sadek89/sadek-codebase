@@ -5,7 +5,6 @@ import type {
   CreateSeoResponse,
   DeleteSeoResponse,
   SeoDetails,
-  SeoPageName,
   ToggleSeoActiveResponse,
   SeoListQuery,
   SeoListResponse,
@@ -16,12 +15,12 @@ import { authHeaders } from "./auth-headers";
 
 export const seoEndpoints = {
   collection: "/seo",
-  public: (pageName: SeoPageName) => `/seo/public/${pageName}`,
+  public: (pageId: number) => `/seo/public/${pageId}`,
   byId: (id: number) => `/seo/${id}`,
   toggleActive: (id: number) => `/seo/${id}/toggle-active`,
 } as const;
 
-// GET /seo/public/:pageName is public; every other route sits behind JwtAuthGuard.
+// GET /seo/public/:pageId is public; every other route sits behind JwtAuthGuard.
 export const seoService = {
   async create(
     request: CreateSeoRequest,
@@ -44,10 +43,10 @@ export const seoService = {
     );
     return data;
   },
-  /** GET /seo/public/:pageName (no token): the default-view user's active row for that page; 404 when none. */
-  async findPublic(pageName: SeoPageName): Promise<SeoDetails> {
+  /** GET /seo/public/:pageId (no token): the page's active SEO of the default-view user; 404 when none. */
+  async findPublic(pageId: number): Promise<SeoDetails> {
     const { data } = await apiClient.get<SeoDetails>(
-      seoEndpoints.public(pageName),
+      seoEndpoints.public(pageId),
     );
     return data;
   },
@@ -73,7 +72,7 @@ export const seoService = {
     );
     return data;
   },
-  /** Live ⇄ offline. Going live deactivates the user's other rows for that page. */
+  /** Live ⇄ offline. */
   async toggleActive(
     id: number,
     auth: AuthorizedRequest,

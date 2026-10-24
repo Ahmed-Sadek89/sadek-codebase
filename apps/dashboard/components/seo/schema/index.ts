@@ -2,7 +2,6 @@ import { z } from "zod";
 import type { CreateSeoRequest } from "@repo/types/seo";
 import type { MessageKey } from "../../../i18n/types";
 import { createUploadFieldSchema } from "../../ui/forms/base-upload/utils/schema";
-import { SEO_PAGE_NAMES } from "@repo/constants/seo-pages";
 import {
   HREFLANG_LANG_MAX,
   HREFLANG_MAX,
@@ -75,7 +74,11 @@ const hreflangSchema = (t: Translate) =>
 // A picked share image is still a File here (see useSeoForm).
 export const createSeoSchema = (t: Translate) =>
   z.object({
-    pageName: z.enum(SEO_PAGE_NAMES, t("seoFormPageRequired")),
+    // The Select holds the id as text; the request body needs the number.
+    pageId: z
+      .string()
+      .min(1, t("seoFormPageRequired"))
+      .transform((value) => Number(value)),
     metaTitle_en: requiredText(t, SEO_META_TITLE_MAX),
     metaTitle_ar: requiredText(t, SEO_META_TITLE_MAX),
     metaDescription_en: requiredText(t, SEO_META_DESCRIPTION_MAX),

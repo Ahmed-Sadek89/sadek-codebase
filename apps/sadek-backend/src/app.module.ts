@@ -15,6 +15,7 @@ import { UserCompanyModule } from './user-company/user-company.module';
 import { WhatCanDoModule } from './what-can-do/what-can-do.module';
 import { ContactModule } from './contacts/contact.module';
 import { SeoModule } from './seo/seo.module';
+import { PagesModule } from './pages/pages.module';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { SeoModule } from './seo/seo.module';
     UserCompanyModule,
     WhatCanDoModule,
     ContactModule,
-    SeoModule
+    SeoModule,
+    PagesModule
   ],
   controllers: [AppController],
   providers: [AppService],

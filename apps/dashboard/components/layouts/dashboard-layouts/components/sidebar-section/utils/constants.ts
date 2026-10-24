@@ -1,4 +1,5 @@
 import {
+  FileText,
   FolderKanban,
   IdCard,
   LayoutDashboard,
@@ -79,7 +80,8 @@ export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
   {
     labelKey: "navSeo",
     items: [
-      // One page for every apps/web page; each row picks its page.
+      // The website's pages first: each SEO row belongs to one of them.
+      { titleKey: "navPages", href: "/dashboard/pages", icon: FileText },
       { titleKey: "navSeoPages", href: "/dashboard/seo", icon: Search },
     ],
   },

@@ -1,41 +1,19 @@
 import {
-  isSeoPageName,
-  SEO_PAGE_NAMES,
-  SeoPageName,
-} from "@repo/constants/seo-pages";
-import {
   DEFAULT_TWITTER_CARD,
   TWITTER_CARDS,
   TwitterCard,
 } from "@repo/constants/twitter-card";
+import type { PageRef } from "@repo/types/pages";
 import type { Seo, SeoListQuery } from "@repo/types/seo";
 import type { MessageKey } from "../../../i18n/types";
 import {
   readListQueryParams,
+  readPositiveInt,
   type ParamReader,
 } from "../../../utils/list-query";
-import { SEO_PAGE_NAME_PARAM } from "../../../utils/constants";
+import { SEO_PAGE_ID_PARAM } from "../../../utils/constants";
+import { localized } from "../../../utils/format";
 import type { SeoFormInput } from "../schema";
-
-/**
- * Each website page's label. A `Record`, so adding a page to the shared
- * `SeoPageName` (`@repo/constants/seo-pages`) fails type-checking until it
- * has a label here (and in the four message files).
- */
-const SEO_PAGE_LABEL_KEYS: Record<SeoPageName, MessageKey> = {
-  [SeoPageName.HOME]: "seoPageHome",
-};
-
-/** Options for the page select and filter chips, in the shared order. */
-export const SEO_PAGES = SEO_PAGE_NAMES.map((value) => ({
-  value,
-  labelKey: SEO_PAGE_LABEL_KEYS[value],
-}));
-
-/** The label key of a page, for tables, filters and selects. */
-export function seoPageLabelKey(pageName: SeoPageName): MessageKey {
-  return SEO_PAGE_LABEL_KEYS[pageName];
-}
 
 /** Each share card size's label; a `Record`, so a new size needs one. */
 const TWITTER_CARD_LABEL_KEYS: Record<TwitterCard, MessageKey> = {
@@ -54,33 +32,41 @@ export function twitterCardLabelKey(card: TwitterCard): MessageKey {
   return TWITTER_CARD_LABEL_KEYS[card];
 }
 
-/** A `?pageName=` value, or undefined when missing or unknown. */
-export function readSeoPageName(
-  raw: string | null | undefined,
-): SeoPageName | undefined {
-  return isSeoPageName(raw) ? raw : undefined;
+/** A page's name in the active locale (Arabic pages fall back to English). */
+export function pageLabel(
+  locale: string,
+  page: Pick<PageRef, "name_en" | "name_ar">,
+): string {
+  return localized(locale, page.name_en, page.name_ar);
 }
+
+/**
+ * Pages the page filter and select offer: up to the backend's page-size cap
+ * (PAGINATION.MAX_LIMIT, 30), enough for every website page.
+ */
+export const SEO_PAGE_OPTIONS_QUERY = { limit: 30 } as const;
 
 /** Page size when the URL has no `?limit=`. */
 export const SEO_LIST_LIMIT = 10;
 
 /**
  * The list query for the URL's `search`, `page`, `limit`, `order`,
- * `isActive`, and `pageName` (any combination). Shared by the server prefetch
- * and the client hook so both build the same query key. `pageName` is read
+ * `isActive`, and `pageId` (any combination). Shared by the server prefetch
+ * and the client hook so both build the same query key. `pageId` is read
  * here, not in readListQueryParams, because only GET /seo accepts it.
  */
 export function getSeoListQuery(get: ParamReader): SeoListQuery {
-  const pageName = readSeoPageName(get(SEO_PAGE_NAME_PARAM));
+  const pageId = readPositiveInt(get(SEO_PAGE_ID_PARAM));
   return {
     limit: SEO_LIST_LIMIT,
     ...readListQueryParams(get),
-    ...(pageName && { pageName }),
+    ...(pageId !== undefined && { pageId }),
   };
 }
 
 export const SEO_FORM_DEFAULT_VALUES = {
-  pageName: SEO_PAGE_NAMES[0],
+  // A Select value; the schema turns it into a number.
+  pageId: "",
   metaTitle_en: "",
   metaTitle_ar: "",
   metaDescription_en: "",
@@ -110,7 +96,7 @@ export function toSeoFormInput(
 ): SeoFormInput {
   if (!seo) return SEO_FORM_DEFAULT_VALUES;
   return {
-    pageName: seo.pageName,
+    pageId: String(seo.pageId),
     metaTitle_en: seo.metaTitle_en,
     metaTitle_ar: seo.metaTitle_ar,
     metaDescription_en: seo.metaDescription_en,

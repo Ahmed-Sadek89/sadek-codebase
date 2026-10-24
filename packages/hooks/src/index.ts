@@ -118,3 +118,11 @@ export {
   useToggleSeoActive,
   useUpdateSeo,
 } from "./seo";
+
+export {
+  useCreatePage,
+  useDeletePage,
+  usePage,
+  usePages,
+  useUpdatePage,
+} from "./pages";

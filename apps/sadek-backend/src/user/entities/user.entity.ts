@@ -8,6 +8,7 @@ import { UserCompany } from "../../user-company/entities/user-company.entity";
 import { WhatCanDo } from "../../what-can-do/entities/what-can-do.entity";
 import { Contact } from "../../contacts/entities/contact.entity";
 import { Seo } from "../../seo/entities/seo.entity";
+import { Page } from "../../pages/entities/page.entity";
 import { BeforeInsert, BeforeUpdate, Column, Entity, Index, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 // Partial unique index: at most one user can be the default view.
@@ -143,4 +144,10 @@ export class User {
         (seo) => seo.user
     )
     seos!: Seo[];
+
+    @OneToMany(
+        () => Page,
+        (page) => page.user
+    )
+    pages!: Page[];
 }

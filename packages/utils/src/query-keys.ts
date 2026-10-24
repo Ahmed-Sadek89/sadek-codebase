@@ -2,7 +2,8 @@ import type { CategoryProjectsQuery } from "@repo/types/category-projects";
 import type { ContactsQuery } from "@repo/types/contacts";
 import type { CategorySkillsQuery } from "@repo/types/category-skills";
 import type { ProjectsQuery } from "@repo/types/projects";
-import type { SeoListQuery, SeoPageName } from "@repo/types/seo";
+import type { PagesQuery } from "@repo/types/pages";
+import type { SeoListQuery } from "@repo/types/seo";
 import type { SkillsQuery } from "@repo/types/skills";
 import type { UserCompaniesQuery } from "@repo/types/user-company";
 import type { UserInfoQuery } from "@repo/types/user-info";
@@ -143,10 +144,17 @@ export const queryKeys = {
     list: (query: SeoListQuery) =>
       [...queryKeys.seo.lists(), query] as const,
     // Under lists(), so every mutation that refreshes lists refreshes it too.
-    public: (pageName: SeoPageName) =>
-      [...queryKeys.seo.lists(), "public", pageName] as const,
+    public: (pageId: number) =>
+      [...queryKeys.seo.lists(), "public", pageId] as const,
     details: () => [...queryKeys.seo.all, "detail"] as const,
     detail: (id: number) =>
       [...queryKeys.seo.details(), id] as const,
+  },
+  pages: {
+    all: ["pages"] as const,
+    lists: () => [...queryKeys.pages.all, "list"] as const,
+    list: (query: PagesQuery) => [...queryKeys.pages.lists(), query] as const,
+    details: () => [...queryKeys.pages.all, "detail"] as const,
+    detail: (id: number) => [...queryKeys.pages.details(), id] as const,
   },
 };

@@ -5,7 +5,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -19,7 +18,6 @@ import { UpdateSeoDto } from './dto/update-seo.dto';
 import { FilterSeoDto } from './dto/filter-seo.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth/jwt-auth.guard';
 import { RequestUserDto } from '../auth/dto/request-user.dto';
-import { SeoPageName } from '@repo/constants/seo-pages';
 
 @ApiTags('Seo')
 @Controller('seo')
@@ -41,9 +39,9 @@ export class SeoController {
   }
 
   // Public: the website's SEO for one page. Declared before ':id' so "public" is not parsed as an id.
-  @Get('public/:pageName')
-  async findPublic(@Param('pageName', new ParseEnumPipe(SeoPageName)) pageName: SeoPageName) {
-    return await this.seoService.findPublic(pageName);
+  @Get('public/:pageId')
+  async findPublic(@Param('pageId', ParseIntPipe) pageId: number) {
+    return await this.seoService.findPublic(pageId);
   }
 
   @UseGuards(JwtAuthGuard)

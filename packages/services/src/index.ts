@@ -18,3 +18,4 @@ export {
   seoEndpoints,
   seoService,
 } from "./seo";
+export { pagesEndpoints, pagesService } from "./pages";

@@ -8,6 +8,7 @@ import ProjectsSeeder from "./seeds/projects.seeder";
 import UserInfoSeeder from "./seeds/user-info.seeder";
 import UserCompanySeeder from "./seeds/user-company.seeder";
 import WhatCanDoSeeder from "./seeds/what-can-do.seeder";
+import PagesSeeder from "./seeds/pages.seeder";
 import SeoSeeder from "./seeds/seo.seeder";
 
 // `pnpm seed` runs every seeder; `pnpm seed <name>` runs only that one.
@@ -21,6 +22,7 @@ const SEEDERS_BY_NAME = {
     "user-info": UserInfoSeeder,
     "user-company": UserCompanySeeder,
     "what-can-do": WhatCanDoSeeder,
+    pages: PagesSeeder,
     "seo": SeoSeeder,
 } as const;
 

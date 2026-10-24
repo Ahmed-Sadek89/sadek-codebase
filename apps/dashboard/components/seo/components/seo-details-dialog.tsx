@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useFormatter, useTranslations } from "next-intl";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { TwitterCard } from "@repo/constants/twitter-card";
 import type { Seo } from "@repo/types/seo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/tabs";
@@ -16,7 +16,7 @@ import {
   getPreviewTexts,
   getRobotsBadge,
   PREVIEW_LANGUAGES,
-  seoPageLabelKey,
+  pageLabel,
   twitterCardLabelKey,
   type PreviewLanguage,
 } from "../utils/constants";
@@ -36,6 +36,7 @@ export function SeoDetailsDialog({
 }: SeoDetailsDialogProps) {
   const t = useTranslations();
   const format = useFormatter();
+  const locale = useLocale();
   if (!seo) return null;
 
   const details = [
@@ -54,7 +55,7 @@ export function SeoDetailsDialog({
     >
       <div className="space-y-6">
         <div className="flex flex-wrap items-center gap-2">
-          <StatusBadgeCell value={t(seoPageLabelKey(seo.pageName))} tone="primary" />
+          <StatusBadgeCell value={pageLabel(locale, seo.page)} tone="primary" />
           <StatusBadgeCell
             value={seo.isActive ? t("seoStatusLive") : t("seoStatusDraft")}
             tone={seo.isActive ? "success" : "neutral"}

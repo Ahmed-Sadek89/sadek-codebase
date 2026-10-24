@@ -1,8 +1,7 @@
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsEnum, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { ToBoolean } from '../../common/transformers/to-boolean';
-import { SeoPageName } from '@repo/constants/seo-pages';
 
 export class FilterSeoDto extends PaginationQueryDto {
   @IsString()
@@ -18,9 +17,13 @@ export class FilterSeoDto extends PaginationQueryDto {
   isActive?: boolean;
 
   // Not `page`: that name is the pagination page. Missing or empty
-  // (`?pageName=`) means every page.
+  // (`?pageId=`) means every page.
   @IsOptional()
-  @Transform(({ value }) => (typeof value === 'string' && value.trim() === '' ? undefined : value))
-  @IsEnum(SeoPageName)
-  pageName?: SeoPageName;
+  @Transform(({ obj, key }) => {
+    const raw: unknown = obj[key];
+    return typeof raw === 'string' && raw.trim() === '' ? undefined : Number(raw);
+  })
+  @IsInt()
+  @Min(1)
+  pageId?: number;
 }

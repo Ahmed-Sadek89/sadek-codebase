@@ -12,7 +12,7 @@ import {
 } from "../../ui/cells";
 import type { DynamicColumnDef } from "../../ui/dynamic-table/types/types";
 import { localized } from "../../../utils/format";
-import { getRobotsBadge, seoPageLabelKey, twitterCardLabelKey } from "../utils/constants";
+import { getRobotsBadge, pageLabel, twitterCardLabelKey } from "../utils/constants";
 
 type UseColumnsOptions = {
   busy?: boolean;
@@ -50,11 +50,12 @@ const useColumns = ({
         cell: ({ row }) => <TextCell value={row.original.id} tone="muted" />,
       },
       {
-        accessorKey: "pageName",
+        id: "page",
+        accessorFn: (seo) => pageLabel(locale, seo.page),
         sortable: true,
         header: t("tableColPage"),
         cell: ({ row }) => (
-          <TextCell value={t(seoPageLabelKey(row.original.pageName))} weight="semibold" />
+          <TextCell value={pageLabel(locale, row.original.page)} weight="semibold" />
         ),
       },
       {

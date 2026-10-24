@@ -9,6 +9,7 @@ import { UserCompany } from "../user-company/entities/user-company.entity";
 import { WhatCanDo } from "../what-can-do/entities/what-can-do.entity";
 import { Contact } from "../contacts/entities/contact.entity";
 import { Seo } from "../seo/entities/seo.entity";
+import { Page } from "../pages/entities/page.entity";
 import "reflect-metadata";
 import { SeederOptions } from 'typeorm-extension';
 import { DataSource, DataSourceOptions } from 'typeorm';
@@ -25,13 +26,14 @@ import ProjectsSeeder from './seeds/projects.seeder';
 import UserInfoSeeder from './seeds/user-info.seeder';
 import UserCompanySeeder from './seeds/user-company.seeder';
 import WhatCanDoSeeder from './seeds/what-can-do.seeder';
+import PagesSeeder from './seeds/pages.seeder';
 import SeoSeeder from './seeds/seo.seeder';
 
 const options: SeederOptions & DataSourceOptions = {
     ...dbConnectionOptions,
     // Every entity reachable through relations must be registered, or TypeORM
     // cannot build metadata for User (which relates to all of them).
-    entities: [User, CategorySkill, Skill, CategoryProject, Project, UserInfo, UserCompany, WhatCanDo, Contact, Seo],
+    entities: [User, CategorySkill, Skill, CategoryProject, Project, UserInfo, UserCompany, WhatCanDo, Contact, Seo, Page],
     factories: [userFactory, userInfoFactory, userCompanyFactory, whatCanDoFactory, seoFactory],
     // Order matters: users own everything; both category tables come before
     // the skills and projects that link to random category ids.
@@ -44,6 +46,7 @@ const options: SeederOptions & DataSourceOptions = {
         UserInfoSeeder,
         UserCompanySeeder,
         WhatCanDoSeeder,
+        PagesSeeder,
         SeoSeeder,
     ],
 }

@@ -5,7 +5,6 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./seo-pages": "./src/seo-pages.ts",
     "./twitter-card": "./src/twitter-card.ts",
     "./hreflang": "./src/hreflang.ts"
   },

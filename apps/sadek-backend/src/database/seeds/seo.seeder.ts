@@ -1,37 +1,31 @@
 import { DataSource } from 'typeorm';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
-import { SeoPageName } from '@repo/constants/seo-pages';
 import { Seo } from '../../seo/entities/seo.entity';
-import { User } from '../../user/entities/user.entity';
+import { Page } from '../../pages/entities/page.entity';
 import { hasRows } from './seed.utils';
 
-/** Rows seeded per page for the default-view user; only each page's first one is active. */
-const SEO_SEED_COUNT_PER_PAGE = 5;
-
-/** Seeds SEO rows for every page for the default-view user into an empty `seo` table. */
+/** Seeds one live SEO row per page (seo 1:1 pages) into an empty `seo` table; run after the pages seed. */
 export default class SeoSeeder implements Seeder {
   public async run(
     dataSource: DataSource,
     factoryManager: SeederFactoryManager,
   ): Promise<void> {
     if (await hasRows(dataSource, Seo, 'seo')) return;
-    const owner = await dataSource
-      .getRepository(User)
-      .findOne({ where: { isDefaultView: true }, select: { id: true } });
-    if (!owner) {
-      console.log('Skip seo seed — no default-view user exists');
+    const pages = await dataSource
+      .getRepository(Page)
+      .find({ relations: { user: true }, select: { id: true, user: { id: true } } });
+    if (!pages.length) {
+      console.log('Skip seo seed — no pages exist; run `pnpm seed:pages` first');
       return;
     }
 
     const factory = factoryManager.get(Seo);
     const items = await Promise.all(
-      Object.values(SeoPageName).flatMap((pageName) =>
-        Array.from({ length: SEO_SEED_COUNT_PER_PAGE }, (_, index) =>
-          factory.make({ user: owner, pageName, isActive: index === 0 }),
-        ),
+      pages.map((page) =>
+        factory.make({ page, pageId: page.id, user: page.user, isActive: true }),
       ),
     );
     await dataSource.getRepository(Seo).save(items);
-    console.log(`Seeded ${items.length} seo rows for user ${owner.id}`);
+    console.log(`Seeded ${items.length} seo rows`);
   }
 }

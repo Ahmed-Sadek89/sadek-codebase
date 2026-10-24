@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page({
   searchParams,
 }: PageProps<"/[locale]/dashboard/seo">) {
-  // ?search=&page=&limit=&order=&isActive=&pageName= (any combination). The client builds the same
+  // ?search=&page=&limit=&order=&isActive=&pageId= (any combination). The client builds the same
   // query from useSearchParams, so the prefetch key matches.
   const query = getSeoListQuery(recordParamReader(await searchParams));
   const queryClient = getQueryClient();

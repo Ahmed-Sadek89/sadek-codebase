@@ -1,19 +1,29 @@
 import type { SeoHreflang } from '@repo/constants/hreflang';
-import { SeoPageName } from '@repo/constants/seo-pages';
 import { DEFAULT_TWITTER_CARD, TwitterCard } from '@repo/constants/twitter-card';
+import { Page } from '../../pages/entities/page.entity';
 import { User } from '../../user/entities/user.entity';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
 
-// Partial unique index: at most one active row per user and page.
-@Index('UQ_seo_user_page_active', ['user', 'pageName'], { unique: true, where: '"isActive" = true' })
 @Entity('seo')
 export class Seo {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    // Shared with the dashboard and web app (@repo/constants/seo-pages).
-    @Column({ type: 'enum', enum: SeoPageName, nullable: false, unique: true })
-    pageName!: SeoPageName;
+    // The page this SEO is for (pages.id). The one-to-one relation below makes
+    // it unique: each page has at most one SEO row.
+    @Column({ type: 'int', nullable: false })
+    pageId!: number;
+
+    @OneToOne(
+        () => Page,
+        (page) => page.seo,
+        {
+            nullable: false,
+            onDelete: 'CASCADE',
+        }
+    )
+    @JoinColumn({ name: 'pageId' })
+    page!: Page;
 
     @Column({ type: 'varchar', length: 70, nullable: false })
     metaTitle_en!: string;
@@ -81,7 +91,7 @@ export class Seo {
     @Column({ type: 'boolean', default: true, nullable: false })
     robotsFollow!: boolean;
 
-    // The row the website uses for `pageName`; at most one active row per user and page.
+    // Whether the website uses this row for its page (PATCH /seo/:id/toggle-active).
     @Column({ type: 'boolean', default: false, nullable: false })
     isActive!: boolean;
 

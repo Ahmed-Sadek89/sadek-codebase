@@ -10,6 +10,7 @@ import { DynamicTable } from "../ui/dynamic-table";
 import { ConfirmAction } from "../ui/confirm-action";
 import useColumns from "./hooks/use-columns";
 import { useStaticFilter } from "./hooks/use-static-filter";
+import { useDynamicFilter } from "./hooks/use-dynamic-filter";
 import { useDeleteSeoAction } from "./hooks/use-delete-seo";
 import { useToggleSeoActiveAction } from "./hooks/use-toggle-seo-active";
 import { getSeoListQuery } from "./utils/constants";
@@ -47,6 +48,7 @@ getSeoListQuery((name) => searchParams.get(name)),
   const { data, isPending, isFetching, isError, refetch } =
     useSeoList(query);
   const staticFilter = useStaticFilter();
+  const dynamicFilter = useDynamicFilter();
   const deleteAction = useDeleteSeoAction();
   const toggleAction = useToggleSeoActiveAction();
   const columns = useColumns({
@@ -78,6 +80,7 @@ getSeoListQuery((name) => searchParams.get(name)),
         showCreate={true}
         makeCreateAction={handleCreate}
         staticFilter={staticFilter}
+        dynamicFilter={dynamicFilter}
       />
       <SeoForm
         isOpenDialog={isOpenDialog}
