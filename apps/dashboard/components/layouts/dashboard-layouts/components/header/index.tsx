@@ -4,6 +4,7 @@ import { MessageSquare } from "@repo/ui/icons";
 import { Link } from "../../../../../i18n/navigation";
 import { ThemeSelect } from "../../../../ui/theme-switcher";
 import { LanguageSelect } from "../../../../ui/language-switcher";
+import { AppLogo } from "../../../../ui/app-logo";
 import { SidebarToggles } from "./components/sidebar-toggles";
 import { UserMenu } from "./components/user-menu";
 
@@ -18,9 +19,7 @@ const HeaderSection = () => {
             href="/dashboard"
             className="flex items-center gap-2 text-[17px] font-extrabold text-foreground no-underline"
           >
-            <span className="grid size-7 place-items-center rounded-md bg-primary font-black text-primary-foreground">
-              S
-            </span>
+            <AppLogo priority />
             <span className="hidden sm:inline">Sadek</span>
           </Link>
         </div>

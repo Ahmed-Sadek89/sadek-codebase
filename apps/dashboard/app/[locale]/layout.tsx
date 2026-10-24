@@ -9,7 +9,7 @@ import { ThemeProvider } from "@repo/provider/theme-provider";
 import { ToastProvider } from "@repo/provider/toast-provider";
 import { DirectionProvider } from "@repo/ui/direction";
 import "../styles.css";
-import { DEFAULT_THEME } from "../../utils/constants";
+import { APP_LOGO, DEFAULT_THEME } from "../../utils/constants";
 import { getDirection, isLocale, LOCALES } from "../../i18n/config";
 
 const poppins = Poppins({
@@ -21,9 +21,27 @@ const poppins = Poppins({
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations();
+  const title = t("metaRootTitle");
+  const description = t("metaRootDescription");
   return {
-    title: t("metaRootTitle"),
-    description: t("metaRootDescription"),
+    title,
+    description,
+    icons: {
+      icon: APP_LOGO,
+      shortcut: APP_LOGO,
+      apple: APP_LOGO,
+    },
+    openGraph: {
+      title,
+      description,
+      images: [{ url: APP_LOGO, width: 1536, height: 1024, alt: "Sadek" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [APP_LOGO],
+    },
   };
 }
 

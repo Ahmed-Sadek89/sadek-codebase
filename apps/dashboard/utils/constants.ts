@@ -2,6 +2,8 @@ import { Monitor, Moon, Sun } from "@repo/ui/icons";
 
 export const SIGNED_OUT_REDIRECT_PATH = "/";
 
+export const APP_LOGO = "/logo/sadek.png";
+
 export const THEME_OPTIONS = [
   { value: "light", labelKey: "themeLight", icon: Sun },
   { value: "dark", labelKey: "themeDark", icon: Moon },

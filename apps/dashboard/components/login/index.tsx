@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardDescription, CardHeader } from "@repo/ui/card";
 import { LoginForm } from "./components/login-form";
 import { Link } from "../../i18n/navigation";
+import { AppLogo } from "../ui/app-logo";
 
 export default async function LoginPage() {
   const t = await getTranslations();
@@ -12,9 +13,7 @@ export default async function LoginPage() {
         <Card className="gap-7 border-border py-8 shadow-none">
           <CardHeader className="gap-y-6 flex flex-col px-6 sm:px-8">
             <div className="flex items-center justify-center w-full gap-3">
-              <span className="flex size-10 items-center justify-center rounded-lg bg-primary text-lg font-bold text-primary-foreground">
-                S
-              </span>
+              <AppLogo size={40} priority />
               <span className="text-lg font-semibold tracking-tight">
                 Sadek{" "}
                 <span className="font-normal text-muted-foreground">
