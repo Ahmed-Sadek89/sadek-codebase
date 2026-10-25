@@ -33,7 +33,7 @@ export function createAuth(
   const requestConfig = { baseURL: backendUrl.replace(/\/$/, "") };
   return NextAuth({
     debug: process.env.NODE_ENV === "development",
-    secret: process.env.AUTH_SECRET,
+    // No `secret`: NextAuth reads AUTH_SECRET itself (declared on the dashboard's turbo tasks).
     basePath: "/api/session",
     pages: { signIn: "/" },
     session: { strategy: "jwt" },
@@ -65,7 +65,7 @@ export function createAuth(
               { email: credentials.email, password: credentials.password },
               requestConfig,
             );
-            console.log({ result })
+            // console.log({ result })
             if (
               tokenExpiresAt(result.access_token) <= Date.now() ||
               tokenExpiresAt(result.refresh_token) <= Date.now()

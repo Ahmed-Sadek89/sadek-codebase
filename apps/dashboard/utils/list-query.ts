@@ -5,7 +5,7 @@ import {
   MAX_LIMIT,
   ORDER_PARAM,
   PAGE_PARAM,
-  SEARCH_MAX_LENGTH,
+  SEARCH_MAX,
   SEARCH_PARAM,
 } from "./constants";
 
@@ -59,7 +59,7 @@ export function readIsActive(raw: string | null | undefined): boolean | undefine
  * produce the same object, and therefore the same query key.
  */
 export function readListQueryParams(get: ParamReader): ListQueryParams {
-  const search = get(SEARCH_PARAM)?.trim().slice(0, SEARCH_MAX_LENGTH);
+  const search = get(SEARCH_PARAM)?.trim().slice(0, SEARCH_MAX);
   const page = readPositiveInt(get(PAGE_PARAM));
   const limit = readPositiveInt(get(LIMIT_PARAM));
   const order = readSortOrder(get(ORDER_PARAM));

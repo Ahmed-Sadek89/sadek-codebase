@@ -9,7 +9,7 @@ import { localized } from "../../../../utils/format";
 import {
   MAX_LIMIT,
   SEARCH_DEBOUNCE_MS,
-  SEARCH_MAX_LENGTH,
+  SEARCH_MAX,
 } from "../../../../utils/constants";
 
 export type MultiSelectCategoryProjectsProps = {
@@ -71,7 +71,7 @@ export function MultiSelectCategoryProjects({
       }
       search={search}
       onSearchChange={setSearch}
-      searchMaxLength={SEARCH_MAX_LENGTH}
+      searchMaxLength={SEARCH_MAX}
       isLoading={isFetching}
       onOpenChange={setOpen}
       error={error}

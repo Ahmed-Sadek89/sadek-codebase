@@ -11,7 +11,7 @@ import { BaseInput } from "../../ui/forms/base-input";
 import { BaseUpload } from "../../ui/forms/base-upload";
 import { FormSection } from "../../ui/forms/form-section";
 import { useProfileForm } from "../hooks/use-profile-form";
-import { PROFILE_EMAIL_MAX, PROFILE_USERNAME_MAX } from "../schema";
+import { USER_EMAIL_MAX, USERNAME_MAX } from "../schema";
 import { ProfileHero } from "./profile-hero";
 
 type ProfileFormProps = {
@@ -71,7 +71,7 @@ export function ProfileForm({ user, onCancel, onSaved }: ProfileFormProps) {
                   label={t("profileUsernameLabel")}
                   placeholder={t("profileUsernamePlaceholder")}
                   dir="auto"
-                  maxLength={PROFILE_USERNAME_MAX}
+                  maxLength={USERNAME_MAX}
                   required
                   disabled={isPending}
                   error={errors.username?.message}
@@ -85,7 +85,7 @@ export function ProfileForm({ user, onCancel, onSaved }: ProfileFormProps) {
                   label={t("profileEmailLabel")}
                   placeholder="name@example.com"
                   dir="ltr"
-                  maxLength={PROFILE_EMAIL_MAX}
+                  maxLength={USER_EMAIL_MAX}
                   required
                   disabled={isPending}
                   error={errors.email?.message}

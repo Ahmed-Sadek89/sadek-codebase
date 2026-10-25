@@ -1,9 +1,9 @@
 import { useTranslations } from "next-intl";
 import { cn } from "@repo/ui/utils";
-import type { ProfileLink } from "../../../utils";
+import { linkTarget, type ProfileLink } from "../../../utils";
 import { profileLinkStyles } from "../../../../ui/brand-icon/profile-link-icon";
 
-/** Round icon buttons for CV, email, LinkedIn and GitHub, in brand colours on hover. */
+/** Round icon buttons for the profile links (CV, email, phone, WhatsApp, LinkedIn, GitHub), in brand colours on hover. */
 export function SocialLinks({ links }: { links: ProfileLink[] }) {
   const t = useTranslations();
   if (!links.length) return null;
@@ -21,7 +21,7 @@ export function SocialLinks({ links }: { links: ProfileLink[] }) {
               )}
               href={href}
               rel="noreferrer"
-              target={kind === "email" ? undefined : "_blank"}
+              target={linkTarget(kind)}
               title={t(labelKey)}
             >
               <Icon className="size-[18px]" />

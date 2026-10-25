@@ -36,6 +36,9 @@ export const EMPLOYMENT_TYPES = Object.values(EmploymentType) as [
   ...EmploymentType[],
 ];
 
+/** Max length of `company_name`. */
+export const USER_COMPANY_NAME_MAX = 50;
+
 /** Max length of a company's `job_title` (e.g. "Senior Front-end Developer"). */
 export const USER_COMPANY_JOB_TITLE_MAX = 100;
 

@@ -9,6 +9,7 @@ import {
   JoinColumn,
   ManyToMany,
 } from "typeorm";
+import { CATEGORY_SKILL_NAME_MAX, CATEGORY_SKILL_RANK_MIN } from "@repo/constants/category-skills";
 
 @Entity("category_skills")
 export class CategorySkill {
@@ -17,14 +18,14 @@ export class CategorySkill {
 
   @Column({
     type: "varchar",
-    length: 50,
+    length: CATEGORY_SKILL_NAME_MAX,
     nullable: false,
   })
   nameAr!: string;
 
   @Column({
     type: "varchar",
-    length: 50,
+    length: CATEGORY_SKILL_NAME_MAX,
     nullable: false,
   })
   nameEn!: string;
@@ -44,7 +45,7 @@ export class CategorySkill {
   // Display order on the website: lowest rank first.
   @Column({
     type: "int",
-    default: 0,
+    default: CATEGORY_SKILL_RANK_MIN,
     nullable: false,
   })
   rank!: number;

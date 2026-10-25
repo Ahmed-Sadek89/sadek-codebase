@@ -7,11 +7,9 @@ type OptionButtonProps = {
   label: string;
   isSelected: boolean;
   onClick: () => void;
-  /** Muted text, e.g. for the "All …" option. */
   muted?: boolean;
 };
 
-/** One row of a filter's option list: a check mark when selected, then the label. */
 export function OptionButton({
   label,
   isSelected,

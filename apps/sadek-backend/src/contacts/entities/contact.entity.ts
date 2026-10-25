@@ -1,18 +1,19 @@
 import { User } from '../../user/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } from 'typeorm';
+import { CONTACT_EMAIL_MAX, CONTACT_NAME_MAX, CONTACT_SUBJECT_MAX } from '@repo/constants/contacts';
 
 @Entity('contacts')
 export class Contact {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ type: 'varchar', length: 50, nullable: false })
+    @Column({ type: 'varchar', length: CONTACT_NAME_MAX, nullable: false })
     name!: string;
 
-    @Column({ type: 'varchar', length: 50, nullable: false })
+    @Column({ type: 'varchar', length: CONTACT_EMAIL_MAX, nullable: false })
     email!: string;
 
-    @Column({ type: 'varchar', length: 50, nullable: false })
+    @Column({ type: 'varchar', length: CONTACT_SUBJECT_MAX, nullable: false })
     subject!: string;
 
     @Column({ type: 'text', nullable: false })

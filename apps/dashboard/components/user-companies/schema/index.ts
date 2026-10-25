@@ -4,9 +4,12 @@ import {
   LOCATION_TYPES,
   USER_COMPANY_JOB_TITLE_MAX,
   USER_COMPANY_LOCATION_MAX,
+  USER_COMPANY_NAME_MAX,
 } from "@repo/constants/user-company";
+import { URL_MAX } from "@repo/constants/url";
 import type { CreateUserCompanyRequest } from "@repo/types/user-company";
 import type { MessageKey } from "../../../i18n/types";
+import { isHttpUrl } from "../../../utils/validation";
 import { createUploadFieldSchema } from "../../ui/forms/base-upload/utils/schema";
 
 type Translate = (
@@ -14,9 +17,7 @@ type Translate = (
   values?: Record<string, string | number>,
 ) => string;
 
-/** Backend limits (CreateUserCompanyDto). */
-export const USER_COMPANY_NAME_MAX = 50;
-export const USER_COMPANY_URL_MAX = 255;
+export { URL_MAX, USER_COMPANY_NAME_MAX };
 
 /** Optional text: blank is "not set". */
 const optionalTextSchema = (max?: number, maxMessage?: string) =>
@@ -48,7 +49,7 @@ export const createUserCompanySchema = (t: Translate) =>
         .string()
         .trim()
         .min(1, t("userCompanyFormCompanyNameRequired"))
-        .max(USER_COMPANY_NAME_MAX, t("userCompanyFormCompanyNameMax")),
+        .max(USER_COMPANY_NAME_MAX, t("userCompanyFormCompanyNameMax", { max: USER_COMPANY_NAME_MAX })),
       description_en: optionalTextSchema(),
       description_ar: optionalTextSchema(),
       startWorkFrom: z.string().min(1, t("userCompanyFormStartRequired")),
@@ -57,9 +58,9 @@ export const createUserCompanySchema = (t: Translate) =>
       company_site: z
         .string()
         .trim()
-        .max(USER_COMPANY_URL_MAX, t("projectFormUrlMax"))
+        .max(URL_MAX, t("projectFormUrlMax", { max: URL_MAX }))
         .refine(
-          (value) => value === "" || z.url().safeParse(value).success,
+          (value) => value === "" || isHttpUrl(value),
           t("projectFormUrlInvalid"),
         )
         .transform((value) => value || undefined),

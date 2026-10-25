@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
-import { PAGINATION, type SortOrder } from '../pagination.constants';
+import { PAGINATION, SORT_ORDERS, type SortOrder } from '../pagination.constants';
 
 export class PaginationQueryDto {
   @IsOptional()
@@ -20,6 +20,6 @@ export class PaginationQueryDto {
 
   @IsOptional()
   @IsString()
-  @IsIn(['ASC', 'DESC'])
+  @IsIn(SORT_ORDERS)
   order: SortOrder = PAGINATION.DEFAULT_ORDER;
 }

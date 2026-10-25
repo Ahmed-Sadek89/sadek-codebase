@@ -8,24 +8,36 @@ import {
   HREFLANG_PATTERN,
   SEO_URL_MAX,
 } from "@repo/constants/hreflang";
+import {
+  SEO_JOB_TITLE_MAX,
+  SEO_META_DESCRIPTION_MAX,
+  SEO_META_TITLE_MAX,
+  SEO_OG_DESCRIPTION_MAX,
+  SEO_OG_IMAGE_ALT_MAX,
+  SEO_OG_TITLE_MAX,
+  TWITTER_HANDLE_MAX,
+  TWITTER_HANDLE_PATTERN,
+} from "@repo/constants/seo";
 import { TWITTER_CARDS } from "@repo/constants/twitter-card";
+import { isHttpUrl } from "../../../utils/validation";
 
 type Translate = (
   key: MessageKey,
   values?: Record<string, string | number>,
 ) => string;
 
-/** Backend limits (CreateSeoDto). */
-export const SEO_META_TITLE_MAX = 70;
-export const SEO_META_DESCRIPTION_MAX = 170;
-export const SEO_OG_TITLE_MAX = 100;
-export const SEO_OG_DESCRIPTION_MAX = 200;
-export const SEO_OG_IMAGE_ALT_MAX = 150;
-export const SEO_TWITTER_HANDLE_MAX = 16;
-export const SEO_JOB_TITLE_MAX = 100;
-export { HREFLANG_LANG_MAX, HREFLANG_MAX, SEO_URL_MAX };
-
-const TWITTER_HANDLE_PATTERN = /^@?\w{1,15}$/;
+export {
+  HREFLANG_LANG_MAX,
+  HREFLANG_MAX,
+  SEO_JOB_TITLE_MAX,
+  SEO_META_DESCRIPTION_MAX,
+  SEO_META_TITLE_MAX,
+  SEO_OG_DESCRIPTION_MAX,
+  SEO_OG_IMAGE_ALT_MAX,
+  SEO_OG_TITLE_MAX,
+  SEO_URL_MAX,
+  TWITTER_HANDLE_MAX,
+};
 
 const requiredText = (t: Translate, max: number) =>
   z
@@ -41,19 +53,6 @@ const optionalText = (t: Translate, max?: number) =>
     : z.string().trim().max(max, t("seoFormMaxLength", { max }))
   ).transform((value) => value || undefined);
 
-const httpUrl = z.url({ protocol: /^https?$/ });
-
-/**
- * The same URLs the backend's `@IsUrl(URL_OPTIONS)` accepts (CreateSeoDto):
- * http(s) only, and a host that is a domain with a TLD or an IPv4 address.
- * Plain `z.url()` also allows `ftp:`, `mailto:`, `localhost` and `https://example`.
- */
-const isUrl = (value: string) => {
-  if (!httpUrl.safeParse(value).success) return false;
-  const { hostname } = new URL(value);
-  return z.regexes.domain.test(hostname) || z.regexes.ipv4.test(hostname);
-};
-
 /** One alternate row: both cells are required once the row exists. */
 const hreflangSchema = (t: Translate) =>
   z.object({
@@ -68,7 +67,7 @@ const hreflangSchema = (t: Translate) =>
       .trim()
       .min(1, t("seoFormRequired"))
       .max(SEO_URL_MAX, t("seoFormMaxLength", { max: SEO_URL_MAX }))
-      .refine(isUrl, t("seoFormUrlInvalid")),
+      .refine(isHttpUrl, t("seoFormUrlInvalid")),
   });
 
 // A picked share image is still a File here (see useSeoForm).
@@ -87,7 +86,10 @@ export const createSeoSchema = (t: Translate) =>
       .string()
       .trim()
       .max(SEO_URL_MAX, t("seoFormMaxLength", { max: SEO_URL_MAX }))
-      .refine((value) => value === "" || isUrl(value), t("seoFormUrlInvalid"))
+      .refine(
+        (value) => value === "" || isHttpUrl(value),
+        t("seoFormUrlInvalid"),
+      )
       .transform((value) => value || undefined),
     hreflang: z
       .array(hreflangSchema(t))

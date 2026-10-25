@@ -1,6 +1,20 @@
 import type { SVGProps } from "react";
-import { CvIcon, GithubIcon, GmailIcon, LinkedinIcon, type BrandIcon } from ".";
-export type ProfileLinkKind = "cv" | "email" | "linkedin" | "github";
+import {
+  CvIcon,
+  GithubIcon,
+  GmailIcon,
+  LinkedinIcon,
+  PhoneIcon,
+  WhatsappIcon,
+  type BrandIcon,
+} from ".";
+export type ProfileLinkKind =
+  | "cv"
+  | "email"
+  | "phone"
+  | "whatsapp"
+  | "linkedin"
+  | "github";
 
 /** Each profile link's icon and the brand colour it takes on hover/focus. */
 export const profileLinkStyles: Record<
@@ -11,6 +25,14 @@ export const profileLinkStyles: Record<
   email: {
     Icon: GmailIcon,
     hover: "hover:text-[#EA4335] focus-visible:text-[#EA4335]",
+  },
+  phone: {
+    Icon: PhoneIcon,
+    hover: "hover:text-primary focus-visible:text-primary",
+  },
+  whatsapp: {
+    Icon: WhatsappIcon,
+    hover: "hover:text-[#25D366] focus-visible:text-[#25D366]",
   },
   linkedin: {
     Icon: LinkedinIcon,

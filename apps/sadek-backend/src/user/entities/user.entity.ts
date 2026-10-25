@@ -10,6 +10,8 @@ import { Contact } from "../../contacts/entities/contact.entity";
 import { Seo } from "../../seo/entities/seo.entity";
 import { Page } from "../../pages/entities/page.entity";
 import { BeforeInsert, BeforeUpdate, Column, Entity, Index, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { USER_EMAIL_MAX, USERNAME_MAX } from "@repo/constants/auth";
+import { URL_MAX } from "@repo/constants/url";
 
 // Partial unique index: at most one user can be the default view.
 @Index("UQ_users_is_default_view", ["isDefaultView"], { unique: true, where: '"isDefaultView" = true' })
@@ -24,7 +26,7 @@ export class User {
         type: "varchar",
         nullable: false,
         unique: true,
-        length: 50
+        length: USERNAME_MAX
     })
     username!: string;
 
@@ -32,7 +34,7 @@ export class User {
         type: "varchar",
         nullable: false,
         unique: true,
-        length: 70
+        length: USER_EMAIL_MAX
     })
     email!: string
 
@@ -46,14 +48,14 @@ export class User {
 
     @Column({
         type: "varchar",
-        length: 255,
+        length: URL_MAX,
         nullable: true,
     })
     avatarUrl!: string
 
     @Column({
         type: "varchar",
-        length: 255,
+        length: URL_MAX,
         nullable: true,
     })
     coverPhotoUrl!: string

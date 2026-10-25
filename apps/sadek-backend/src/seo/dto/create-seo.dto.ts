@@ -23,13 +23,17 @@ import {
     type SeoHreflang,
 } from '@repo/constants/hreflang';
 import { TwitterCard } from '@repo/constants/twitter-card';
-
-const URL_OPTIONS = {
-    protocols: ['http', 'https'],
-    require_tld: true,
-    require_protocol: true,
-    require_valid_protocol: true,
-};
+import {
+    SEO_JOB_TITLE_MAX,
+    SEO_META_DESCRIPTION_MAX,
+    SEO_META_TITLE_MAX,
+    SEO_OG_DESCRIPTION_MAX,
+    SEO_OG_IMAGE_ALT_MAX,
+    SEO_OG_TITLE_MAX,
+    TWITTER_HANDLE_MAX,
+    TWITTER_HANDLE_PATTERN,
+} from '@repo/constants/seo';
+import { URL_OPTIONS } from '../../common/validation/url-options';
 
 export class SeoHreflangDto implements SeoHreflang {
     @IsString()
@@ -51,22 +55,22 @@ export class CreateSeoDto {
 
     @IsString()
     @IsNotEmpty()
-    @MaxLength(70)
+    @MaxLength(SEO_META_TITLE_MAX)
     metaTitle_en!: string;
 
     @IsString()
     @IsNotEmpty()
-    @MaxLength(70)
+    @MaxLength(SEO_META_TITLE_MAX)
     metaTitle_ar!: string;
 
     @IsString()
     @IsNotEmpty()
-    @MaxLength(170)
+    @MaxLength(SEO_META_DESCRIPTION_MAX)
     metaDescription_en!: string;
 
     @IsString()
     @IsNotEmpty()
-    @MaxLength(170)
+    @MaxLength(SEO_META_DESCRIPTION_MAX)
     metaDescription_ar!: string;
 
     @IsUrl(URL_OPTIONS)
@@ -92,37 +96,37 @@ export class CreateSeoDto {
 
     @IsString()
     @IsOptional()
-    @MaxLength(100)
+    @MaxLength(SEO_OG_TITLE_MAX)
     ogTitle_en?: string;
 
     @IsString()
     @IsOptional()
-    @MaxLength(100)
+    @MaxLength(SEO_OG_TITLE_MAX)
     ogTitle_ar?: string;
 
     @IsString()
     @IsOptional()
-    @MaxLength(200)
+    @MaxLength(SEO_OG_DESCRIPTION_MAX)
     ogDescription_en?: string;
 
     @IsString()
     @IsOptional()
-    @MaxLength(200)
+    @MaxLength(SEO_OG_DESCRIPTION_MAX)
     ogDescription_ar?: string;
 
     @IsUrl(URL_OPTIONS)
     @IsOptional()
-    @MaxLength(255)
+    @MaxLength(SEO_URL_MAX)
     ogImage?: string;
 
     @IsString()
     @IsOptional()
-    @MaxLength(150)
+    @MaxLength(SEO_OG_IMAGE_ALT_MAX)
     ogImageAlt_en?: string;
 
     @IsString()
     @IsOptional()
-    @MaxLength(150)
+    @MaxLength(SEO_OG_IMAGE_ALT_MAX)
     ogImageAlt_ar?: string;
 
     @IsEnum(TwitterCard)
@@ -131,18 +135,18 @@ export class CreateSeoDto {
 
     @IsString()
     @IsOptional()
-    @MaxLength(50)
-    @Matches(/^@?\w{1,15}$/, { message: 'twitterHandle must be a valid X/Twitter handle' })
+    @MaxLength(TWITTER_HANDLE_MAX)
+    @Matches(TWITTER_HANDLE_PATTERN, { message: 'twitterHandle must be a valid X/Twitter handle' })
     twitterHandle?: string;
 
     @IsString()
     @IsOptional()
-    @MaxLength(100)
+    @MaxLength(SEO_JOB_TITLE_MAX)
     jobTitle_en?: string;
 
     @IsString()
     @IsOptional()
-    @MaxLength(100)
+    @MaxLength(SEO_JOB_TITLE_MAX)
     jobTitle_ar?: string;
 
     @IsBoolean()

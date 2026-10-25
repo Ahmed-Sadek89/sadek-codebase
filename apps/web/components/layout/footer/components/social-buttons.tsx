@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import { cn } from "@repo/ui/utils";
-import type { ProfileLink } from "../../../homepage/utils";
+import { linkTarget, type ProfileLink } from "../../../homepage/utils";
 import { profileLinkStyles } from "../../../ui/brand-icon/profile-link-icon";
 
 /** Round brand-icon buttons for the owner's links; brand colour on hover. */
@@ -21,7 +21,7 @@ export function SocialButtons({ links }: { links: ProfileLink[] }) {
               )}
               href={href}
               rel="noreferrer"
-              target={kind === "email" ? undefined : "_blank"}
+              target={linkTarget(kind)}
               title={t(labelKey)}
             >
               <Icon className="size-[18px]" />

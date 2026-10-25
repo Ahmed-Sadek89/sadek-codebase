@@ -13,6 +13,7 @@ import { BaseSwitch } from "../../ui/forms/base-switch";
 import { useWhatCanDoForm } from "../hooks/use-what-can-do-form";
 import { toWhatCanDoFormInput } from "../utils/constants";
 import {
+  WHAT_CAN_DO_RANK_MIN,
   WHAT_CAN_DO_SHORT_DESCRIPTION_MAX,
   WHAT_CAN_DO_TITLE_MAX,
 } from "../schema";
@@ -132,7 +133,7 @@ export function WhatCanDoForm({
             id="rank"
             type="number"
             inputMode="numeric"
-            min={0}
+            min={WHAT_CAN_DO_RANK_MIN}
             step={1}
             label={t("whatCanDoFormRankLabel")}
             aria-describedby="rank-hint"

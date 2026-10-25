@@ -1,14 +1,17 @@
 import { IsString, IsNotEmpty, IsBoolean, IsOptional, IsUrl, MaxLength, IsArray, ArrayNotEmpty, ArrayUnique, IsInt } from 'class-validator';
+import { PROJECT_NAME_MAX } from '@repo/constants/projects';
+import { URL_MAX } from '@repo/constants/url';
+import { URL_OPTIONS } from '../../common/validation/url-options';
 
 export class CreateProjectDto {
     @IsString()
     @IsNotEmpty()
-    @MaxLength(100)
+    @MaxLength(PROJECT_NAME_MAX)
     nameAr!: string;
 
     @IsString()
     @IsNotEmpty()
-    @MaxLength(100)
+    @MaxLength(PROJECT_NAME_MAX)
     nameEn!: string;
 
     @IsString()
@@ -23,19 +26,19 @@ export class CreateProjectDto {
     @IsNotEmpty()
     isActive!: boolean;
 
-    @IsString()
+    @IsUrl(URL_OPTIONS)
     @IsOptional()
-    @MaxLength(255)
+    @MaxLength(URL_MAX)
     mainImageUrl?: string;
 
-    @IsString()
+    @IsUrl(URL_OPTIONS)
     @IsOptional()
-    @MaxLength(255)
+    @MaxLength(URL_MAX)
     liveUrl?: string;
 
-    @IsString()
+    @IsUrl(URL_OPTIONS)
     @IsOptional()
-    @MaxLength(255)
+    @MaxLength(URL_MAX)
     repoUrl?: string;
 
 

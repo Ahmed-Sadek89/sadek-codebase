@@ -1,10 +1,10 @@
 import { useTranslations } from "next-intl";
 import { cn } from "@repo/ui/utils";
-import type { ProfileLink } from "../../../utils";
+import { linkTarget, type ProfileLink } from "../../../utils";
 import { profileLinkStyles } from "../../../../ui/brand-icon/profile-link-icon";
 
 /**
- * CV, email, LinkedIn and GitHub as rows with their brand icons.
+ * The profile links (CV, email, phone, WhatsApp, LinkedIn, GitHub) as rows with their brand icons.
  * `tone="inverse"` is for a primary-coloured background: white glass rows
  * instead of brand-colour hovers.
  */
@@ -37,7 +37,7 @@ export function ContactDetails({
               )}
               href={href}
               rel="noreferrer"
-              target={kind === "email" ? undefined : "_blank"}
+              target={linkTarget(kind)}
             >
               <span
                 className={cn(
@@ -58,7 +58,7 @@ export function ContactDetails({
                 >
                   {t(labelKey)}
                 </span>
-                {/* The address itself for email; the link for the others. */}
+                {/* The address or number itself; links without their scheme. */}
                 <span
                   className={cn(
                     "block wrap-anywhere font-semibold sm:truncate",

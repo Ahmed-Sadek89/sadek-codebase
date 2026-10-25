@@ -15,6 +15,7 @@ export {
 export { hasText } from "./text";
 export {
   getProfileLinks,
+  linkTarget,
   type ProfileLink,
   type ProfileLinkKind,
 } from "./profile-links";

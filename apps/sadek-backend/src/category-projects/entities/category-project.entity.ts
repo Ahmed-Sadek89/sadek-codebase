@@ -1,16 +1,17 @@
 import { Project } from '../../projects/entities/project.entity';
 import { User } from '../../user/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, ManyToMany } from 'typeorm';
+import { CATEGORY_PROJECT_NAME_MAX } from '@repo/constants/category-projects';
 
 @Entity('category_projects')
 export class CategoryProject {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ type: 'varchar', length: 50, nullable: false })
+    @Column({ type: 'varchar', length: CATEGORY_PROJECT_NAME_MAX, nullable: false })
     nameAr!: string;
 
-    @Column({ type: 'varchar', length: 50, nullable: false })
+    @Column({ type: 'varchar', length: CATEGORY_PROJECT_NAME_MAX, nullable: false })
     nameEn!: string;
 
     @Column({ type: 'text', nullable: true })

@@ -8,7 +8,7 @@ import type { MessageKey } from "../../../i18n/types";
 import { BaseInput } from "../../ui/forms/base-input";
 import { BaseUpload } from "../../ui/forms/base-upload";
 import {
-  USER_INFO_LINK_MAX,
+  URL_MAX,
   type CvSource,
   type UserInfoFormInput,
   type UserInfoFormValues,
@@ -97,7 +97,7 @@ export function CvField({ form, setCvSource, disabled = false }: CvFieldProps) {
             label={t("userInfoCvLinkLabel")}
             placeholder="https://drive.google.com/file/d/…/view"
             dir="ltr"
-            maxLength={USER_INFO_LINK_MAX}
+            maxLength={URL_MAX}
             aria-describedby={linkHintId}
             error={form.formState.errors.cvLink?.message}
             {...form.register("cvLink")}

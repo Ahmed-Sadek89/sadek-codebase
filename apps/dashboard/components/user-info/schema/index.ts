@@ -1,6 +1,15 @@
 import { z } from "zod";
 import type { CreateUserInfoRequest } from "@repo/types/user-info";
+import { URL_MAX } from "@repo/constants/url";
+import {
+  PHONE_MAX,
+  PHONE_PATTERN,
+  USER_INFO_COUNT_MIN,
+  USER_INFO_HEAD_TITLE_MAX,
+  USER_INFO_SHORT_DESCRIPTION_MAX,
+} from "@repo/constants/user-info";
 import type { MessageKey } from "../../../i18n/types";
+import { isHttpUrl } from "../../../utils/validation";
 import { createUploadFieldSchema } from "../../ui/forms/base-upload/utils/schema";
 import { isGoogleDriveUrl } from "../utils/constants";
 
@@ -9,10 +18,13 @@ type Translate = (
   values?: Record<string, string | number>,
 ) => string;
 
-/** Backend limits (CreateUserInfoDto). */
-export const USER_INFO_HEAD_TITLE_MAX = 100;
-export const USER_INFO_SHORT_DESCRIPTION_MAX = 255;
-export const USER_INFO_LINK_MAX = 255;
+export {
+  PHONE_MAX,
+  URL_MAX,
+  USER_INFO_COUNT_MIN,
+  USER_INFO_HEAD_TITLE_MAX,
+  USER_INFO_SHORT_DESCRIPTION_MAX,
+};
 
 const requiredText = (t: Translate, max?: number) => {
   const text = z.string().trim().min(1, t("userInfoFormRequired"));
@@ -27,12 +39,19 @@ const optionalPlainText = (t: Translate, max?: number) => {
   );
 };
 
+/** A required phone number, e.g. +20 100 123 4567. */
+const phoneSchema = (t: Translate) =>
+  requiredText(t, PHONE_MAX).regex(
+    PHONE_PATTERN,
+    t("userInfoFormPhoneInvalid"),
+  );
+
 /** A whole number of 0 or more; an empty number input arrives as NaN. */
 const countSchema = (t: Translate) =>
   z
     .number({ error: t("userInfoFormCountInvalid") })
     .int(t("userInfoFormCountInvalid"))
-    .min(0, t("userInfoFormCountInvalid"));
+    .min(USER_INFO_COUNT_MIN, t("userInfoFormCountInvalid"));
 
 /** An optional field: blank is "not set", otherwise it must pass `isValid`. */
 const optionalText = (
@@ -43,14 +62,10 @@ const optionalText = (
   z
     .string()
     .trim()
-    .max(USER_INFO_LINK_MAX, t("userInfoFormMax", { max: USER_INFO_LINK_MAX }))
+    .max(URL_MAX, t("userInfoFormMax", { max: URL_MAX }))
     .refine((value) => value === "" || isValid(value), t(invalidKey))
     .transform((value) => value || undefined);
 
-// The backend only accepts http(s) links with a domain.
-const isHttpUrl = (value: string) =>
-  z.url({ protocol: /^https?$/, hostname: z.regexes.domain }).safeParse(value)
-    .success;
 const isEmail = (value: string) => z.email().safeParse(value).success;
 
 /** Where the CV comes from: an uploaded file or a Google Drive share link. */
@@ -76,6 +91,8 @@ export const createUserInfoSchema = (t: Translate) =>
       companies: countSchema(t),
       projectNumbers: countSchema(t),
       techMastering: countSchema(t),
+      phoneNumber: phoneSchema(t),
+      whatsappNumber: phoneSchema(t),
       gmail: optionalText(t, isEmail, "userInfoFormEmailInvalid"),
       linkedin: optionalText(t, isHttpUrl, "userInfoFormUrlInvalid"),
       github: optionalText(t, isHttpUrl, "userInfoFormUrlInvalid"),

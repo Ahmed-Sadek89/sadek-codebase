@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { NamedRef } from "@repo/types/common";
 import type { CreateManySkillsRequest } from "@repo/types/skills";
+import { SKILL_NAME_MAX, SKILLS_BULK_MAX } from "@repo/constants/skills";
 import type { MessageKey } from "../../../i18n/types";
 
 type Translate = (
@@ -8,9 +9,7 @@ type Translate = (
   values?: Record<string, string | number>,
 ) => string;
 
-export const SKILL_NAME_MAX = 50;
-/** Max names in one create (POST /skills/bulk accepts up to 50). */
-export const SKILLS_BULK_MAX = 50;
+export { SKILL_NAME_MAX, SKILLS_BULK_MAX };
 
 const namedRefSchema = z.object({
   id: z.number().int(),
@@ -32,7 +31,7 @@ export const createSkillSchema = (t: Translate) =>
               .string()
               .trim()
               .min(1, t("skillFormNameRequired"))
-              .max(SKILL_NAME_MAX, t("skillFormNameMax")),
+              .max(SKILL_NAME_MAX, t("skillFormNameMax", { max: SKILL_NAME_MAX })),
           }),
         )
         .min(1, t("skillFormNameRequired"))

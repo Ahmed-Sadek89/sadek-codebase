@@ -21,7 +21,8 @@ export function ContactItem({
   linkText,
 }: ContactItemProps) {
   const t = useTranslations();
-  const isExternal = href !== null && !href.startsWith("mailto:");
+  const isExternal =
+    href !== null && !href.startsWith("mailto:") && !href.startsWith("tel:");
 
   return (
     <li className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">

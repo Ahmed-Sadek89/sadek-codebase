@@ -5,16 +5,18 @@ import {
     LocationType,
     USER_COMPANY_JOB_TITLE_MAX,
     USER_COMPANY_LOCATION_MAX,
+    USER_COMPANY_NAME_MAX,
 } from '@repo/constants/user-company';
 import { User } from '../../user/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } from 'typeorm';
+import { URL_MAX } from '@repo/constants/url';
 
 @Entity('user_company')
 export class UserCompany {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ type: 'varchar', length: 50, nullable: false })
+    @Column({ type: 'varchar', length: USER_COMPANY_NAME_MAX, nullable: false })
     company_name!: string;
 
     @Column({ type: 'text', nullable: true })
@@ -29,10 +31,10 @@ export class UserCompany {
     @Column({ type: 'timestamp', nullable: true })
     startWorkTo!: Date;
 
-    @Column({ type: 'varchar', length: 255, nullable: true })
+    @Column({ type: 'varchar', length: URL_MAX, nullable: true })
     logo!: string;
 
-    @Column({ type: 'varchar', length: 255, nullable: true })
+    @Column({ type: 'varchar', length: URL_MAX, nullable: true })
     company_site!: string;
 
     // The defaults only fill rows saved before these columns existed; the DTO requires all four.

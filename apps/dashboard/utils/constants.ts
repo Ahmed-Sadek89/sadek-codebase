@@ -54,8 +54,8 @@ export const FILTER_PARAMS = [
 /** Delay between the last keystroke and updating the URL. */
 export const SEARCH_DEBOUNCE_MS = 400;
 
-/** Backend list DTOs reject `search` longer than 20 characters (400). */
-export const SEARCH_MAX_LENGTH = 20;
+/** Backend list DTOs reject a longer `search` (400). */
+export { SEARCH_MAX } from "@repo/constants/pagination";
 
 /** URL query params for the requested page and page size. */
 export const PAGE_PARAM = "page";

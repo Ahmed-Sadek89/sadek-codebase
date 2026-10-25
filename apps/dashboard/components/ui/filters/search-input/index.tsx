@@ -15,7 +15,7 @@ import { updateUrlParams } from "../../../../utils/url-params";
 import {
   PAGE_PARAM,
   SEARCH_DEBOUNCE_MS,
-  SEARCH_MAX_LENGTH,
+  SEARCH_MAX,
   SEARCH_PARAM,
 } from "../../../../utils/constants";
 
@@ -34,7 +34,7 @@ export type SearchInputProps = {
 export function SearchInput({
   paramName = SEARCH_PARAM,
   placeholder,
-  maxLength = SEARCH_MAX_LENGTH,
+  maxLength = SEARCH_MAX,
   className,
 }: SearchInputProps) {
   const t = useTranslations();
@@ -42,12 +42,15 @@ export function SearchInput({
   // Start from the URL so a shared or reloaded link keeps its search.
   const urlValue = searchParams.get(paramName) ?? "";
   const [value, setValue] = useState(urlValue);
+  const [syncedUrlValue, setSyncedUrlValue] = useState(urlValue);
 
-  // Follow changes made elsewhere (e.g. "Reset filters"); typing does not
-  // trigger this because the URL only changes once the debounce fires.
-  useEffect(() => {
-    setValue((prev) => (prev.trim() === urlValue ? prev : urlValue));
-  }, [urlValue]);
+  // Follow changes made elsewhere (e.g. "Reset filters") during render, not in
+  // an effect; typing does not trigger this because the URL only changes once
+  // the debounce fires.
+  if (urlValue !== syncedUrlValue) {
+    setSyncedUrlValue(urlValue);
+    if (value.trim() !== urlValue) setValue(urlValue);
+  }
 
   useEffect(() => {
     const next = value.trim();

@@ -1,5 +1,10 @@
 import { z } from "zod";
 import type { CreateWhatCanDoRequest } from "@repo/types/what-can-do";
+import {
+  WHAT_CAN_DO_RANK_MIN,
+  WHAT_CAN_DO_SHORT_DESCRIPTION_MAX,
+  WHAT_CAN_DO_TITLE_MAX,
+} from "@repo/constants/what-can-do";
 import type { MessageKey } from "../../../i18n/types";
 
 type Translate = (
@@ -8,8 +13,11 @@ type Translate = (
 ) => string;
 
 /** Backend limits (CreateWhatCanDoDto). */
-export const WHAT_CAN_DO_TITLE_MAX = 50;
-export const WHAT_CAN_DO_SHORT_DESCRIPTION_MAX = 200;
+export {
+  WHAT_CAN_DO_RANK_MIN,
+  WHAT_CAN_DO_SHORT_DESCRIPTION_MAX,
+  WHAT_CAN_DO_TITLE_MAX,
+};
 
 /** Optional text: blank is "not set". */
 const optionalTextSchema = (max?: number, maxMessage?: string) =>
@@ -24,18 +32,18 @@ export const createWhatCanDoSchema = (t: Translate) =>
       .string()
       .trim()
       .min(1, t("whatCanDoFormTitleEnRequired"))
-      .max(WHAT_CAN_DO_TITLE_MAX, t("whatCanDoFormTitleEnMax")),
+      .max(WHAT_CAN_DO_TITLE_MAX, t("whatCanDoFormTitleEnMax", { max: WHAT_CAN_DO_TITLE_MAX })),
     title_ar: optionalTextSchema(
       WHAT_CAN_DO_TITLE_MAX,
-      t("whatCanDoFormTitleArMax"),
+      t("whatCanDoFormTitleArMax", { max: WHAT_CAN_DO_TITLE_MAX }),
     ),
     shortDescription_en: optionalTextSchema(
       WHAT_CAN_DO_SHORT_DESCRIPTION_MAX,
-      t("whatCanDoFormShortDescriptionEnMax"),
+      t("whatCanDoFormShortDescriptionEnMax", { max: WHAT_CAN_DO_SHORT_DESCRIPTION_MAX }),
     ),
     shortDescription_ar: optionalTextSchema(
       WHAT_CAN_DO_SHORT_DESCRIPTION_MAX,
-      t("whatCanDoFormShortDescriptionArMax"),
+      t("whatCanDoFormShortDescriptionArMax", { max: WHAT_CAN_DO_SHORT_DESCRIPTION_MAX }),
     ),
     description_en: optionalTextSchema(),
     description_ar: optionalTextSchema(),
@@ -44,7 +52,8 @@ export const createWhatCanDoSchema = (t: Translate) =>
       .trim()
       .min(1, t("whatCanDoFormRankRequired"))
       .regex(/^\d+$/, t("whatCanDoFormRankInvalid"))
-      .transform(Number),
+      .transform(Number)
+      .pipe(z.number().min(WHAT_CAN_DO_RANK_MIN, t("whatCanDoFormRankInvalid"))),
     isActive: z.boolean(),
   }) satisfies z.ZodType<CreateWhatCanDoRequest, unknown>;
 

@@ -1,7 +1,10 @@
 import { z } from "zod";
 import type { NamedRef } from "@repo/types/common";
 import type { CreateProjectRequest } from "@repo/types/projects";
+import { PROJECT_NAME_MAX } from "@repo/constants/projects";
+import { URL_MAX } from "@repo/constants/url";
 import type { MessageKey } from "../../../i18n/types";
+import { isHttpUrl } from "../../../utils/validation";
 import { createUploadFieldSchema } from "../../ui/forms/base-upload/utils/schema";
 
 type Translate = (
@@ -9,9 +12,7 @@ type Translate = (
   values?: Record<string, string | number>,
 ) => string;
 
-/** Backend limits (CreateProjectDto). */
-export const PROJECT_NAME_MAX = 100;
-export const PROJECT_URL_MAX = 255;
+export { PROJECT_NAME_MAX, URL_MAX };
 
 const namedRefSchema = z.object({
   id: z.number().int(),
@@ -19,14 +20,14 @@ const namedRefSchema = z.object({
   nameEn: z.string(),
 }) satisfies z.ZodType<NamedRef>;
 
-/** An optional link: blank is "not set", otherwise a URL of at most 255 chars. */
+/** An optional link: blank is "not set", otherwise an http(s) URL of at most URL_MAX chars. */
 const optionalUrlSchema = (t: Translate) =>
   z
     .string()
     .trim()
-    .max(PROJECT_URL_MAX, t("projectFormUrlMax"))
+    .max(URL_MAX, t("projectFormUrlMax", { max: URL_MAX }))
     .refine(
-      (value) => value === "" || z.url().safeParse(value).success,
+      (value) => value === "" || isHttpUrl(value),
       t("projectFormUrlInvalid"),
     )
     .transform((value) => value || undefined);
@@ -41,12 +42,12 @@ export const createProjectSchema = (t: Translate) =>
         .string()
         .trim()
         .min(1, t("projectFormNameEnRequired"))
-        .max(PROJECT_NAME_MAX, t("projectFormNameEnMax")),
+        .max(PROJECT_NAME_MAX, t("projectFormNameEnMax", { max: PROJECT_NAME_MAX })),
       nameAr: z
         .string()
         .trim()
         .min(1, t("projectFormNameArRequired"))
-        .max(PROJECT_NAME_MAX, t("projectFormNameArMax")),
+        .max(PROJECT_NAME_MAX, t("projectFormNameArMax", { max: PROJECT_NAME_MAX })),
       descriptionEn: z
         .string()
         .trim()

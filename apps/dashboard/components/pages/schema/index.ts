@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { CreatePageRequest } from "@repo/types/pages";
+import { PAGE_NAME_MAX } from "@repo/constants/pages";
 import type { MessageKey } from "../../../i18n/types";
 
 type Translate = (
@@ -7,8 +8,8 @@ type Translate = (
   values?: Record<string, string | number>,
 ) => string;
 
-/** Backend limit (CreatePageDto); both names are also unique (409 when taken). */
-export const PAGE_NAME_MAX = 50;
+/** Both names are also unique (409 when taken). */
+export { PAGE_NAME_MAX };
 
 const pageName = (t: Translate) =>
   z

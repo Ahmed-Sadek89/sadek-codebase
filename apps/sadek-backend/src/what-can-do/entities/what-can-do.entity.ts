@@ -1,21 +1,22 @@
 import { User } from '../../user/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } from 'typeorm';
+import { WHAT_CAN_DO_SHORT_DESCRIPTION_MAX, WHAT_CAN_DO_TITLE_MAX } from '@repo/constants/what-can-do';
 
 @Entity('what_can_do')
 export class WhatCanDo {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ type: 'varchar', length: 50, nullable: false })
+    @Column({ type: 'varchar', length: WHAT_CAN_DO_TITLE_MAX, nullable: false })
     title_en!: string;
 
-    @Column({ type: 'varchar', length: 50, nullable: true })
+    @Column({ type: 'varchar', length: WHAT_CAN_DO_TITLE_MAX, nullable: true })
     title_ar!: string;
 
-    @Column({ type: 'varchar', length: 200, nullable: true })
+    @Column({ type: 'varchar', length: WHAT_CAN_DO_SHORT_DESCRIPTION_MAX, nullable: true })
     shortDescription_en!: string;
 
-    @Column({ type: 'varchar', length: 200, nullable: true })
+    @Column({ type: 'varchar', length: WHAT_CAN_DO_SHORT_DESCRIPTION_MAX, nullable: true })
     shortDescription_ar!: string;
 
     @Column({ type: 'text', nullable: true })

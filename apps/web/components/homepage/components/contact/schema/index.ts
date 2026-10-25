@@ -1,15 +1,21 @@
 import { z } from "zod";
+import {
+  CONTACT_EMAIL_MAX,
+  CONTACT_MESSAGE_MAX,
+  CONTACT_NAME_MAX,
+  CONTACT_SUBJECT_MAX,
+} from "@repo/constants/contacts";
 import type { CreateContactRequest } from "@repo/types/contacts";
 import type { MessageKey } from "../../../../../i18n/types";
 
 type Translate = (key: MessageKey, values?: { max: number }) => string;
 
-/** Limits of POST /contacts (CreateContactDto). */
+/** Limits of POST /contacts, shared with CreateContactDto. */
 export const CONTACT_LIMITS = {
-  name: 255,
-  email: 255,
-  subject: 255,
-  message: 5000,
+  name: CONTACT_NAME_MAX,
+  email: CONTACT_EMAIL_MAX,
+  subject: CONTACT_SUBJECT_MAX,
+  message: CONTACT_MESSAGE_MAX,
 } as const;
 
 // Built per render so validation messages follow the active locale.

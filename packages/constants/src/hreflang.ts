@@ -3,6 +3,8 @@
  * hreflang="…" href="…">`), shared by the backend DTO and the dashboard form.
  */
 
+import { URL_MAX } from "./url.js";
+
 /** The fallback alternate for visitors whose language has no page of its own. */
 export const X_DEFAULT_HREFLANG = "x-default";
 
@@ -14,7 +16,7 @@ export const HREFLANG_MAX = 10;
 
 /** Max length of an alternate's language code and URL (matches the URL columns). */
 export const HREFLANG_LANG_MAX = 20;
-export const SEO_URL_MAX = 255;
+export const SEO_URL_MAX = URL_MAX;
 
 /** One alternate: the page's URL for one language. */
 export type SeoHreflang = {

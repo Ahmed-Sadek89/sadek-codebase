@@ -5,19 +5,15 @@ import {
     LocationType,
     USER_COMPANY_JOB_TITLE_MAX,
     USER_COMPANY_LOCATION_MAX,
+    USER_COMPANY_NAME_MAX,
 } from '@repo/constants/user-company';
-
-const URL_OPTIONS = {
-    protocols: ['http', 'https'],
-    require_tld: true,
-    require_protocol: true,
-    require_valid_protocol: true,
-};
+import { URL_MAX } from '@repo/constants/url';
+import { URL_OPTIONS } from '../../common/validation/url-options';
 
 export class CreateUserCompanyDto {
     @IsString()
     @IsNotEmpty()
-    @MaxLength(50)
+    @MaxLength(USER_COMPANY_NAME_MAX)
     company_name!: string;
 
     @IsString()
@@ -40,12 +36,12 @@ export class CreateUserCompanyDto {
 
     @IsUrl(URL_OPTIONS)
     @IsOptional()
-    @MaxLength(255)
+    @MaxLength(URL_MAX)
     logo?: string;
 
     @IsUrl(URL_OPTIONS)
     @IsOptional()
-    @MaxLength(255)
+    @MaxLength(URL_MAX)
     company_site?: string;
 
     /** The role held there, e.g. "Senior Front-end Developer". */

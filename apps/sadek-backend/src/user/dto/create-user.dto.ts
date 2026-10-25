@@ -1,30 +1,41 @@
 import { IsEmail, IsOptional, IsString, IsUrl, Matches, MaxLength, MinLength, validate } from 'class-validator';
 import { IsEqualTo } from '../../../lib/validations/is-equal.validate';
+import {
+    PASSWORD_MAX,
+    PASSWORD_MIN,
+    PASSWORD_PATTERN,
+    USER_EMAIL_MAX,
+    USERNAME_MAX,
+    USERNAME_MIN,
+} from '@repo/constants/auth';
+import { URL_MAX } from '@repo/constants/url';
+import { URL_OPTIONS } from '../../common/validation/url-options';
 export class CreateUserDto {
     @IsString({
         message: 'Username is required',
     })
-    @MinLength(3, {
-        message: 'Username must be at least 3 characters long',
+    @MinLength(USERNAME_MIN, {
+        message: `Username must be at least ${USERNAME_MIN} characters long`,
     })
-    @MaxLength(50, {
-        message: 'Username must be at most 50 characters long',
+    @MaxLength(USERNAME_MAX, {
+        message: `Username must be at most ${USERNAME_MAX} characters long`,
     })
     username!: string;
 
     @IsEmail()
+    @MaxLength(USER_EMAIL_MAX)
     email!: string;
 
     @IsString({
         message: 'Password is required',
     })
-    @MinLength(8, {
-        message: 'Password must be at least 8 characters long',
+    @MinLength(PASSWORD_MIN, {
+        message: `Password must be at least ${PASSWORD_MIN} characters long`,
     })
-    @MaxLength(32, {
-        message: 'Password must be at most 32 characters long',
+    @MaxLength(PASSWORD_MAX, {
+        message: `Password must be at most ${PASSWORD_MAX} characters long`,
     })
-    @Matches(new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/), {
+    @Matches(PASSWORD_PATTERN, {
         message: 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character',
     })
     password!: string;
@@ -36,22 +47,14 @@ export class CreateUserDto {
 
     @IsString()
     @IsOptional()
-    @IsUrl({
-        protocols: ['http', 'https'],
-        require_tld: true,
-        require_protocol: true,
-        require_valid_protocol: true,
-    })
+    @IsUrl(URL_OPTIONS)
+    @MaxLength(URL_MAX)
     avatarUrl!: string;
 
     @IsString()
     @IsOptional()
-    @IsUrl({
-        protocols: ['http', 'https'],
-        require_tld: true,
-        require_protocol: true,
-        require_valid_protocol: true,
-    })
+    @IsUrl(URL_OPTIONS)
+    @MaxLength(URL_MAX)
     coverPhotoUrl!: string;
 }
 

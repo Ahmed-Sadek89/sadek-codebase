@@ -1,6 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
 import { CategorySkill } from '../../category_skills/entities/category_skill.entity';
 import { User } from '../../user/entities/user.entity';
+import { SKILL_NAME_MAX } from '@repo/constants/skills';
 
 @Entity('skills')
 export class Skill {
@@ -9,7 +10,7 @@ export class Skill {
 
     @Column({
         type: 'varchar',
-        length: 50,
+        length: SKILL_NAME_MAX,
         nullable: false,
     })
     name!: string;

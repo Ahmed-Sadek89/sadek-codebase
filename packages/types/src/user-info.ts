@@ -22,6 +22,9 @@ export interface UserInfoDetails {
   companies: number;
   projectNumbers: number;
   techMastering: number;
+  /** Required on create; `""` on rows saved before the column existed. */
+  phoneNumber: string;
+  whatsappNumber: string;
   gmail: string | null;
   linkedin: string | null;
   github: string | null;
@@ -49,6 +52,12 @@ export interface CreateUserInfoRequest {
   companies: number;
   projectNumbers: number;
   techMastering: number;
+  /**
+   * Max 20 characters: an optional leading `+`, then 7–15 digits (spaces,
+   * dashes and brackets allowed), e.g. `+20 100 123 4567`.
+   */
+  phoneNumber: string;
+  whatsappNumber: string;
   /** Valid email, max 255 characters. */
   gmail?: string;
   /** http(s) URLs, max 255 characters each. */

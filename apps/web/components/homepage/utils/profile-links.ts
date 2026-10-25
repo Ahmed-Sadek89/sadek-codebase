@@ -9,9 +9,24 @@ export type ProfileLink = {
   kind: ProfileLinkKind;
   labelKey: MessageKey;
   href: string;
-  /** The raw value: the address for `email`, the URL otherwise. */
+  /** The raw value: the address for `email`, the number for `phone`/`whatsapp`, the URL otherwise. */
   value: string;
 };
+
+/** Links that stay in the tab: they open the mail or phone app, not a page. */
+const SAME_TAB_KINDS: ReadonlySet<ProfileLinkKind> = new Set(["email", "phone"]);
+
+/** `target` for a profile link's anchor. */
+export function linkTarget(kind: ProfileLinkKind) {
+  return SAME_TAB_KINDS.has(kind) ? undefined : "_blank";
+}
+
+/** `tel:` link: the digits with a leading + kept (spaces, dashes, brackets dropped). */
+const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
+
+/** WhatsApp chat link: wa.me takes the digits only, with the country code. */
+const whatsappHref = (phone: string) =>
+  `https://wa.me/${phone.replace(/\D/g, "")}`;
 
 /**
  * The profile links set on user-info, in display order. `fallbackEmail`
@@ -32,6 +47,22 @@ export function getProfileLinks(
           labelKey: "socialEmail",
           href: `mailto:${email}`,
           value: email,
+        }
+      : null,
+    hasText(info.phoneNumber)
+      ? {
+          kind: "phone",
+          labelKey: "socialPhone",
+          href: telHref(info.phoneNumber),
+          value: info.phoneNumber,
+        }
+      : null,
+    hasText(info.whatsappNumber)
+      ? {
+          kind: "whatsapp",
+          labelKey: "socialWhatsapp",
+          href: whatsappHref(info.whatsappNumber),
+          value: info.whatsappNumber,
         }
       : null,
     hasText(info.linkedin)

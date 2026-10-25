@@ -15,6 +15,7 @@ import { toCategorySkillFormInput } from "../utils/constants";
 import {
     CATEGORY_SKILL_DESCRIPTION_MAX,
     CATEGORY_SKILL_NAME_MAX,
+    CATEGORY_SKILL_RANK_MIN,
 } from "../schema";
 import { LucideIcon } from "@repo/ui/icons";
 
@@ -121,7 +122,7 @@ export function CategorySkillsForm({
                         id="rank"
                         type="number"
                         inputMode="numeric"
-                        min={0}
+                        min={CATEGORY_SKILL_RANK_MIN}
                         step={1}
                         label={t("categorySkillFormRankLabel")}
                         description={t("categorySkillFormRankHint")}

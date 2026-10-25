@@ -5,7 +5,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { BaseInput } from "../../ui/forms/base-input";
 import {
   USER_COMPANY_NAME_MAX,
-  USER_COMPANY_URL_MAX,
+  URL_MAX,
   type UserCompanyFormInput,
   type UserCompanyFormValues,
 } from "../schema";
@@ -40,7 +40,7 @@ export function CompanyInfoFields({ form, disabled }: UserCompanyFieldsProps) {
         label={t("userCompanyFormSiteLabel")}
         placeholder="https://"
         dir="ltr"
-        maxLength={USER_COMPANY_URL_MAX}
+        maxLength={URL_MAX}
         disabled={disabled}
         error={errors.company_site?.message}
         {...form.register("company_site")}

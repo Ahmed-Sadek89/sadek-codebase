@@ -1,8 +1,6 @@
 import { ArrayMaxSize, ArrayMinSize, ArrayUnique, IsArray, IsBoolean, IsInt, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-
-/** Max skills one POST /skills/bulk can insert. */
-export const SKILLS_BULK_MAX = 50;
+import { SKILL_NAME_MAX, SKILLS_BULK_MAX } from '@repo/constants/skills';
 
 /** Many skills at once; every one gets the same `isActive` and categories. */
 export class CreateManySkillsDto {
@@ -18,7 +16,7 @@ export class CreateManySkillsDto {
     })
     @IsString({ each: true })
     @IsNotEmpty({ each: true })
-    @MaxLength(50, { each: true })
+    @MaxLength(SKILL_NAME_MAX, { each: true })
     names!: string[];
 
     @IsBoolean()

@@ -9,20 +9,80 @@
       "require": "./dist/index.js",
       "default": "./src/index.ts"
     },
-    "./twitter-card": {
-      "types": "./src/twitter-card.ts",
-      "require": "./dist/twitter-card.js",
-      "default": "./src/twitter-card.ts"
+    "./auth": {
+      "types": "./src/auth.ts",
+      "require": "./dist/auth.js",
+      "default": "./src/auth.ts"
+    },
+    "./category-projects": {
+      "types": "./src/category-projects.ts",
+      "require": "./dist/category-projects.js",
+      "default": "./src/category-projects.ts"
+    },
+    "./category-skills": {
+      "types": "./src/category-skills.ts",
+      "require": "./dist/category-skills.js",
+      "default": "./src/category-skills.ts"
+    },
+    "./contacts": {
+      "types": "./src/contacts.ts",
+      "require": "./dist/contacts.js",
+      "default": "./src/contacts.ts"
     },
     "./hreflang": {
       "types": "./src/hreflang.ts",
       "require": "./dist/hreflang.js",
       "default": "./src/hreflang.ts"
     },
+    "./pages": {
+      "types": "./src/pages.ts",
+      "require": "./dist/pages.js",
+      "default": "./src/pages.ts"
+    },
+    "./pagination": {
+      "types": "./src/pagination.ts",
+      "require": "./dist/pagination.js",
+      "default": "./src/pagination.ts"
+    },
+    "./projects": {
+      "types": "./src/projects.ts",
+      "require": "./dist/projects.js",
+      "default": "./src/projects.ts"
+    },
+    "./seo": {
+      "types": "./src/seo.ts",
+      "require": "./dist/seo.js",
+      "default": "./src/seo.ts"
+    },
+    "./skills": {
+      "types": "./src/skills.ts",
+      "require": "./dist/skills.js",
+      "default": "./src/skills.ts"
+    },
+    "./twitter-card": {
+      "types": "./src/twitter-card.ts",
+      "require": "./dist/twitter-card.js",
+      "default": "./src/twitter-card.ts"
+    },
+    "./url": {
+      "types": "./src/url.ts",
+      "require": "./dist/url.js",
+      "default": "./src/url.ts"
+    },
     "./user-company": {
       "types": "./src/user-company.ts",
       "require": "./dist/user-company.js",
       "default": "./src/user-company.ts"
+    },
+    "./user-info": {
+      "types": "./src/user-info.ts",
+      "require": "./dist/user-info.js",
+      "default": "./src/user-info.ts"
+    },
+    "./what-can-do": {
+      "types": "./src/what-can-do.ts",
+      "require": "./dist/what-can-do.js",
+      "default": "./src/what-can-do.ts"
     }
   },
   "scripts": {

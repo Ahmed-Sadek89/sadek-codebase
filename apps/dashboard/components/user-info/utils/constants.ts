@@ -8,6 +8,8 @@ import {
   FolderGit2,
   Link2,
   Mail,
+  MessageCircle,
+  Phone,
   type LucideIcon,
 } from "@repo/ui/icons";
 import type { MessageKey } from "../../../i18n/types";
@@ -15,7 +17,13 @@ import type { UserInfoFormInput } from "../schema";
 
 type CountField =
   "yearsOfExp" | "companies" | "projectNumbers" | "techMastering";
-type LinkField = "gmail" | "linkedin" | "github" | "cv";
+type LinkField =
+  | "phoneNumber"
+  | "whatsappNumber"
+  | "gmail"
+  | "linkedin"
+  | "github"
+  | "cv";
 
 /** The four numbers shown as stat cards, in display order. */
 export const USER_INFO_STATS: {
@@ -34,12 +42,31 @@ export const USER_INFO_STATS: {
 ];
 
 /** The contact rows; `href` turns a stored value into a link target. */
+/** `tel:` link: the digits with a leading + kept (spaces, dashes, brackets dropped). */
+export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
+
+/** WhatsApp chat link: wa.me takes the digits only, with the country code. */
+export const whatsappHref = (phone: string) =>
+  `https://wa.me/${phone.replace(/\D/g, "")}`;
+
 export const USER_INFO_LINKS: {
   field: LinkField;
   labelKey: MessageKey;
   icon: LucideIcon;
   href: (value: string) => string;
 }[] = [
+  {
+    field: "phoneNumber",
+    labelKey: "userInfoPhoneLabel",
+    icon: Phone,
+    href: telHref,
+  },
+  {
+    field: "whatsappNumber",
+    labelKey: "userInfoWhatsappLabel",
+    icon: MessageCircle,
+    href: whatsappHref,
+  },
   {
     field: "gmail",
     labelKey: "userInfoGmailLabel",
@@ -92,6 +119,8 @@ export const USER_INFO_FORM_DEFAULT_VALUES = {
   companies: 0,
   projectNumbers: 0,
   techMastering: 0,
+  phoneNumber: "",
+  whatsappNumber: "",
   gmail: "",
   linkedin: "",
   github: "",
@@ -128,6 +157,8 @@ export function toUserInfoFormInput(
     companies: userInfo.companies,
     projectNumbers: userInfo.projectNumbers,
     techMastering: userInfo.techMastering,
+    phoneNumber: userInfo.phoneNumber,
+    whatsappNumber: userInfo.whatsappNumber,
     gmail: userInfo.gmail ?? "",
     linkedin: userInfo.linkedin ?? "",
     github: userInfo.github ?? "",

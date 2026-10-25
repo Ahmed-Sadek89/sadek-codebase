@@ -10,7 +10,7 @@ import {
   CHANGE_PASSWORD_DEFAULT_VALUES,
   useChangePasswordForm,
 } from "../hooks/use-change-password-form";
-import { PASSWORD_MAX } from "../schema";
+import { PASSWORD_MAX, PASSWORD_MIN } from "../schema";
 
 type ChangePasswordDialogProps = {
   open: boolean;
@@ -79,7 +79,7 @@ export function ChangePasswordDialog({
             id="newPassword-rules"
             className="-mt-2 text-xs text-muted-foreground"
           >
-            {t("profilePasswordRules")}
+            {t("profilePasswordRules", { min: PASSWORD_MIN, max: PASSWORD_MAX })}
           </p>
           <PasswordInput
             id="confirmPassword"

@@ -17,7 +17,7 @@ import {
   SEO_OG_DESCRIPTION_MAX,
   SEO_OG_IMAGE_ALT_MAX,
   SEO_OG_TITLE_MAX,
-  SEO_TWITTER_HANDLE_MAX,
+  TWITTER_HANDLE_MAX,
 } from "../schema";
 import { FieldHint } from "./char-count";
 import type { SeoSectionProps } from "./search-section";
@@ -167,7 +167,7 @@ export function SocialSection({ form, disabled }: SeoSectionProps) {
           label={t("seoFormTwitterHandleLabel")}
           placeholder="@username"
           dir="ltr"
-          maxLength={SEO_TWITTER_HANDLE_MAX}
+          maxLength={TWITTER_HANDLE_MAX}
           disabled={disabled}
           error={errors.twitterHandle?.message}
           description={t("seoFormTwitterHandleHint")}

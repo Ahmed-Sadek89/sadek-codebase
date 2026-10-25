@@ -1,5 +1,6 @@
  
 -- add entities for educations and language
+-- make forgetPassword page in dashboard, using gmail
 -- cv builder in dashboard
 -- upload and get cv from Google drive
 -- make media library dialog when upload image 

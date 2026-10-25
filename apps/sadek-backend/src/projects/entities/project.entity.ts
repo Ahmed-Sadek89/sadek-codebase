@@ -1,16 +1,18 @@
 import { CategoryProject } from '../../category-projects/entities/category-project.entity';
 import { User } from '../../user/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
+import { PROJECT_NAME_MAX } from '@repo/constants/projects';
+import { URL_MAX } from '@repo/constants/url';
 
 @Entity('projects')
 export class Project {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ type: 'varchar', length: 100, nullable: false })
+    @Column({ type: 'varchar', length: PROJECT_NAME_MAX, nullable: false })
     nameAr!: string;
 
-    @Column({ type: 'varchar', length: 100, nullable: false })
+    @Column({ type: 'varchar', length: PROJECT_NAME_MAX, nullable: false })
     nameEn!: string;
 
     @Column({ type: 'text', nullable: false })
@@ -22,13 +24,13 @@ export class Project {
     @Column({ type: 'boolean', nullable: false })
     isActive!: boolean;
 
-    @Column({ type: 'varchar', length: 255, nullable: true })
+    @Column({ type: 'varchar', length: URL_MAX, nullable: true })
     mainImageUrl?: string;
 
-    @Column({ type: 'varchar', length: 255, nullable: true })
+    @Column({ type: 'varchar', length: URL_MAX, nullable: true })
     liveUrl?: string;
 
-    @Column({ type: 'varchar', length: 255, nullable: true })
+    @Column({ type: 'varchar', length: URL_MAX, nullable: true })
     repoUrl?: string;
 
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: false })
