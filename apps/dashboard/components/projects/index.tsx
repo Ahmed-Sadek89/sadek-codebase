@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRouter } from "../../i18n/navigation";
@@ -12,14 +12,15 @@ import useColumns from "./hooks/use-columns";
 import { useStaticFilter } from "./hooks/use-static-filter";
 import { useDynamicFilter } from "./hooks/use-dynamic-filter";
 import { useDeleteProjectAction } from "./hooks/use-delete-project";
-import { ProjectDetailsDialog } from "./components/project-details-dialog";
+import { useToggleProjectActiveAction } from "./hooks/use-toggle-project-active";
 import { getProjectsQuery } from "./utils/constants";
 
 /** All projects page content. Data is prefetched in the route's page.tsx. */
 export default function ProjectsPage() {
   const t = useTranslations();
   const router = useRouter();
-  // Creating and editing happen on their own page: /dashboard/projects/form/[slug].
+  // Viewing, creating and editing happen on their own pages:
+  // /dashboard/projects/view/[id] and /dashboard/projects/form/[slug].
   const handleCreate = useCallback(() => {
     router.push("/dashboard/projects/form/create");
   }, [router]);
@@ -29,13 +30,12 @@ export default function ProjectsPage() {
     },
     [router],
   );
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  // Kept after closing so the content doesn't vanish during the close animation.
-  const [viewedProject, setViewedProject] = useState<Project | null>(null);
-  const handleView = useCallback((project: Project) => {
-    setViewedProject(project);
-    setIsDetailsOpen(true);
-  }, []);
+  const handleView = useCallback(
+    (project: Project) => {
+      router.push(`/dashboard/projects/view/${project.id}`);
+    },
+    [router],
+  );
   // ?search=&page=&limit=&order=&isActive=&categoryId= (any combination).
   const searchParams = useSearchParams();
   // Same query as the server prefetch, so the hydrated cache is reused.
@@ -48,14 +48,17 @@ export default function ProjectsPage() {
   const staticFilter = useStaticFilter();
   const dynamicFilter = useDynamicFilter();
   const deleteAction = useDeleteProjectAction();
+  const toggleAction = useToggleProjectActiveAction();
   const columns = useColumns({
-    busy: deleteAction.isDeleting,
+    busy: deleteAction.isDeleting || toggleAction.isToggling,
     canView: true,
     canUpdate: true,
     canDelete: true,
+    canToggleActive: true,
     onView: handleView,
     onEdit: handleEdit,
     onDelete: deleteAction.requestDelete,
+    onToggleActive: toggleAction.requestToggle,
   });
 
   return (
@@ -77,10 +80,11 @@ export default function ProjectsPage() {
         staticFilter={staticFilter}
         dynamicFilter={dynamicFilter}
       />
-      <ProjectDetailsDialog
-        open={isDetailsOpen}
-        onOpenChange={setIsDetailsOpen}
-        project={viewedProject}
+      <ConfirmAction
+        open={toggleAction.isOpen}
+        onOpenChange={toggleAction.onOpenChange}
+        question={toggleAction.question}
+        onConfirm={toggleAction.confirmToggle}
       />
       <ConfirmAction
         open={deleteAction.isOpen}

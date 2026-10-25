@@ -179,13 +179,14 @@ Source: `apps/sadek-backend/src/projects`. Types in `@repo/types/projects` (`Pro
 | `GET /projects/public` (Public) | Same query as `GET /projects`                                                                                             | `PaginatedResponse<Project>` of the default-view user |
 | `GET /projects/:id`             | –                                                                                                                         | Project with full `categoryProjects`                  |
 | `PATCH /projects/:id`           | JSON partial of the create body                                                                                           | `{ message: "project updated successfully" }`         |
+| `PATCH /projects/:id/toggle-active` | –                                                                                                                     | `{ message, isActive }` (`ToggleProjectActiveResponse`, the new value) |
 | `DELETE /projects/:id`          | –                                                                                                                         | `{ message: "project removed successfully" }`         |
 
 - Project fields: `id`, `nameAr`, `nameEn` (max 100), `shortDescriptionAr`, `shortDescriptionEn` (required, max 255 `PROJECT_SHORT_DESCRIPTION_MAX`; the column defaults to `''` for rows saved before it existed), `descriptionAr`, `descriptionEn` (required rich-text HTML: sanitized on create and update with `sanitizeRichText` from `@repo/rich-text`, so a body with no visible text, e.g. `<p></p>`, returns 400; rows saved earlier may hold plain text, which `plainTextToHtml` turns into paragraphs), `isActive`, `mainImageUrl`, `liveUrl`, `repoUrl` (nullable, max 255), `createdAt`, `user: { id }`, `categoryProjects` (`[{ id, nameAr, nameEn }]` in the list).
 - `categoryProjectsIds` must be a non-empty array of unique integers, all owned by the signed-in user, or the request returns 400.
 - `GET /projects` returns only the signed-in user's projects. `search` matches `nameAr`/`nameEn`, `isActive` and `categoryId` filter, and `order` sorts by `createdAt`.
-- Client: `projectsService.create/findAll/findAllPublic/findOne/update/remove`; hooks `useCreateProject`, `useProjects(query)`, `usePublicProjects(query)` (infinite: `useInfiniteQuery` pages via `fetchNextPage`, key `publicList(query)` without `page`; keeps the previous pages while filters change), `useProject(id)`, `useUpdateProject` (`{ id, data }`), `useDeleteProject` (`id`).
-- `GET`, `PATCH` (except the category ownership check), and `DELETE /:id` have no owner check.
+- Client: `projectsService.create/findAll/findAllPublic/findOne/update/toggleActive/remove`; hooks `useCreateProject`, `useProjects(query)`, `usePublicProjects(query)` (infinite: `useInfiniteQuery` pages via `fetchNextPage`, key `publicList(query)` without `page`; keeps the previous pages while filters change), `useProject(id)`, `useUpdateProject` (`{ id, data }`), `useToggleProjectActive` (`id`; invalidates lists and `detail(id)`), `useDeleteProject` (`id`).
+- `GET /:id`, `PATCH /:id`, `PATCH /:id/toggle-active` and `DELETE /:id` are owner-scoped: another user's project returns 404.
 
 ### User info (`/user-info`)
 

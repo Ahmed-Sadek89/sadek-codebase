@@ -90,4 +90,9 @@ export type UpdateProjectRequest = Partial<
 
 export type UpdateProjectResponse = MessageResponse;
 
+/** PATCH /projects/:id/toggle-active: the project's new `isActive`. */
+export type ToggleProjectActiveResponse = MessageResponse & {
+  isActive: boolean;
+};
+
 export type DeleteProjectResponse = MessageResponse;

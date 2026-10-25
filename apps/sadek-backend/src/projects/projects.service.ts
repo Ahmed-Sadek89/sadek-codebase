@@ -122,6 +122,17 @@ export class ProjectsService {
 
   }
 
+  /** Flips `isActive` on one of the user's projects and returns the new value. */
+  async toggleActive(id: number, userId: number): Promise<boolean> {
+    const project = await this.projectRepository.findOneBy({ id, user: { id: userId } });
+    if (!project) {
+      throw new NotFoundException(`Project with id ${id} not found`);
+    }
+    const isActive = !project.isActive;
+    await this.projectRepository.update({ id }, { isActive });
+    return isActive;
+  }
+
   async remove(id: number, userId: number): Promise<void> {
     const project = await this.findOne(id, userId);
     await this.projectRepository.remove(project);

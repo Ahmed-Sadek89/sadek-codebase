@@ -8,7 +8,7 @@ import { SectionStatus } from "../../../ui/section-status";
 import { ShowMoreButton } from "../../../ui/show-more-button";
 import type { InfiniteQueryState } from "../../utils";
 import { cn } from "@repo/ui/utils";
-import { CategoryFilter, ProjectCard } from "./components";
+import { CategoryFilter, ProjectShowcase } from "./components";
 
 export function Work({
   projects: projectsQuery,
@@ -17,7 +17,7 @@ export function Work({
   onCategoryChange,
 }: {
   /**
-   * GET /projects/public for the selected category, 5 per page, plus "show
+   * GET /projects/public for the selected category, 3 per page, plus "show
    * more". `isSwitching` is true while another category loads; the previous
    * projects stay on screen meanwhile.
    */
@@ -59,21 +59,20 @@ export function Work({
           onLoadMore={categories.loadMore}
         />
         {projects.length ? (
-          // The gallery: 1 / 2 / 3 columns; dims while another category loads.
+          // One full-width row per project, alternating sides; dims while another category loads.
           <div
             aria-busy={projectsQuery.isSwitching}
             className={cn(
-              "grid gap-6 transition-opacity duration-300 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8",
-              // Lets later cards backfill beside the 2×2 featured card.
-              "lg:grid-flow-dense",
+              "space-y-20 transition-opacity duration-300 max-[700px]:space-y-14 lg:space-y-28",
               projectsQuery.isSwitching && "opacity-60",
             )}
           >
             {projects.map((project, index) => (
-              <ProjectCard
-                featured={index === 0}
+              <ProjectShowcase
+                index={index}
                 key={project.id}
                 project={project}
+                reversed={index % 2 === 1}
               />
             ))}
           </div>

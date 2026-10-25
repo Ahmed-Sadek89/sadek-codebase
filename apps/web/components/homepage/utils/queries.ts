@@ -28,8 +28,8 @@ export const experienceQuery: Omit<UserCompaniesQuery, "page"> = {
   isActive: true,
 };
 /**
- * Work: 10 category chips and 6 projects per page; each has its own "show
- * more". 6 = the featured card (2×2) + 5 cards, which fills 3 rows of 3.
+ * Work: 10 category chips and 3 projects per page; each has its own "show
+ * more". Every project is a full-width row with all its details, so pages stay short.
  * Category chips come lowest rank first.
  */
 export const categoryProjectsQuery: Omit<CategoryProjectsQuery, "page"> = {
@@ -38,6 +38,8 @@ export const categoryProjectsQuery: Omit<CategoryProjectsQuery, "page"> = {
   order: "ASC",
 };
 export const projectsQuery: Omit<ProjectsQuery, "page"> = {
-  limit: 6,
+  limit: 3,
   isActive: true,
+  order: "ASC",
+
 };

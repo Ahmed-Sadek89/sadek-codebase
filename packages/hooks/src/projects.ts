@@ -35,7 +35,7 @@ export function usePublicProjects(query: Omit<ProjectsQuery, "page"> = {}) {
   return useInfiniteQuery({
     queryKey: queryKeys.projects.publicList(query),
     queryFn: ({ pageParam }) =>
-      projectsService.findAllPublic({ ...query, page: pageParam }),
+      projectsService.findAllPublic({ ...query, page: pageParam, order: "ASC" }),
     initialPageParam: 1,
     getNextPageParam,
     placeholderData: keepPreviousData,
@@ -69,6 +69,18 @@ export function useUpdateProject() {
       auth,
     ) => projectsService.update(id, data, auth),
     onSuccess: (_response, { id }) =>
+      Promise.all([
+        client.invalidateQueries({ queryKey: queryKeys.projects.lists() }),
+        client.invalidateQueries({ queryKey: queryKeys.projects.detail(id) }),
+      ]),
+  });
+}
+
+export function useToggleProjectActive() {
+  const client = useQueryClient();
+  return useGuardedMutation({
+    mutationFn: (id: number, auth) => projectsService.toggleActive(id, auth),
+    onSuccess: (_response, id) =>
       Promise.all([
         client.invalidateQueries({ queryKey: queryKeys.projects.lists() }),
         client.invalidateQueries({ queryKey: queryKeys.projects.detail(id) }),

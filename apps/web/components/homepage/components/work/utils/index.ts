@@ -12,11 +12,4 @@ export function getProjectCategories(project: Project, locale: string) {
   }));
 }
 
-/** "Mar 2026" for the date a project was added, in the page's language. */
-export function formatProjectDate(project: Project, locale: string) {
-  return new Intl.DateTimeFormat(locale, {
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(project.createdAt));
-}
+ 

@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import type { Project } from "@repo/types/projects";
-import { Eye, Pencil, Trash2 } from "@repo/ui/icons";
+import { CircleCheck, CircleOff, Eye, Pencil, Trash2 } from "@repo/ui/icons";
 import {
   AvatarCell,
   ChipsCell,
@@ -20,10 +20,12 @@ type UseColumnsOptions = {
   onView?: (project: Project) => void;
   onEdit?: (project: Project) => void;
   onDelete?: (project: Project) => void;
+  onToggleActive?: (project: Project) => void;
   /** Each flag shows its action; the Action column shows if any is set. */
   canView?: boolean;
   canUpdate?: boolean;
   canDelete?: boolean;
+  canToggleActive?: boolean;
 };
 
 const useColumns = ({
@@ -31,9 +33,11 @@ const useColumns = ({
   onView,
   onEdit,
   onDelete,
+  onToggleActive,
   canView = false,
   canUpdate = false,
   canDelete = false,
+  canToggleActive = false,
 }: UseColumnsOptions = {}) => {
   const t = useTranslations();
   const locale = useLocale();
@@ -109,7 +113,7 @@ const useColumns = ({
       },
     ];
 
-    if (!canView && !canUpdate && !canDelete) return columns;
+    if (!canView && !canUpdate && !canDelete && !canToggleActive) return columns;
 
     return [
       ...columns,
@@ -134,6 +138,16 @@ const useColumns = ({
                   hidden: !canView,
                 },
                 {
+                  key: "toggle-active",
+                  label: project.isActive
+                    ? t("tableActionDeactivate")
+                    : t("tableActionActivate"),
+                  icon: project.isActive ? CircleOff : CircleCheck,
+                  tone: project.isActive ? "danger" : "success",
+                  onClick: () => onToggleActive?.(project),
+                  hidden: !canToggleActive,
+                },
+                {
                   key: "edit",
                   label: t("tableActionEdit"),
                   icon: Pencil,
@@ -154,7 +168,19 @@ const useColumns = ({
         },
       },
     ];
-  }, [busy, canDelete, canUpdate, canView, locale, onDelete, onEdit, onView, t]);
+  }, [
+    busy,
+    canDelete,
+    canToggleActive,
+    canUpdate,
+    canView,
+    locale,
+    onDelete,
+    onEdit,
+    onToggleActive,
+    onView,
+    t,
+  ]);
 };
 
 export default useColumns;
