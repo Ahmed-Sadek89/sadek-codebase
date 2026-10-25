@@ -206,19 +206,20 @@ Source: `apps/sadek-backend/src/user-company`. Types in `@repo/types/user-compan
 
 | Backend endpoint                    | Request                                                                                                           | Response                                           |
 | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| `POST /user-company`                | JSON `{ company_name, description_en?, description_ar?, startWorkFrom, startWorkTo?, logo?, company_site? }` | Saved company with `user: { id }`                  |
-| `GET /user-company`                 | Query pagination plus `search`                                                                                    | Paginated companies with `user: { id }`            |
-| `GET /user-company/public` (Public) | Same query as `GET /user-company`                                                                                 | Paginated companies of the default-view user       |
-| `GET /user-company/me`              | Query `page`, `limit`, `search`, `order` (sorts by `startWorkFrom`, default `DESC`)                               | Paginated `UserCompanyDetails`                     |
+| `POST /user-company`                | JSON `{ company_name, description_en?, description_ar?, startWorkFrom, startWorkTo?, logo?, company_site?, isActive? }` | Saved company with `user: { id }`                  |
+| `GET /user-company`                 | Query pagination plus `search`, `isActive`                                                                        | Paginated companies with `user: { id }`            |
+| `GET /user-company/public` (Public) | Same query as `GET /user-company`                                                                                 | Active companies of the default-view user (`isActive` is ignored) |
+| `GET /user-company/me`              | Query `page`, `limit`, `search`, `isActive`, `order` (sorts by `startWorkFrom`, default `DESC`)                   | Paginated `UserCompanyDetails`                     |
 | `GET /user-company/:id`             | –                                                                                                                 | Company, without `user`                            |
 | `PATCH /user-company/:id`           | JSON partial of the create body                                                                                   | `{ message: "User company updated successfully" }` |
+| `PATCH /user-company/:id/toggle-active` | –                                                                                                         | `{ message, isActive }` (the new value)            |
 | `DELETE /user-company/:id`          | –                                                                                                                 | `{ message: "User company deleted successfully" }` |
 
-- Fields: `id`, `company_name` (required, max 50); `description_en` / `description_ar` (nullable); `startWorkFrom` (required ISO date), `startWorkTo` (nullable; `null` means a current job), `logo`, `company_site` (nullable http(s) URLs, max 255), `createdAt`.
+- Fields: `id`, `company_name` (required, max 50); `description_en` / `description_ar` (nullable); `startWorkFrom` (required ISO date), `startWorkTo` (nullable; `null` means a current job), `logo`, `company_site` (nullable http(s) URLs, max 255), `isActive` (boolean, default `true`; inactive companies are left out of `GET /user-company/public`), `createdAt`.
 - `search` (max 20 characters, trimmed) matches `company_name` or the English or Arabic `description` (`description_en`, `description_ar`) case-insensitively on `GET /user-company`, `GET /user-company/public`, and `GET /user-company/me`.
 - `startWorkTo` before `startWorkFrom` returns 400 on create and update. Send `startWorkTo: null` in a `PATCH` to mark a job as current.
 - A company of another user returns 404 from `GET`, `PATCH`, and `DELETE /:id`.
-- Client: `userCompanyService.create/findAll/findAllPublic/findMine/findOne/update/remove`; hooks `useCreateUserCompany`, `useUserCompanies(query)`, `usePublicUserCompanies(query)`, `useInfinitePublicUserCompanies(query)` (pages via `fetchNextPage`, key `queryKeys.userCompany.publicInfinite(query)`), `useMyUserCompanies(query)`, `useUserCompany(id)`, `useUpdateUserCompany` (`{ id, data }`), `useDeleteUserCompany` (`id`). Every mutation invalidates `queryKeys.userCompany.lists()` and `mines()`; update also refreshes `detail(id)`, delete removes it.
+- Client: `userCompanyService.create/findAll/findAllPublic/findMine/findOne/update/toggleActive/remove`; hooks `useCreateUserCompany`, `useUserCompanies(query)`, `usePublicUserCompanies(query)`, `useInfinitePublicUserCompanies(query)` (pages via `fetchNextPage`, key `queryKeys.userCompany.publicInfinite(query)`), `useMyUserCompanies(query)`, `useUserCompany(id)`, `useUpdateUserCompany` (`{ id, data }`), `useToggleUserCompanyActive` (`id`), `useDeleteUserCompany` (`id`). Every mutation invalidates `queryKeys.userCompany.lists()` and `mines()`; update and toggle-active also refresh `detail(id)`, delete removes it.
 
 ### What can do (`/what-can-do`)
 

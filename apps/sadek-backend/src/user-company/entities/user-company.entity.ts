@@ -27,6 +27,9 @@ export class UserCompany {
     @Column({ type: 'varchar', length: 255, nullable: true })
     company_site!: string;
 
+    @Column({ type: 'boolean', default: true, nullable: false })
+    isActive!: boolean;
+
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: false })
     createdAt!: Date;
 

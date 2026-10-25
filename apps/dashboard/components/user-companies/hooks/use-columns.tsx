@@ -1,28 +1,38 @@
 "use client";
 
 import { useMemo } from "react";
-import { useFormatter, useLocale, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { UserCompanyDetails } from "@repo/types/user-company";
-import { Eye, Globe, Pencil, Trash2 } from "@repo/ui/icons";
+import {
+  CircleCheck,
+  CircleOff,
+  Eye,
+  Pencil,
+  Trash2,
+} from "@repo/ui/icons";
 import {
   AvatarCell,
   DateCell,
+  StatusBadgeCell,
   TableActionsGroup,
   TextCell,
 } from "../../ui/cells";
 import type { DynamicColumnDef } from "../../ui/dynamic-table/types/types";
 import { localized } from "../../../utils/format";
-import { LINK_CLASS_NAME, WORK_DATE_FORMAT } from "../utils/constants";
+import { CompanySiteCell } from "../components/company-site-cell";
+import { WorkPeriodCell } from "../components/work-period-cell";
 
 type UseColumnsOptions = {
   busy?: boolean;
   onView?: (company: UserCompanyDetails) => void;
   onEdit?: (company: UserCompanyDetails) => void;
   onDelete?: (company: UserCompanyDetails) => void;
+  onToggleActive?: (company: UserCompanyDetails) => void;
   /** Each flag shows its action; the Action column shows if any is set. */
   canView?: boolean;
   canUpdate?: boolean;
   canDelete?: boolean;
+  canToggleActive?: boolean;
 };
 
 const useColumns = ({
@@ -30,13 +40,14 @@ const useColumns = ({
   onView,
   onEdit,
   onDelete,
+  onToggleActive,
   canView = false,
   canUpdate = false,
   canDelete = false,
+  canToggleActive = false,
 }: UseColumnsOptions = {}) => {
   const t = useTranslations();
   const locale = useLocale();
-  const format = useFormatter();
 
   return useMemo<DynamicColumnDef<UserCompanyDetails>[]>(() => {
     const columns: DynamicColumnDef<UserCompanyDetails>[] = [
@@ -80,37 +91,33 @@ const useColumns = ({
         accessorKey: "startWorkFrom",
         sortable: true,
         header: t("tableColWorkPeriod"),
-        cell: ({ row }) => {
-          const { startWorkFrom, startWorkTo } = row.original;
-          const from = format.dateTime(new Date(startWorkFrom), WORK_DATE_FORMAT);
-          const to = startWorkTo
-            ? format.dateTime(new Date(startWorkTo), WORK_DATE_FORMAT)
-            : t("userCompanyPresent");
-          return <TextCell value={`${from} – ${to}`} className="whitespace-nowrap" />;
-        },
+        cell: ({ row }) => (
+          <WorkPeriodCell
+            from={row.original.startWorkFrom}
+            to={row.original.startWorkTo}
+          />
+        ),
       },
       {
         id: "site",
         sortable: false,
         header: t("tableColWebsite"),
-        cell: ({ row }) => {
-          const { company_site } = row.original;
-          if (!company_site) {
-            return <span className="text-muted-foreground">—</span>;
-          }
-          return (
-            <a
-              href={company_site}
-              target="_blank"
-              rel="noreferrer noopener"
-              aria-label={t("userCompanySiteLink")}
-              title={company_site}
-              className={LINK_CLASS_NAME}
-            >
-              <Globe className="size-4" aria-hidden />
-            </a>
-          );
-        },
+        cell: ({ row }) => (
+          <CompanySiteCell url={row.original.company_site} />
+        ),
+      },
+      {
+        accessorKey: "isActive",
+        sortable: true,
+        header: t("tableColStatus"),
+        cell: ({ row }) => (
+          <StatusBadgeCell
+            value={
+              row.original.isActive ? t("statusActive") : t("statusInactive")
+            }
+            tone={row.original.isActive ? "primary" : "danger"}
+          />
+        ),
       },
       {
         accessorKey: "createdAt",
@@ -120,7 +127,7 @@ const useColumns = ({
       },
     ];
 
-    if (!canView && !canUpdate && !canDelete) return columns;
+    if (!canView && !canUpdate && !canDelete && !canToggleActive) return columns;
 
     return [
       ...columns,
@@ -145,6 +152,16 @@ const useColumns = ({
                   hidden: !canView,
                 },
                 {
+                  key: "toggle-active",
+                  label: c.isActive
+                    ? t("tableActionDeactivate")
+                    : t("tableActionActivate"),
+                  icon: c.isActive ? CircleOff : CircleCheck,
+                  tone: c.isActive ? "danger" : "success",
+                  onClick: () => onToggleActive?.(c),
+                  hidden: !canToggleActive,
+                },
+                {
                   key: "edit",
                   label: t("tableActionEdit"),
                   icon: Pencil,
@@ -167,11 +184,12 @@ const useColumns = ({
     ];
   }, [
     busy,
+    canToggleActive,
     canDelete,
     canUpdate,
     canView,
-    format,
     locale,
+    onToggleActive,
     onDelete,
     onEdit,
     onView,

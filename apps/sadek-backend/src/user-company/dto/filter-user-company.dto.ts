@@ -1,7 +1,8 @@
 import { OmitType } from '@nestjs/swagger';
-import { IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { type SortOrder } from '../../common/pagination.constants';
+import { ToBoolean } from '../../common/transformers/to-boolean';
 
 /**
  * Query for both GET /user-company and GET /user-company/me.
@@ -21,4 +22,10 @@ export class FilterUserCompanyDto extends OmitType(PaginationQueryDto, ['order']
     message: 'search be at most 20 characters long',
   })
   search?: string;
+
+  /** Ignored by GET /user-company/public, which only returns active rows. */
+  @IsOptional()
+  @ToBoolean()
+  @IsBoolean()
+  isActive?: boolean;
 }

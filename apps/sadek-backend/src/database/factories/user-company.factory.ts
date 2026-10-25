@@ -16,5 +16,6 @@ export default setSeederFactory(UserCompany, () => {
     ) as Date;
     userCompany.logo = faker.image.url({ width: 256, height: 256 });
     userCompany.company_site = faker.internet.url().slice(0, 255);
+    userCompany.isActive = true;
     return userCompany;
 });

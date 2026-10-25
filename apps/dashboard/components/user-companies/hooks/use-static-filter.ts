@@ -7,27 +7,39 @@ import {
   ArrowDownWideNarrow,
   ArrowUpDown,
   ArrowUpNarrowWide,
+  CircleCheck,
+  CircleOff,
+  Layers,
+  ListFilter,
 } from "@repo/ui/icons";
 import { updateUrlParams } from "../../../utils/url-params";
-import { readSortOrder } from "../../../utils/list-query";
-import { ORDER_PARAM, PAGE_PARAM } from "../../../utils/constants";
+import { readIsActive, readSortOrder } from "../../../utils/list-query";
+import {
+  IS_ACTIVE_PARAM,
+  ORDER_PARAM,
+  PAGE_PARAM,
+} from "../../../utils/constants";
 import type { StaticFilter } from "../../ui/dynamic-table/types/types";
 
 /**
  * The user-companies table's static (chip) filters, bound to the URL;
  * `getUserCompaniesQuery` sends them to GET /user-company/me:
  * - Sort: `?order=asc|desc` → `order` (by `startWorkFrom`, default DESC)
- * There is no status filter: the endpoint has no `isActive`.
+ * - Status: `?isActive=true|false` → `isActive` (unset = all)
  * Pass the result to `<DynamicTable staticFilter={...} />`.
  */
 export function useStaticFilter(): StaticFilter[] {
   const t = useTranslations();
   const searchParams = useSearchParams();
   const order = readSortOrder(searchParams.get(ORDER_PARAM));
+  const isActive = readIsActive(searchParams.get(IS_ACTIVE_PARAM));
 
   // A new filter starts from the first page; other params (search, limit) stay.
   const onOrderChange = useCallback((value: string | null) => {
     updateUrlParams({ [ORDER_PARAM]: value, [PAGE_PARAM]: null });
+  }, []);
+  const onStatusChange = useCallback((value: string | null) => {
+    updateUrlParams({ [IS_ACTIVE_PARAM]: value, [PAGE_PARAM]: null });
   }, []);
 
   return useMemo(
@@ -43,7 +55,19 @@ export function useStaticFilter(): StaticFilter[] {
         value: order?.toLowerCase() ?? null,
         onChange: onOrderChange,
       },
+      {
+        paramName: IS_ACTIVE_PARAM,
+        label: t("tableStatusLabel"),
+        icon: ListFilter,
+        options: [
+          { value: null, label: t("tableStatusAll"), icon: Layers },
+          { value: "true", label: t("statusActive"), icon: CircleCheck },
+          { value: "false", label: t("statusInactive"), icon: CircleOff },
+        ],
+        value: isActive === undefined ? null : String(isActive),
+        onChange: onStatusChange,
+      },
     ],
-    [onOrderChange, order, t],
+    [isActive, onOrderChange, onStatusChange, order, t],
   );
 }

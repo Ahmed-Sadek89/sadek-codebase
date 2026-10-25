@@ -47,6 +47,7 @@ export const createUserCompanySchema = (t: Translate) =>
           t("projectFormUrlInvalid"),
         )
         .transform((value) => value || undefined),
+      isActive: z.boolean(),
     })
     .superRefine(({ isCurrent, startWorkFrom, startWorkTo }, ctx) => {
       if (isCurrent) return;

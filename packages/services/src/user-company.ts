@@ -5,6 +5,7 @@ import type {
   CreateUserCompanyResponse,
   DeleteUserCompanyResponse,
   MyUserCompaniesResponse,
+  ToggleUserCompanyActiveResponse,
   UpdateUserCompanyRequest,
   UpdateUserCompanyResponse,
   UserCompaniesQuery,
@@ -18,6 +19,7 @@ export const userCompanyEndpoints = {
   public: "/user-company/public",
   me: "/user-company/me",
   byId: (id: number) => `/user-company/${id}`,
+  toggleActive: (id: number) => `/user-company/${id}/toggle-active`,
 } as const;
 
 // GET /user-company/public is public; every other route sits behind JwtAuthGuard
@@ -82,6 +84,18 @@ export const userCompanyService = {
     const { data } = await apiClient.patch<UpdateUserCompanyResponse>(
       userCompanyEndpoints.byId(id),
       request,
+      { headers: authHeaders(auth) },
+    );
+    return data;
+  },
+  /** Active ⇄ inactive. */
+  async toggleActive(
+    id: number,
+    auth: AuthorizedRequest,
+  ): Promise<ToggleUserCompanyActiveResponse> {
+    const { data } = await apiClient.patch<ToggleUserCompanyActiveResponse>(
+      userCompanyEndpoints.toggleActive(id),
+      undefined,
       { headers: authHeaders(auth) },
     );
     return data;

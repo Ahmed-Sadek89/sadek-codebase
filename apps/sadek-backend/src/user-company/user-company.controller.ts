@@ -66,6 +66,18 @@ export class UserCompanyController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  // Active ⇄ inactive; the response says which way it went.
+  @Patch(':id/toggle-active')
+  async toggleActive(@Param('id', ParseIntPipe) id: number, @Request() req: RequestUserDto) {
+    const { isActive } = await this.userCompanyService.toggleActive(id, req.user.userId);
+    return {
+      message: isActive ? 'User company activated successfully' : 'User company deactivated successfully',
+      isActive,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number, @Request() req: RequestUserDto) {
     await this.userCompanyService.remove(id, req.user.userId);

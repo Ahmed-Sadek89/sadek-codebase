@@ -9,15 +9,13 @@ import type { UserCompanyFormInput } from "../schema";
 export const USER_COMPANIES_LIMIT = 10;
 
 /**
- * The list query for the URL's `search`, `page`, `limit`, and `order` (any
- * combination). Shared by the server prefetch and the client hook so both
- * build the same query key. `isActive` is dropped because
- * GET /user-company/me rejects it.
+ * The list query for the URL's `search`, `page`, `limit`, `order`, and
+ * `isActive` (any combination). Shared by the server prefetch and the client
+ * hook so both build the same query key.
  */
-export function getUserCompaniesQuery({
-  isActive: _isActive,
-  ...params
-}: ListQueryParams): UserCompaniesQuery {
+export function getUserCompaniesQuery(
+  params: ListQueryParams,
+): UserCompaniesQuery {
   return { limit: USER_COMPANIES_LIMIT, ...params };
 }
 
@@ -36,6 +34,7 @@ export const USER_COMPANY_FORM_DEFAULT_VALUES = {
   isCurrent: false,
   startWorkTo: "",
   company_site: "",
+  isActive: true,
 } satisfies UserCompanyFormInput;
 
 /** A saved ISO date as the month picker's "YYYY-MM" (UTC, like the table). */
@@ -55,5 +54,6 @@ export function toUserCompanyFormInput(
     isCurrent: company.startWorkTo === null,
     startWorkTo: toMonthValue(company.startWorkTo),
     company_site: company.company_site ?? "",
+    isActive: company.isActive,
   };
 }

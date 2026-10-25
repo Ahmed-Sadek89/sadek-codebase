@@ -29,13 +29,13 @@ export class UserCompanyService {
     return await this.findAllFor(query, { id: userId });
   }
 
-  /** Public list: always the rows of the user whose `isDefaultView` is true. */
+  /** Public list: always the active rows of the user whose `isDefaultView` is true. */
   async findAllPublic(query: FilterUserCompanyDto) {
-    return await this.findAllFor(query, { isDefaultView: true });
+    return await this.findAllFor({ ...query, isActive: true }, { isDefaultView: true });
   }
 
   private async findAllFor(query: FilterUserCompanyDto, owner: FindOptionsWhere<User>) {
-    const where = this.ownedWhere(owner, query.search);
+    const where = this.ownedWhere(owner, query.search, query.isActive);
     return await paginate({
       repository: this.userCompanyRepository,
       where,
@@ -51,7 +51,7 @@ export class UserCompanyService {
 
   /** The user's companies, paginated by `startWorkFrom`: latest job first unless `order` is ASC. */
   async findByUser(query: FilterUserCompanyDto, userId: number) {
-    const where = this.ownedWhere({ id: userId }, query.search);
+    const where = this.ownedWhere({ id: userId }, query.search, query.isActive);
     return await paginate({
       repository: this.userCompanyRepository,
       where,
@@ -78,14 +78,31 @@ export class UserCompanyService {
     return await this.userCompanyRepository.save(userCompany);
   }
 
+  /** Flips `isActive` and returns the row with its new value. */
+  async toggleActive(id: number, userId: number): Promise<UserCompany> {
+    const userCompany = await this.findOne(id, userId);
+    const isActive = !userCompany.isActive;
+    await this.userCompanyRepository.update({ id: userCompany.id }, { isActive });
+    userCompany.isActive = isActive;
+    return userCompany;
+  }
+
   async remove(id: number, userId: number): Promise<void> {
     const userCompany = await this.findOne(id, userId);
     await this.userCompanyRepository.remove(userCompany);
   }
 
-  /** The user's rows, optionally narrowed by `search` on the company name or the English or Arabic description. */
-  private ownedWhere(user: FindOptionsWhere<User>, search?: string): FindOptionsWhere<UserCompany> | FindOptionsWhere<UserCompany>[] {
+  /**
+   * The user's rows, optionally narrowed by `isActive` and by `search` on the
+   * company name or the English or Arabic description.
+   */
+  private ownedWhere(
+    user: FindOptionsWhere<User>,
+    search?: string,
+    isActive?: boolean,
+  ): FindOptionsWhere<UserCompany> | FindOptionsWhere<UserCompany>[] {
     const owner: FindOptionsWhere<UserCompany> = { user };
+    if (isActive !== undefined) owner.isActive = isActive;
     search = search?.trim();
     if (!search) return owner;
     return [

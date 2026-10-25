@@ -17,6 +17,8 @@ export interface UserCompanyDetails {
   startWorkTo: IsoDateString | null;
   logo: string | null;
   company_site: string | null;
+  /** Inactive companies are hidden from GET /user-company/public. */
+  isActive: boolean;
   createdAt: IsoDateString;
 }
 
@@ -38,6 +40,8 @@ export interface CreateUserCompanyRequest {
   /** http(s) URLs, max 255 characters each. */
   logo?: string;
   company_site?: string;
+  /** Defaults to `true` when omitted. */
+  isActive?: boolean;
 }
 
 /** Optional fields: omitted from a create response when not sent, cleared with `null` on update. */
@@ -66,6 +70,8 @@ export type CreateUserCompanyResponse = Omit<
 export interface UserCompaniesQuery extends PaginationQuery {
   /** Matches the company name or the English or Arabic description (case-insensitive). Max 20 characters. */
   search?: string;
+  /** Filters by status (unset = all). Ignored by `/public`, which only returns active companies. */
+  isActive?: boolean;
 }
 
 export type UserCompaniesResponse = PaginatedResponse<UserCompany>;
@@ -83,5 +89,10 @@ export type UpdateUserCompanyRequest = Partial<
   OptionalUserCompanyFields;
 
 export type UpdateUserCompanyResponse = MessageResponse;
+
+/** PATCH /user-company/:id/toggle-active: the row's new `isActive`. */
+export type ToggleUserCompanyActiveResponse = MessageResponse & {
+  isActive: boolean;
+};
 
 export type DeleteUserCompanyResponse = MessageResponse;

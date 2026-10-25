@@ -5,9 +5,10 @@ import { useTranslations } from "next-intl";
 import { Controller } from "react-hook-form";
 import type { UserCompanyDetails } from "@repo/types/user-company";
 import { Button } from "@repo/ui/button";
-import type { LucideIcon } from "@repo/ui/icons";
+import { Eye, type LucideIcon } from "@repo/ui/icons";
 import { AppDialog } from "../../ui/dialog";
 import { BaseInput } from "../../ui/forms/base-input";
+import { BaseSwitch } from "../../ui/forms/base-switch";
 import { BaseUpload } from "../../ui/forms/base-upload";
 import { useUserCompanyForm } from "../hooks/use-user-company-form";
 import { toUserCompanyFormInput } from "../utils/constants";
@@ -103,6 +104,26 @@ export function UserCompanyForm({
             {...form.register("company_site")}
           />
         </div>
+        <Controller
+          control={form.control}
+          name="isActive"
+          render={({ field, fieldState }) => (
+            <BaseSwitch
+              id={field.name}
+              label={t("userCompanyFormActiveLabel")}
+              description={t("userCompanyFormActiveHint")}
+              icon={<Eye className="size-4" />}
+              checkedText={t("userCompanyFormActiveOn")}
+              uncheckedText={t("userCompanyFormActiveOff")}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              disabled={isSubmitting}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
         <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
           <Button
             type="button"

@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsNotEmpty, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
+import { IsBoolean, IsDate, IsNotEmpty, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 
 const URL_OPTIONS = {
     protocols: ['http', 'https'],
@@ -41,4 +41,9 @@ export class CreateUserCompanyDto {
     @IsOptional()
     @MaxLength(255)
     company_site?: string;
+
+    /** Defaults to true when omitted. */
+    @IsBoolean()
+    @IsOptional()
+    isActive?: boolean;
 }

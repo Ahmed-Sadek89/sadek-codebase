@@ -11,6 +11,7 @@ import { ConfirmAction } from "../ui/confirm-action";
 import useColumns from "./hooks/use-columns";
 import { useStaticFilter } from "./hooks/use-static-filter";
 import { useDeleteUserCompanyAction } from "./hooks/use-delete-user-company";
+import { useToggleUserCompanyActiveAction } from "./hooks/use-toggle-user-company-active";
 import { UserCompanyForm } from "./components/user-company-form";
 import { readListQueryParams } from "../../utils/list-query";
 import { getUserCompaniesQuery } from "./utils/constants";
@@ -47,12 +48,15 @@ export default function UserCompaniesPage() {
     useMyUserCompanies(query);
   const staticFilter = useStaticFilter();
   const deleteAction = useDeleteUserCompanyAction();
+  const toggleAction = useToggleUserCompanyActiveAction();
   const columns = useColumns({
-    busy: deleteAction.isDeleting,
+    busy: deleteAction.isDeleting || toggleAction.isToggling,
     canUpdate: true,
     canDelete: true,
+    canToggleActive: true,
     onEdit: handleEdit,
     onDelete: deleteAction.requestDelete,
+    onToggleActive: toggleAction.requestToggle,
   });
 
   return (
@@ -87,6 +91,12 @@ export default function UserCompaniesPage() {
         Icon={isEditing ? Pencil : Building2}
         role={isEditing ? "edit" : "create"}
         defaultValues={selectedCompany}
+      />
+      <ConfirmAction
+        open={toggleAction.isOpen}
+        onOpenChange={toggleAction.onOpenChange}
+        question={toggleAction.question}
+        onConfirm={toggleAction.confirmToggle}
       />
       <ConfirmAction
         open={deleteAction.isOpen}

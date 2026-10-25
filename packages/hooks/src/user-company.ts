@@ -105,6 +105,21 @@ export function useUpdateUserCompany() {
   });
 }
 
+/** PATCH /user-company/:id/toggle-active; refreshes the lists and that company's detail. */
+export function useToggleUserCompanyActive() {
+  const client = useQueryClient();
+  return useGuardedMutation({
+    mutationFn: (id: number, auth) => userCompanyService.toggleActive(id, auth),
+    onSuccess: (_response, id) =>
+      Promise.all([
+        invalidateUserCompanyLists(client),
+        client.invalidateQueries({
+          queryKey: queryKeys.userCompany.detail(id),
+        }),
+      ]),
+  });
+}
+
 export function useDeleteUserCompany() {
   const client = useQueryClient();
   return useGuardedMutation({
