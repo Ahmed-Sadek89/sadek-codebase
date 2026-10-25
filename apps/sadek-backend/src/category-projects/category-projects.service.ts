@@ -105,6 +105,18 @@ export class CategoryProjectsService {
     }
   }
 
+  /** Flips `isActive` on one of the user's categories and returns the row with its new value. */
+  async toggleActive(id: number, userId: number): Promise<CategoryProject> {
+    const categoryProject = await this.categoryProjectRepository.findOneBy({ id, user: { id: userId } });
+    if (!categoryProject) {
+      throw new NotFoundException(`CategoryProject with id ${id} not found`);
+    }
+    const isActive = !categoryProject.isActive;
+    await this.categoryProjectRepository.update({ id }, { isActive });
+    categoryProject.isActive = isActive;
+    return categoryProject;
+  }
+
   async remove(id: number): Promise<void> {
     const result = await this.categoryProjectRepository.delete(id);
     if (result.affected === 0) {

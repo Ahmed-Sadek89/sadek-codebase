@@ -11,6 +11,8 @@ import { readListQueryParams } from "../../utils/list-query";
 import { getCategoryProjectsQuery } from "./utils/constants";
 import { CategoryProjectsForm } from "./components/category-projects-form";
 import { useDeleteCategoryProjectAction } from "./hooks/use-delete-category-project";
+import { useToggleCategoryProjectActiveAction } from "./hooks/use-toggle-category-project-active";
+import { CategoryProjectDetailsDialog } from "./components/category-project-details-dialog";
 import { ConfirmAction } from "../ui/confirm-action";
 import { FolderPlus, Pencil } from "@repo/ui/icons";
 import type { CategoryProject } from "@repo/types/category-projects";
@@ -30,6 +32,15 @@ export default function CategoryProjectsPage() {
     setSelectedCategory(category);
     setIsOpenDialog(true);
   }, []);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  // Kept after closing so the content doesn't vanish during the close animation.
+  const [viewedCategory, setViewedCategory] = useState<CategoryProject | null>(
+    null,
+  );
+  const handleView = useCallback((category: CategoryProject) => {
+    setViewedCategory(category);
+    setIsDetailsOpen(true);
+  }, []);
   const isEditing = selectedCategory !== null;
   const searchParams = useSearchParams();
   const query = useMemo(
@@ -43,12 +54,17 @@ export default function CategoryProjectsPage() {
     useCategoryProjects(query);
   const staticFilter = useStaticFilter();
   const deleteAction = useDeleteCategoryProjectAction();
+  const toggleAction = useToggleCategoryProjectActiveAction();
   const columns = useColumns({
-    busy: deleteAction.isDeleting,
+    busy: deleteAction.isDeleting || toggleAction.isToggling,
+    canView: true,
     canUpdate: true,
     canDelete: true,
+    canToggleActive: true,
+    onView: handleView,
     onEdit: handleEdit,
     onDelete: deleteAction.requestDelete,
+    onToggleActive: toggleAction.requestToggle,
   });
 
   return (
@@ -85,6 +101,17 @@ export default function CategoryProjectsPage() {
         Icon={isEditing ? Pencil : FolderPlus}
         role={isEditing ? "edit" : "create"}
         defaultValues={selectedCategory}
+      />
+      <CategoryProjectDetailsDialog
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        category={viewedCategory}
+      />
+      <ConfirmAction
+        open={toggleAction.isOpen}
+        onOpenChange={toggleAction.onOpenChange}
+        question={toggleAction.question}
+        onConfirm={toggleAction.confirmToggle}
       />
       <ConfirmAction
         open={deleteAction.isOpen}

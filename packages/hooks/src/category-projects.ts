@@ -92,6 +92,25 @@ export function useUpdateCategoryProject() {
   });
 }
 
+/** PATCH /category-projects/:id/toggle-active; refreshes the lists, that category's detail, and projects. */
+export function useToggleCategoryProjectActive() {
+  const client = useQueryClient();
+  return useGuardedMutation({
+    mutationFn: (id: number, auth) =>
+      categoryProjectsService.toggleActive(id, auth),
+    onSuccess: (_response, id) =>
+      Promise.all([
+        client.invalidateQueries({
+          queryKey: queryKeys.categoryProjects.lists(),
+        }),
+        client.invalidateQueries({
+          queryKey: queryKeys.categoryProjects.detail(id),
+        }),
+        client.invalidateQueries({ queryKey: queryKeys.projects.all }),
+      ]),
+  });
+}
+
 export function useDeleteCategoryProject() {
   const client = useQueryClient();
   return useGuardedMutation({

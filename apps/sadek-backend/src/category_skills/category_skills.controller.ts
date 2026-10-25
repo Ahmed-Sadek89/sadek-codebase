@@ -62,6 +62,18 @@ export class CategorySkillsController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  // Active ⇄ inactive; the response says which way it went.
+  @Patch(':id/toggle-active')
+  async toggleActive(@Param('id') id: string, @Request() req: RequestUserDto) {
+    const { isActive } = await this.categorySkillsService.toggleActive(+id, req.user.userId);
+    return {
+      message: isActive ? 'CategorySkill activated successfully' : 'CategorySkill deactivated successfully',
+      isActive,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   async remove(@Param('id') id: string) {
     await this.categorySkillsService.remove(+id);

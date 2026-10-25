@@ -4,3 +4,4 @@
 -- upload and get cv from Google drive
 -- make media library dialog when upload image 
 -- use Socket.Io when message
+-- make stats endponit and call in in dashboard homepage

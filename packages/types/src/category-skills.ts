@@ -79,4 +79,9 @@ export type UpdateCategorySkillRequest = Partial<CreateCategorySkillRequest>;
 export type UpdateCategorySkillResponse = MessageResponse;
 
 /** DELETE /category-skills/:id: fails with 400 while skills still use it. */
+/** PATCH /category-skills/:id/toggle-active: the row's new `isActive`. */
+export type ToggleCategorySkillActiveResponse = MessageResponse & {
+  isActive: boolean;
+};
+
 export type DeleteCategorySkillResponse = MessageResponse;

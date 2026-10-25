@@ -133,6 +133,18 @@ export class CategorySkillsService {
     }
   }
 
+  /** Flips `isActive` on one of the user's categories and returns the row with its new value. */
+  async toggleActive(id: number, userId: number): Promise<CategorySkill> {
+    const categorySkill = await this.categorySkillRepository.findOneBy({ id, user: { id: userId } });
+    if (!categorySkill) {
+      throw new NotFoundException(`CategorySkill with id ${id} not found`);
+    }
+    const isActive = !categorySkill.isActive;
+    await this.categorySkillRepository.update({ id }, { isActive });
+    categorySkill.isActive = isActive;
+    return categorySkill;
+  }
+
   async remove(id: number): Promise<void> {
     const categorySkill = await this.categorySkillRepository.findOne({
       where: { id },

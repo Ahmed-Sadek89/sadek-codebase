@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import type { CategorySkill } from "@repo/types/category-skills";
-import { Eye, Pencil, Trash2 } from "@repo/ui/icons";
+import { CircleCheck, CircleOff, Eye, Pencil, Trash2 } from "@repo/ui/icons";
 import {
   DateCell,
   StatusBadgeCell,
@@ -17,10 +17,12 @@ type UseColumnsOptions = {
   onView?: (category: CategorySkill) => void;
   onEdit?: (category: CategorySkill) => void;
   onDelete?: (category: CategorySkill) => void;
+  onToggleActive?: (category: CategorySkill) => void;
   /** Each flag shows its action; the Action column shows if any is set. */
   canView?: boolean;
   canUpdate?: boolean;
   canDelete?: boolean;
+  canToggleActive?: boolean;
 };
 
 const useColumns = ({
@@ -28,9 +30,11 @@ const useColumns = ({
   onView,
   onEdit,
   onDelete,
+  onToggleActive,
   canView = false,
   canUpdate = false,
   canDelete = false,
+  canToggleActive = false,
 }: UseColumnsOptions = {}) => {
   const t = useTranslations();
 
@@ -49,14 +53,7 @@ const useColumns = ({
         header: t("tableColCategoryAr"),
         meta: { cellProps: { lang: "ar", dir: "rtl" } },
         cell: ({ row }) => (
-          <div className="max-w-sm min-w-55 flex items-start flex-col gap-y-1.5">
-            <TextCell value={row.original.nameAr} weight="semibold" />
-            <TextCell
-              value={row.original.descriptionAr}
-              tone="muted"
-              size="sm"
-            />
-          </div>
+          <TextCell value={row.original.nameAr} weight="semibold" />
         ),
       },
       {
@@ -65,14 +62,7 @@ const useColumns = ({
         header: t("tableColCategoryEn"),
         meta: { cellProps: { lang: "en", dir: "ltr" } },
         cell: ({ row }) => (
-          <div className="max-w-sm min-w-55 flex items-start flex-col gap-y-1.5">
-            <TextCell value={row.original.nameEn} weight="semibold" />
-            <TextCell
-              value={row.original.descriptionEn}
-              tone="muted"
-              size="sm"
-            />
-          </div>
+          <TextCell value={row.original.nameEn} weight="semibold" />
         ),
       },
       {
@@ -96,7 +86,7 @@ const useColumns = ({
       },
     ];
 
-    if (!canView && !canUpdate && !canDelete) return columns;
+    if (!canView && !canUpdate && !canDelete && !canToggleActive) return columns;
 
     return [
       ...columns,
@@ -121,6 +111,16 @@ const useColumns = ({
                   hidden: !canView,
                 },
                 {
+                  key: "toggle-active",
+                  label: c.isActive
+                    ? t("tableActionDeactivate")
+                    : t("tableActionActivate"),
+                  icon: c.isActive ? CircleOff : CircleCheck,
+                  tone: c.isActive ? "danger" : "success",
+                  onClick: () => onToggleActive?.(c),
+                  hidden: !canToggleActive,
+                },
+                {
                   key: "edit",
                   label: t("tableActionEdit"),
                   icon: Pencil,
@@ -143,9 +143,11 @@ const useColumns = ({
     ];
   }, [
     busy,
+    canToggleActive,
     canDelete,
     canUpdate,
     canView,
+    onToggleActive,
     onDelete,
     onEdit,
     onView,

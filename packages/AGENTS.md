@@ -117,14 +117,15 @@ Source: `apps/sadek-backend/src/category_skills`. Types in `@repo/types/category
 | `GET /category-skills/public` (Public) | Same query as `/private`                                            | `PublicCategorySkillsResponse`: each category plus `skills`, up to 20 of its active skills (`{ id, nameAr, nameEn, createdAt }`), newest first | `categorySkillsService.findAllPublic` / `usePublicCategorySkills`, `useInfinitePublicCategorySkills` (pages via `fetchNextPage`, key `queryKeys.categorySkills.publicInfinite(query)`) |
 | `GET /category-skills/:id`             | –                                                                   | `CategorySkillDetails`: category plus `skills` (linked-skill count)                                                                            | `categorySkillsService.findOne` / `useCategorySkill`                                                                                                                                   |
 | `PATCH /category-skills/:id`           | JSON partial of the create body                                     | `{ message }`                                                                                                                                  | `categorySkillsService.update` / `useUpdateCategorySkill`                                                                                                                              |
+| `PATCH /category-skills/:id/toggle-active` | –                                                                | `{ message, isActive }` (`ToggleCategorySkillActiveResponse`, the new value)                                                                   | `categorySkillsService.toggleActive` / `useToggleCategorySkillActive`                                                                                                                  |
 | `DELETE /category-skills/:id`          | –                                                                   | `{ message }`                                                                                                                                  | `categorySkillsService.remove` / `useDeleteCategorySkill`                                                                                                                              |
 
 - Category fields: `id`, `nameAr`, `nameEn` (max 50), `descriptionAr`, `descriptionEn` (nullable), `isActive`, `createdAt`, `user: { id }`.
 - The list path is `/private`, not the collection root. It returns only the signed-in user's categories, and `search` matches `nameAr` or `nameEn` (max 20 characters).
 - `GET /category-skills/public` embeds skills owned by the default-view user that are active, at most 20 per category (`PUBLIC_SKILLS_PER_CATEGORY` in the service), fetched per category on the page with `SkillsService.findPublicByCategory`.
 - `DELETE` returns 400 while any skill still references the category.
-- `GET`, `PATCH`, and `DELETE /:id` have no owner check.
-- Hooks: lists use keys `queryKeys.categorySkills.list(query)` and `placeholderData: keepPreviousData`, so the current rows stay visible while a new search loads (`isFetching` is true, `isPending` is not). Create invalidates lists; update invalidates lists, the detail, and `queryKeys.skills.all` (skills embed category names); delete removes the detail and invalidates lists.
+- `GET`, `PATCH`, and `DELETE /:id` have no owner check; `PATCH /:id/toggle-active` returns 404 for another user's category.
+- Hooks: lists use keys `queryKeys.categorySkills.list(query)` and `placeholderData: keepPreviousData`, so the current rows stay visible while a new search loads (`isFetching` is true, `isPending` is not). Create invalidates lists; update invalidates lists, the detail, and `queryKeys.skills.all` (skills embed category names); toggle-active invalidates lists and the detail; delete removes the detail and invalidates lists.
 
 ### Skills (`/skills`)
 
@@ -155,11 +156,12 @@ Source: `apps/sadek-backend/src/category-projects`. Types in `@repo/types/catego
 | `GET /category-projects/public` (Public) | Same query as `GET /category-projects`                              | Paginated categories of the default-view user          |
 | `GET /category-projects/:id`             | –                                                                   | Category, without `user`                               |
 | `PATCH /category-projects/:id`           | JSON partial of the create body                                     | `{ message: "Category project updated successfully" }` |
+| `PATCH /category-projects/:id/toggle-active` | –                                                              | `{ message, isActive }` (`ToggleCategoryProjectActiveResponse`) |
 | `DELETE /category-projects/:id`          | –                                                                   | `{ message: "Category project deleted successfully" }` |
 
-- Client: `categoryProjectsService.create/findAll/findAllPublic/findOne/update/remove`; hooks `useCreateCategoryProject`, `useCategoryProjects(query)`, `usePublicCategoryProjects(query)` (infinite: `useInfiniteQuery` pages via `fetchNextPage`, key `publicList(query)` without `page`), `useCategoryProject(id)` (`CategoryProjectDetails`, no `user`), `useUpdateCategoryProject` (`{ id, data }`), `useDeleteCategoryProject` (`id`). Update and delete also invalidate `queryKeys.projects.all`, because projects embed category names.
+- Client: `categoryProjectsService.create/findAll/findAllPublic/findOne/update/toggleActive/remove`; hooks `useCreateCategoryProject`, `useCategoryProjects(query)`, `usePublicCategoryProjects(query)` (infinite: `useInfiniteQuery` pages via `fetchNextPage`, key `publicList(query)` without `page`), `useCategoryProject(id)` (`CategoryProjectDetails`, no `user`), `useUpdateCategoryProject` (`{ id, data }`), `useToggleCategoryProjectActive` (`id`), `useDeleteCategoryProject` (`id`). Update, toggle-active and delete also invalidate `queryKeys.projects.all`, because projects embed category names.
 - Same fields and rules as category skills: `nameAr`/`nameEn` max 50, nullable descriptions, `isActive`, `createdAt`. Unlike category skills, the list is at the collection root, and `DELETE` does not check for linked projects.
-- `GET`, `PATCH`, and `DELETE /:id` have no owner check.
+- `GET`, `PATCH`, and `DELETE /:id` have no owner check; `PATCH /:id/toggle-active` returns 404 for another user's category.
 
 ### Projects (`/projects`)
 

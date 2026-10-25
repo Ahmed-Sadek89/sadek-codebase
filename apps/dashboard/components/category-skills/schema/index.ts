@@ -5,7 +5,7 @@ import type { MessageKey } from "../../../i18n/types";
 type Translate = (key: MessageKey) => string;
 
 export const CATEGORY_SKILL_NAME_MAX = 50;
-export const CATEGORY_SKILL_DESCRIPTION_MAX = 100;
+export const CATEGORY_SKILL_DESCRIPTION_MAX = 255;
 
 // Descriptions are optional: a blank box is sent as "not set".
 export const createCategorySkillSchema = (t: Translate) =>

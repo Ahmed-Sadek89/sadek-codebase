@@ -11,6 +11,8 @@ import { readListQueryParams } from "../../utils/list-query";
 import { getCategorySkillsQuery } from "./utils/constants";
 import { CategorySkillsForm } from "./components/category-skills-form";
 import { useDeleteCategorySkillAction } from "./hooks/use-delete-category-skill";
+import { useToggleCategorySkillActiveAction } from "./hooks/use-toggle-category-skill-active";
+import { CategorySkillDetailsDialog } from "./components/category-skill-details-dialog";
 import { ConfirmAction } from "../ui/confirm-action";
 import { FolderPlus, Pencil } from "@repo/ui/icons";
 import type { CategorySkill } from "@repo/types/category-skills";
@@ -30,6 +32,15 @@ export default function CategorySkillsPage() {
     setSelectedCategory(category);
     setIsOpenDialog(true);
   }, []);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  // Kept after closing so the content doesn't vanish during the close animation.
+  const [viewedCategory, setViewedCategory] = useState<CategorySkill | null>(
+    null,
+  );
+  const handleView = useCallback((category: CategorySkill) => {
+    setViewedCategory(category);
+    setIsDetailsOpen(true);
+  }, []);
   const isEditing = selectedCategory !== null;
   const searchParams = useSearchParams();
   const query = useMemo(
@@ -43,12 +54,17 @@ export default function CategorySkillsPage() {
     useCategorySkills(query);
   const staticFilter = useStaticFilter();
   const deleteAction = useDeleteCategorySkillAction();
+  const toggleAction = useToggleCategorySkillActiveAction();
   const columns = useColumns({
-    busy: deleteAction.isDeleting,
+    busy: deleteAction.isDeleting || toggleAction.isToggling,
+    canView: true,
     canUpdate: true,
     canDelete: true,
+    canToggleActive: true,
+    onView: handleView,
     onEdit: handleEdit,
     onDelete: deleteAction.requestDelete,
+    onToggleActive: toggleAction.requestToggle,
   });
 
   return (
@@ -85,6 +101,17 @@ export default function CategorySkillsPage() {
         Icon={isEditing ? Pencil : FolderPlus}
         role={isEditing ? "edit" : "create"}
         defaultValues={selectedCategory}
+      />
+      <CategorySkillDetailsDialog
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        category={viewedCategory}
+      />
+      <ConfirmAction
+        open={toggleAction.isOpen}
+        onOpenChange={toggleAction.onOpenChange}
+        question={toggleAction.question}
+        onConfirm={toggleAction.confirmToggle}
       />
       <ConfirmAction
         open={deleteAction.isOpen}

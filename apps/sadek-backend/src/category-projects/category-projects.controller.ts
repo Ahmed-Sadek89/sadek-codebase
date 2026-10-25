@@ -59,6 +59,18 @@ export class CategoryProjectsController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  // Active ⇄ inactive; the response says which way it went.
+  @Patch(':id/toggle-active')
+  async toggleActive(@Param('id') id: string, @Request() req: RequestUserDto) {
+    const { isActive } = await this.categoryProjectsService.toggleActive(+id, req.user.userId);
+    return {
+      message: isActive ? 'Category project activated successfully' : 'Category project deactivated successfully',
+      isActive,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   async remove(@Param('id') id: string) {
     await this.categoryProjectsService.remove(+id);

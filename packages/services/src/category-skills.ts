@@ -8,6 +8,7 @@ import type {
   CreateCategorySkillResponse,
   DeleteCategorySkillResponse,
   PublicCategorySkillsResponse,
+  ToggleCategorySkillActiveResponse,
   UpdateCategorySkillRequest,
   UpdateCategorySkillResponse,
 } from "@repo/types/category-skills";
@@ -18,6 +19,7 @@ export const categorySkillsEndpoints = {
   findAll: "/category-skills/private",
   public: "/category-skills/public",
   byId: (id: number) => `/category-skills/${id}`,
+  toggleActive: (id: number) => `/category-skills/${id}/toggle-active`,
 } as const;
 
 // GET /category-skills/public is public; every other route sits behind JwtAuthGuard.
@@ -71,6 +73,18 @@ export const categorySkillsService = {
     const { data } = await apiClient.patch<UpdateCategorySkillResponse>(
       categorySkillsEndpoints.byId(id),
       request,
+      { headers: authHeaders(auth) },
+    );
+    return data;
+  },
+  /** Active ⇄ inactive. */
+  async toggleActive(
+    id: number,
+    auth: AuthorizedRequest,
+  ): Promise<ToggleCategorySkillActiveResponse> {
+    const { data } = await apiClient.patch<ToggleCategorySkillActiveResponse>(
+      categorySkillsEndpoints.toggleActive(id),
+      undefined,
       { headers: authHeaders(auth) },
     );
     return data;

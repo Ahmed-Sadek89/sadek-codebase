@@ -7,6 +7,7 @@ import type {
   CreateCategoryProjectRequest,
   CreateCategoryProjectResponse,
   DeleteCategoryProjectResponse,
+  ToggleCategoryProjectActiveResponse,
   UpdateCategoryProjectRequest,
   UpdateCategoryProjectResponse,
 } from "@repo/types/category-projects";
@@ -16,6 +17,7 @@ export const categoryProjectsEndpoints = {
   collection: "/category-projects",
   public: "/category-projects/public",
   byId: (id: number) => `/category-projects/${id}`,
+  toggleActive: (id: number) => `/category-projects/${id}/toggle-active`,
 } as const;
 
 // GET /category-projects/public is public; every other route sits behind JwtAuthGuard.
@@ -69,6 +71,18 @@ export const categoryProjectsService = {
     const { data } = await apiClient.patch<UpdateCategoryProjectResponse>(
       categoryProjectsEndpoints.byId(id),
       request,
+      { headers: authHeaders(auth) },
+    );
+    return data;
+  },
+  /** Active ⇄ inactive. */
+  async toggleActive(
+    id: number,
+    auth: AuthorizedRequest,
+  ): Promise<ToggleCategoryProjectActiveResponse> {
+    const { data } = await apiClient.patch<ToggleCategoryProjectActiveResponse>(
+      categoryProjectsEndpoints.toggleActive(id),
+      undefined,
       { headers: authHeaders(auth) },
     );
     return data;

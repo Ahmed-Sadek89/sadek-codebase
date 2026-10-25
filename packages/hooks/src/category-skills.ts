@@ -99,6 +99,24 @@ export function useUpdateCategorySkill() {
   });
 }
 
+/** PATCH /category-skills/:id/toggle-active; refreshes the lists and that category's detail. */
+export function useToggleCategorySkillActive() {
+  const client = useQueryClient();
+  return useGuardedMutation({
+    mutationFn: (id: number, auth) =>
+      categorySkillsService.toggleActive(id, auth),
+    onSuccess: (_response, id) =>
+      Promise.all([
+        client.invalidateQueries({
+          queryKey: queryKeys.categorySkills.lists(),
+        }),
+        client.invalidateQueries({
+          queryKey: queryKeys.categorySkills.detail(id),
+        }),
+      ]),
+  });
+}
+
 export function useDeleteCategorySkill() {
   const client = useQueryClient();
   return useGuardedMutation({

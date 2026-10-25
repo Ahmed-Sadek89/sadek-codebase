@@ -58,4 +58,9 @@ export type UpdateCategoryProjectRequest =
 
 export type UpdateCategoryProjectResponse = MessageResponse;
 
+/** PATCH /category-projects/:id/toggle-active: the row's new `isActive`. */
+export type ToggleCategoryProjectActiveResponse = MessageResponse & {
+  isActive: boolean;
+};
+
 export type DeleteCategoryProjectResponse = MessageResponse;
