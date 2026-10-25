@@ -55,7 +55,7 @@ export function useInfinitePublicWhatCanDos(
   return useInfiniteQuery({
     queryKey: queryKeys.whatCanDo.publicInfinite(query),
     queryFn: ({ pageParam }) =>
-      whatCanDoService.findAllPublic({ ...query, page: pageParam }),
+      whatCanDoService.findAllPublic({ ...query, page: pageParam, order: "ASC" }),
     initialPageParam: 1,
     getNextPageParam,
   });

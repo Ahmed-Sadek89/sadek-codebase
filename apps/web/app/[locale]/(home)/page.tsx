@@ -49,6 +49,7 @@ export default async function Page() {
           whatCanDoService.findAllPublic({
             ...whatCanDoQuery,
             page: pageParam,
+            order: "ASC"
           }),
         initialPageParam: 1,
         getNextPageParam,
