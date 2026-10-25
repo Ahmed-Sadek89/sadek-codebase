@@ -5,21 +5,22 @@ import type { PublicCategorySkill } from "@repo/types/category-skills";
 import type { InfiniteQueryState } from "../../utils";
 import { SectionTitle } from "../../../ui/section-title";
 import { SectionStatus } from "../../../ui/section-status";
-import { ShowMoreButton } from "../../../ui/show-more-button";
-import { SkillCategoryCard } from "./components";
+import { Layers, Sparkles } from "@repo/ui/icons";
+import { SkillsExplorer } from "./components";
 import { useSkillGroups } from "./hooks";
 
 export function Skills({
   categories,
 }: {
   /**
-   * GET /category-skills/public, 10 categories per page (each carries its
-   * skills), plus "show more".
+   * GET /category-skills/public, 5 categories per page (each carries its
+   * skills), plus "more categories".
    */
   categories: InfiniteQueryState<PublicCategorySkill>;
 }) {
   const t = useTranslations();
   const groups = useSkillGroups(categories.data);
+  const skillCount = groups.reduce((total, group) => total + group.skills.length, 0);
   return (
     <section
       id="skills"
@@ -41,27 +42,30 @@ export function Skills({
           copy={t("skillsBody")}
         />
         {groups.length ? (
-          // One card per category, 1–3 columns by width.
-          <div className="grid items-start gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {groups.map((group, index) => (
-              <SkillCategoryCard
-                group={group}
-                index={index}
-                key={group.category.id}
-              />
-            ))}
-          </div>
+          <>
+            {/* What's loaded so far: categories and skills. */}
+            <ul className="mx-auto -mt-4 mb-10 flex flex-wrap justify-center gap-3">
+              <li className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-sm font-semibold text-foreground shadow-sm backdrop-blur">
+                <Layers aria-hidden="true" className="size-4 text-primary" />
+                {t("skillsSummaryCategories", { count: groups.length })}
+              </li>
+              <li className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-sm font-semibold text-foreground shadow-sm backdrop-blur">
+                <Sparkles aria-hidden="true" className="size-4 text-primary" />
+                {t("skillsCount", { count: skillCount })}
+              </li>
+            </ul>
+            <SkillsExplorer
+              groups={groups}
+              hasMore={categories.hasMore}
+              isLoadingMore={categories.isLoadingMore}
+              onLoadMore={categories.loadMore}
+            />
+          </>
         ) : (
           <SectionStatus
             isLoading={categories.isLoading}
             isError={categories.isError}
             emptyText={t("skillsEmpty")}
-          />
-        )}
-        {groups.length > 0 && categories.hasMore && (
-          <ShowMoreButton
-            isLoading={categories.isLoadingMore}
-            onClick={categories.loadMore}
           />
         )}
       </div>

@@ -14,7 +14,7 @@ export const whatCanDoQuery: Omit<WhatCanDosQuery, "page"> = {
 };
 /** Skill categories load 5 at a time, lowest rank first; "Show more" fetches the next page. */
 export const categorySkillsQuery: Omit<CategorySkillsQuery, "page"> = {
-  limit: 5,
+  limit: 10,
   isActive: true,
   order: "ASC",
 };

@@ -3,9 +3,6 @@ import type {
   PublicCategorySkillItem,
 } from "@repo/types/category-skills";
 
-/** Chips a card shows before "+N more" (a category embeds up to 20). */
-export const SKILLS_COLLAPSED_COUNT = 12;
-
 export type SkillGroup = {
   category: PublicCategorySkill;
   skills: PublicCategorySkillItem[];
@@ -24,4 +21,9 @@ export function toSkillGroups(categories: PublicCategorySkill[]): SkillGroup[] {
   return categories
     .map((category) => ({ category, skills: skillsOf(category) }))
     .filter((group) => group.skills.length > 0);
+}
+
+/** "01", "02", … for a category's position. */
+export function categoryNumber(index: number) {
+  return String(index + 1).padStart(2, "0");
 }

@@ -1,5 +1,7 @@
  
 -- add entities for educations and language
+-- add instructor expreicene section
+-- hide/show sections
 -- make forgetPassword page in dashboard, using gmail
 -- cv builder in dashboard
 -- upload and get cv from Google drive
