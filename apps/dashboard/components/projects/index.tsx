@@ -3,37 +3,32 @@
 import { useCallback, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useRouter } from "../../i18n/navigation";
 import { useProjects } from "@repo/hooks/projects";
 import type { Project } from "@repo/types/projects";
-import { Pencil, FolderKanban } from "@repo/ui/icons";
 import { DynamicTable } from "../ui/dynamic-table";
 import { ConfirmAction } from "../ui/confirm-action";
 import useColumns from "./hooks/use-columns";
 import { useStaticFilter } from "./hooks/use-static-filter";
 import { useDynamicFilter } from "./hooks/use-dynamic-filter";
 import { useDeleteProjectAction } from "./hooks/use-delete-project";
-import { ProjectsForm } from "./components/projects-form";
 import { ProjectDetailsDialog } from "./components/project-details-dialog";
 import { getProjectsQuery } from "./utils/constants";
 
 /** All projects page content. Data is prefetched in the route's page.tsx. */
 export default function ProjectsPage() {
   const t = useTranslations();
-  const [isOpenDialog, setIsOpenDialog] = useState(false);
-  // The row being edited; null while creating.
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const handleOpenDialog = useCallback((open: boolean) => {
-    setIsOpenDialog(open);
-  }, []);
+  const router = useRouter();
+  // Creating and editing happen on their own page: /dashboard/projects/form/[slug].
   const handleCreate = useCallback(() => {
-    setSelectedProject(null);
-    setIsOpenDialog(true);
-  }, []);
-  const handleEdit = useCallback((project: Project) => {
-    setSelectedProject(project);
-    setIsOpenDialog(true);
-  }, []);
-  const isEditing = selectedProject !== null;
+    router.push("/dashboard/projects/form/create");
+  }, [router]);
+  const handleEdit = useCallback(
+    (project: Project) => {
+      router.push(`/dashboard/projects/form/${project.id}`);
+    },
+    [router],
+  );
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   // Kept after closing so the content doesn't vanish during the close animation.
   const [viewedProject, setViewedProject] = useState<Project | null>(null);
@@ -81,17 +76,6 @@ export default function ProjectsPage() {
         makeCreateAction={handleCreate}
         staticFilter={staticFilter}
         dynamicFilter={dynamicFilter}
-      />
-      <ProjectsForm
-        isOpenDialog={isOpenDialog}
-        handleOpenDialog={handleOpenDialog}
-        title={isEditing ? t("projectFormEditTitle") : t("projectFormTitle")}
-        description={
-          isEditing ? t("projectFormEditDescription") : t("projectFormDescription")
-        }
-        Icon={isEditing ? Pencil : FolderKanban}
-        role={isEditing ? "edit" : "create"}
-        defaultValues={selectedProject}
       />
       <ProjectDetailsDialog
         open={isDetailsOpen}

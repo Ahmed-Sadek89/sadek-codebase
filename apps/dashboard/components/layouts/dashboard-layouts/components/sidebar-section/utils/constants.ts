@@ -14,6 +14,8 @@ import type { MessageKey } from "../../../../../../i18n/types";
 export type SidebarLink = {
   titleKey: MessageKey;
   href: string;
+  /** Other routes that also highlight this link (with their nested routes), e.g. a detail page outside `href`. */
+  activePrefixes?: string[];
 };
 
 export type SidebarNavItem = SidebarLink & {
@@ -71,7 +73,12 @@ export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
         href: "/dashboard/projects",
         icon: FolderKanban,
         items: [
-          { titleKey: "navAllProjects", href: "/dashboard/projects" },
+          {
+            titleKey: "navAllProjects",
+            href: "/dashboard/projects",
+            // The create/edit page /dashboard/projects/form/[slug] belongs to the list.
+            activePrefixes: ["/dashboard/projects/form"],
+          },
           { titleKey: "navCategories", href: "/dashboard/projects/category" },
         ],
       },

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useMyUserInfo } from "@repo/hooks/user-info";
-import { isNotFoundError } from "./utils/constants";
+import { isNotFoundError } from "../../utils/api-errors";
 import { UserInfoEmpty } from "./components/user-info-empty";
 import { UserInfoError } from "./components/user-info-error";
 import { UserInfoForm } from "./components/user-info-form";

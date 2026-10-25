@@ -22,7 +22,7 @@ import {
 import { useDirection } from "@repo/ui/direction";
 import { ChevronLeft, ChevronRight } from "@repo/ui/icons";
 import type { SidebarNavGroup } from "../utils/constants";
-import { isActivePath } from "../utils/is-active-path";
+import { isActiveLink } from "../utils/is-active-path";
 
 type NavLinkProps = ComponentProps<typeof Link> & { isCurrent: boolean };
 
@@ -63,7 +63,7 @@ export function NavGroup({ group }: { group: SidebarNavGroup }) {
           const Icon = item.icon;
 
           if (!item.items?.length) {
-            const isCurrent = isActivePath(pathname, item.href);
+            const isCurrent = isActiveLink(pathname, item);
             return (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
@@ -84,7 +84,7 @@ export function NavGroup({ group }: { group: SidebarNavGroup }) {
             );
           }
 
-          const isSectionActive = isActivePath(pathname, item.href, false);
+          const isSectionActive = isActiveLink(pathname, item, false);
 
           return (
             <Collapsible
@@ -109,7 +109,7 @@ export function NavGroup({ group }: { group: SidebarNavGroup }) {
                 <CollapsibleContent>
                   <SidebarMenuSub>
                     {item.items.map((subItem) => {
-                      const isCurrent = isActivePath(pathname, subItem.href);
+                      const isCurrent = isActiveLink(pathname, subItem);
                       return (
                         <SidebarMenuSubItem key={subItem.href}>
                           <SidebarMenuSubButton asChild isActive={isCurrent}>

@@ -165,12 +165,3 @@ export function toUserInfoFormInput(
     ...toCvFields(userInfo.cv),
   };
 }
-
-/** True for the backend's 404, which GET /user-info/me sends before the row exists. */
-export function isNotFoundError(error: unknown): boolean {
-  if (typeof error !== "object" || error === null || !("response" in error)) {
-    return false;
-  }
-  const { response } = error as { response?: { status?: number } };
-  return response?.status === 404;
-}

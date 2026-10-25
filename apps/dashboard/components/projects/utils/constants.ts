@@ -1,4 +1,4 @@
-import type { Project, ProjectsQuery } from "@repo/types/projects";
+import type { Project, ProjectDetails, ProjectsQuery } from "@repo/types/projects";
 import { plainTextToHtml } from "@repo/rich-text";
 import {
   readListQueryParams,
@@ -44,8 +44,10 @@ export const PROJECT_FORM_DEFAULT_VALUES = {
   categoryProjects: [],
 } satisfies ProjectFormInput;
 
-/** Form values for a row being edited, or the blank defaults when creating. */
-export function toProjectFormInput(project?: Project | null): ProjectFormInput {
+/** Form values for a project being edited (list row or detail), or the blank defaults when creating. */
+export function toProjectFormInput(
+  project?: Project | ProjectDetails | null,
+): ProjectFormInput {
   if (!project) return PROJECT_FORM_DEFAULT_VALUES;
   return {
     nameEn: project.nameEn,

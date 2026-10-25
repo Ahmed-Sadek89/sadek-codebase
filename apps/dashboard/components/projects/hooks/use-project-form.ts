@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { showToast, toastApiError } from "@repo/libs/toast";
 import { useCreateProject, useUpdateProject } from "@repo/hooks/projects";
-import type { Project } from "@repo/types/projects";
+import type { Project, ProjectDetails } from "@repo/types/projects";
 import {
   createProjectSchema,
   type ProjectFormInput,
@@ -17,12 +17,12 @@ import { deleteFile } from "../../../libs/upload/delete-file";
 import { UploadFileError, uploadFile } from "../../../libs/upload/upload-file";
 import { UPLOAD_MAX_SIZE } from "../../../libs/upload/upload-types";
 import { bytesToMb } from "../../ui/forms/base-upload/utils/file";
-import { PROJECT_FORM_DEFAULT_VALUES } from "../utils/constants";
+import { toProjectFormInput } from "../utils/constants";
 
 type UseProjectFormOptions = {
-  /** The row being edited; null/undefined creates a new project. */
-  project?: Project | null;
-  /** Runs after a successful save, e.g. to close the dialog. */
+  /** The project being edited; null/undefined creates a new project. */
+  project?: Project | ProjectDetails | null;
+  /** Runs after a successful save, e.g. to leave the page. */
   onSuccess?: () => void;
 };
 
@@ -35,7 +35,8 @@ export function useProjectForm({
   const schema = useMemo(() => createProjectSchema(t), [t]);
   const form = useForm<ProjectFormInput, unknown, ProjectFormValues>({
     resolver: zodResolver(schema),
-    defaultValues: PROJECT_FORM_DEFAULT_VALUES,
+    // The form mounts once the project is loaded, so its values are known here.
+    defaultValues: toProjectFormInput(project),
     mode: "onBlur",
     reValidateMode: "onChange",
   });
