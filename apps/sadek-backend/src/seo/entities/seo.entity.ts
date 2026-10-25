@@ -1,4 +1,5 @@
-import { SEO_URL_MAX, type SeoHreflang } from '@repo/constants/hreflang';
+import type { SeoHreflang } from '@repo/constants/hreflang';
+import { URL_MAX } from '@repo/constants/url';
 import { DEFAULT_TWITTER_CARD, TwitterCard } from '@repo/constants/twitter-card';
 import { Page } from '../../pages/entities/page.entity';
 import { User } from '../../user/entities/user.entity';
@@ -46,7 +47,7 @@ export class Seo {
     metaDescription_ar!: string;
 
     // The page's preferred URL (<link rel="canonical">); null lets the website build it.
-    @Column({ type: 'varchar', length: SEO_URL_MAX, nullable: true })
+    @Column({ type: 'varchar', length: URL_MAX, nullable: true })
     canonicalUrl!: string | null;
 
     // Language alternates (<link rel="alternate" hreflang>), e.g. en, ar and x-default.
@@ -71,7 +72,7 @@ export class Seo {
     @Column({ type: 'varchar', length: SEO_OG_DESCRIPTION_MAX, nullable: true })
     ogDescription_ar!: string;
 
-    @Column({ type: 'varchar', length: SEO_URL_MAX, nullable: true })
+    @Column({ type: 'varchar', length: URL_MAX, nullable: true })
     ogImage!: string;
 
     @Column({ type: 'varchar', length: SEO_OG_IMAGE_ALT_MAX, nullable: true })

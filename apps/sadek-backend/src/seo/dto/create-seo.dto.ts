@@ -19,7 +19,6 @@ import {
     HREFLANG_LANG_MAX,
     HREFLANG_MAX,
     HREFLANG_PATTERN,
-    SEO_URL_MAX,
     type SeoHreflang,
 } from '@repo/constants/hreflang';
 import { TwitterCard } from '@repo/constants/twitter-card';
@@ -33,6 +32,7 @@ import {
     TWITTER_HANDLE_MAX,
     TWITTER_HANDLE_PATTERN,
 } from '@repo/constants/seo';
+import { URL_MAX } from '@repo/constants/url';
 import { URL_OPTIONS } from '../../common/validation/url-options';
 
 export class SeoHreflangDto implements SeoHreflang {
@@ -42,7 +42,7 @@ export class SeoHreflangDto implements SeoHreflang {
     lang!: string;
 
     @IsUrl(URL_OPTIONS)
-    @MaxLength(SEO_URL_MAX)
+    @MaxLength(URL_MAX)
     url!: string;
 }
 
@@ -75,7 +75,7 @@ export class CreateSeoDto {
 
     @IsUrl(URL_OPTIONS)
     @IsOptional()
-    @MaxLength(SEO_URL_MAX)
+    @MaxLength(URL_MAX)
     canonicalUrl?: string;
 
     @IsArray()
@@ -116,7 +116,7 @@ export class CreateSeoDto {
 
     @IsUrl(URL_OPTIONS)
     @IsOptional()
-    @MaxLength(SEO_URL_MAX)
+    @MaxLength(URL_MAX)
     ogImage?: string;
 
     @IsString()

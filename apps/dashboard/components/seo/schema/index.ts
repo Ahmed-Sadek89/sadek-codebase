@@ -6,8 +6,8 @@ import {
   HREFLANG_LANG_MAX,
   HREFLANG_MAX,
   HREFLANG_PATTERN,
-  SEO_URL_MAX,
 } from "@repo/constants/hreflang";
+import { URL_MAX } from "@repo/constants/url";
 import {
   SEO_JOB_TITLE_MAX,
   SEO_META_DESCRIPTION_MAX,
@@ -35,8 +35,8 @@ export {
   SEO_OG_DESCRIPTION_MAX,
   SEO_OG_IMAGE_ALT_MAX,
   SEO_OG_TITLE_MAX,
-  SEO_URL_MAX,
   TWITTER_HANDLE_MAX,
+  URL_MAX,
 };
 
 const requiredText = (t: Translate, max: number) =>
@@ -66,7 +66,7 @@ const hreflangSchema = (t: Translate) =>
       .string()
       .trim()
       .min(1, t("seoFormRequired"))
-      .max(SEO_URL_MAX, t("seoFormMaxLength", { max: SEO_URL_MAX }))
+      .max(URL_MAX, t("seoFormMaxLength", { max: URL_MAX }))
       .refine(isHttpUrl, t("seoFormUrlInvalid")),
   });
 
@@ -85,7 +85,7 @@ export const createSeoSchema = (t: Translate) =>
     canonicalUrl: z
       .string()
       .trim()
-      .max(SEO_URL_MAX, t("seoFormMaxLength", { max: SEO_URL_MAX }))
+      .max(URL_MAX, t("seoFormMaxLength", { max: URL_MAX }))
       .refine(
         (value) => value === "" || isHttpUrl(value),
         t("seoFormUrlInvalid"),

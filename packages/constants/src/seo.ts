@@ -1,4 +1,4 @@
-/** SEO-row rules shared by the backend (entity, CreateSeoDto) and the dashboard form. URLs use SEO_URL_MAX (./hreflang). */
+/** SEO-row rules shared by the backend (entity, CreateSeoDto) and the dashboard form. URLs use URL_MAX (./url). */
 export const SEO_META_TITLE_MAX = 70;
 export const SEO_META_DESCRIPTION_MAX = 170;
 export const SEO_OG_TITLE_MAX = 100;
