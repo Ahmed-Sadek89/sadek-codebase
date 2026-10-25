@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
@@ -15,6 +15,8 @@ import {
   defaultOgImage,
   getSiteUrl,
 } from "../../libs/seo/site";
+import { PWA_BACKGROUND_COLOR, PWA_NAME, PWA_SHORT_NAME } from "../../libs/pwa/constants";
+import { RegisterServiceWorker } from "../../libs/pwa/register-service-worker";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -33,6 +35,14 @@ export async function generateMetadata(): Promise<Metadata> {
     title: t("metaRootTitle"),
     description: t("metaRootDescription"),
     icons: DEFAULT_ICONS,
+    applicationName: PWA_NAME,
+    // Installed on iOS: full screen, with the status bar over the dark page.
+    appleWebApp: {
+      capable: true,
+      title: PWA_SHORT_NAME,
+      statusBarStyle: "black-translucent",
+    },
+    formatDetection: { telephone: false },
     openGraph: {
       type: "website",
       images: [defaultOgImage()],
@@ -40,6 +50,13 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: { card: "summary_large_image", images: [DEFAULT_OG_IMAGE] },
   };
 }
+
+// The mobile browser bar and installed-app title bar use the site's
+// default (dark) background.
+export const viewport: Viewport = {
+  themeColor: PWA_BACKGROUND_COLOR,
+  colorScheme: "dark light",
+};
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -68,6 +85,7 @@ export default async function RootLayout({
               <QueryProvider>{children}</QueryProvider>
               {/* Sonner toasts from @repo/libs/toast (e.g. the contact form). */}
               <ToastProvider dir={dir} />
+              <RegisterServiceWorker />
             </ThemeProvider>
           </DirectionProvider>
         </NextIntlClientProvider>
