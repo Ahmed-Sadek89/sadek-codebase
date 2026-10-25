@@ -13,6 +13,7 @@ import { useStaticFilter } from "./hooks/use-static-filter";
 import { useDeleteUserCompanyAction } from "./hooks/use-delete-user-company";
 import { useToggleUserCompanyActiveAction } from "./hooks/use-toggle-user-company-active";
 import { UserCompanyForm } from "./components/user-company-form";
+import { UserCompanyDetailsDialog } from "./components/user-company-details-dialog";
 import { readListQueryParams } from "../../utils/list-query";
 import { getUserCompaniesQuery } from "./utils/constants";
 
@@ -34,6 +35,14 @@ export default function UserCompaniesPage() {
     setSelectedCompany(company);
     setIsOpenDialog(true);
   }, []);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  // Kept after closing so the content doesn't vanish during the close animation.
+  const [viewedCompany, setViewedCompany] =
+    useState<UserCompanyDetails | null>(null);
+  const handleView = useCallback((company: UserCompanyDetails) => {
+    setViewedCompany(company);
+    setIsDetailsOpen(true);
+  }, []);
   const isEditing = selectedCompany !== null;
   // Same query as the server prefetch, so the hydrated cache is reused.
   const searchParams = useSearchParams();
@@ -51,9 +60,11 @@ export default function UserCompaniesPage() {
   const toggleAction = useToggleUserCompanyActiveAction();
   const columns = useColumns({
     busy: deleteAction.isDeleting || toggleAction.isToggling,
+    canView: true,
     canUpdate: true,
     canDelete: true,
     canToggleActive: true,
+    onView: handleView,
     onEdit: handleEdit,
     onDelete: deleteAction.requestDelete,
     onToggleActive: toggleAction.requestToggle,
@@ -91,6 +102,11 @@ export default function UserCompaniesPage() {
         Icon={isEditing ? Pencil : Building2}
         role={isEditing ? "edit" : "create"}
         defaultValues={selectedCompany}
+      />
+      <UserCompanyDetailsDialog
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        company={viewedCompany}
       />
       <ConfirmAction
         open={toggleAction.isOpen}

@@ -1,4 +1,21 @@
+import { EmploymentType, LocationType } from "@repo/constants/user-company";
 import type { UserCompany } from "@repo/types/user-company";
+import type { MessageKey } from "../../../../../i18n/types";
+
+/** Each location type's label; a `Record`, so a new type needs one. */
+export const LOCATION_TYPE_LABEL_KEYS: Record<LocationType, MessageKey> = {
+  [LocationType.REMOTE]: "experienceLocationTypeRemote",
+  [LocationType.ONSITE]: "experienceLocationTypeOnsite",
+  [LocationType.HYBRID]: "experienceLocationTypeHybrid",
+};
+
+/** Each employment type's label; a `Record`, so a new type needs one. */
+export const EMPLOYMENT_TYPE_LABEL_KEYS: Record<EmploymentType, MessageKey> = {
+  [EmploymentType.FULL_TIME]: "experienceEmploymentTypeFullTime",
+  [EmploymentType.PART_TIME]: "experienceEmploymentTypePartTime",
+  [EmploymentType.FREELANCE]: "experienceEmploymentTypeFreelance",
+  [EmploymentType.INTERNSHIP]: "experienceEmploymentTypeInternship",
+};
 
 /** The public list sorts by `createdAt`; the timeline shows the latest job first. */
 export function sortByStartDate(companies: UserCompany[]) {

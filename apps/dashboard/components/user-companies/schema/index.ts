@@ -1,4 +1,10 @@
 import { z } from "zod";
+import {
+  EMPLOYMENT_TYPES,
+  LOCATION_TYPES,
+  USER_COMPANY_JOB_TITLE_MAX,
+  USER_COMPANY_LOCATION_MAX,
+} from "@repo/constants/user-company";
 import type { CreateUserCompanyRequest } from "@repo/types/user-company";
 import type { MessageKey } from "../../../i18n/types";
 import { createUploadFieldSchema } from "../../ui/forms/base-upload/utils/schema";
@@ -16,6 +22,16 @@ export const USER_COMPANY_URL_MAX = 255;
 const optionalTextSchema = (max?: number, maxMessage?: string) =>
   (max === undefined ? z.string().trim() : z.string().trim().max(max, maxMessage))
     .transform((value) => value || undefined);
+
+/** A select that starts blank ("") and must end on one of `values`. */
+const requiredOptionSchema = <T extends string>(
+  values: readonly T[],
+  message: string,
+) =>
+  z
+    .string()
+    .refine((value) => (values as readonly string[]).includes(value), message)
+    .transform((value) => value as T);
 
 /** A month picker value ("YYYY-MM") as the first day of that month in UTC. */
 const toIsoMonthStart = (month: string) => `${month}-01T00:00:00.000Z`;
@@ -47,6 +63,30 @@ export const createUserCompanySchema = (t: Translate) =>
           t("projectFormUrlInvalid"),
         )
         .transform((value) => value || undefined),
+      job_title: z
+        .string()
+        .trim()
+        .min(1, t("userCompanyFormJobTitleRequired"))
+        .max(
+          USER_COMPANY_JOB_TITLE_MAX,
+          t("userCompanyFormJobTitleMax", { max: USER_COMPANY_JOB_TITLE_MAX }),
+        ),
+      location: z
+        .string()
+        .trim()
+        .min(1, t("userCompanyFormLocationRequired"))
+        .max(
+          USER_COMPANY_LOCATION_MAX,
+          t("userCompanyFormLocationMax", { max: USER_COMPANY_LOCATION_MAX }),
+        ),
+      location_type: requiredOptionSchema(
+        LOCATION_TYPES,
+        t("userCompanyFormLocationTypeRequired"),
+      ),
+      employment_type: requiredOptionSchema(
+        EMPLOYMENT_TYPES,
+        t("userCompanyFormEmploymentTypeRequired"),
+      ),
       isActive: z.boolean(),
     })
     .superRefine(({ isCurrent, startWorkFrom, startWorkTo }, ctx) => {

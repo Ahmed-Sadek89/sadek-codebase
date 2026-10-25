@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { cn } from "@repo/ui/utils";
 import { isMediaUrl } from "../../../../libs/media";
 
 export type AvatarCellProps = {
@@ -17,8 +18,8 @@ export type AvatarCellProps = {
 };
 
 const SIZES = {
-  md: { px: 40, className: "size-10", text: "text-xs" },
-  lg: { px: 64, className: "size-16", text: "text-lg" },
+  md: { px: 40, className: "size-10", text: "text-sm" },
+  lg: { px: 64, className: "size-16", text: "text-2xl" },
 } as const;
 
 function initials(name: string) {
@@ -30,7 +31,11 @@ function initials(name: string) {
     .join("");
 }
 
-/** Round thumbnail, e.g. a skill's icon, with initials as the fallback. */
+/**
+ * Square thumbnail, e.g. a skill's icon or a company logo, with no frame:
+ * the whole image fits the box (never cropped), and the initials stand in
+ * when there is no usable image.
+ */
 export function AvatarCell({ src, name, size = "md" }: AvatarCellProps) {
   const { px, className, text } = SIZES[size];
   // The URL that failed, so a new `src` (e.g. after an edit) is tried again.
@@ -39,19 +44,30 @@ export function AvatarCell({ src, name, size = "md" }: AvatarCellProps) {
   const showImage = isMediaUrl(src) && src !== failedSrc;
 
   return (
-    <span className={`relative flex ${className} shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-muted`}>
+    <span
+      className={cn(
+        "relative flex shrink-0 items-center justify-center select-none",
+        className,
+      )}
+    >
       {showImage ? (
         <Image
           src={src}
           alt={name}
-          width={px}
-          height={px}
-          className="size-full object-cover"
+          // 2x the box for sharp logos on high-density screens.
+          width={px * 2}
+          height={px * 2}
+          sizes={`${px}px`}
+          className="size-full object-contain drop-shadow-sm"
+          draggable={false}
           onError={() => setFailedSrc(src)}
         />
       ) : (
         <span
-          className={`${text} font-medium text-muted-foreground`}
+          className={cn(
+            text,
+            "font-bold leading-none tracking-tight text-primary/80",
+          )}
           aria-label={name}
           role="img"
         >

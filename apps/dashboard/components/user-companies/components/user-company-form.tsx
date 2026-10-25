@@ -7,13 +7,13 @@ import type { UserCompanyDetails } from "@repo/types/user-company";
 import { Button } from "@repo/ui/button";
 import { Eye, type LucideIcon } from "@repo/ui/icons";
 import { AppDialog } from "../../ui/dialog";
-import { BaseInput } from "../../ui/forms/base-input";
 import { BaseSwitch } from "../../ui/forms/base-switch";
 import { BaseUpload } from "../../ui/forms/base-upload";
 import { useUserCompanyForm } from "../hooks/use-user-company-form";
 import { toUserCompanyFormInput } from "../utils/constants";
-import { USER_COMPANY_URL_MAX } from "../schema";
 import { CompanyInfoFields } from "./company-info-fields";
+import { DescriptionFields } from "./description-fields";
+import { EmploymentFields } from "./employment-fields";
 import { WorkPeriodFields } from "./work-period-fields";
 
 export type UserCompanyFormProps = {
@@ -28,9 +28,9 @@ export type UserCompanyFormProps = {
 };
 
 /**
- * Create/edit-company dialog: logo, company name, English/Arabic descriptions,
- * work period (start month, then an end month or "I still work here"), and
- * the company website.
+ * Create/edit-company dialog: logo; company name and website; job title and
+ * employment type; location and location type; work period (start month,
+ * then an end month or "I still work here"); English/Arabic descriptions.
  */
 export function UserCompanyForm({
   isOpenDialog,
@@ -46,7 +46,7 @@ export function UserCompanyForm({
     company: defaultValues,
     onSuccess: () => handleOpenDialog(false),
   });
-  const { errors, isSubmitting } = form.formState;
+  const { isSubmitting } = form.formState;
 
   // Fill the inputs each time the dialog opens: the selected row when
   // editing, blank when creating. Not on close, so fields don't flash empty
@@ -89,20 +89,9 @@ export function UserCompanyForm({
         />
         <div className="grid gap-4 sm:grid-cols-2">
           <CompanyInfoFields form={form} disabled={isSubmitting} />
+          <EmploymentFields form={form} disabled={isSubmitting} />
           <WorkPeriodFields form={form} disabled={isSubmitting} />
-          <BaseInput
-            id="company_site"
-            type="url"
-            inputMode="url"
-            label={t("userCompanyFormSiteLabel")}
-            placeholder="https://"
-            dir="ltr"
-            maxLength={USER_COMPANY_URL_MAX}
-            disabled={isSubmitting}
-            error={errors.company_site?.message}
-            containerClassName="self-start"
-            {...form.register("company_site")}
-          />
+          <DescriptionFields form={form} disabled={isSubmitting} />
         </div>
         <Controller
           control={form.control}

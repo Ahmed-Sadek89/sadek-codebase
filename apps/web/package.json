@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
+    "@repo/constants": "workspace:*",
     "@repo/hooks": "workspace:*",
     "@repo/libs": "workspace:*",
     "@repo/provider": "workspace:*",

@@ -1,5 +1,11 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsDate, IsNotEmpty, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
+import { IsBoolean, IsDate, IsEnum, IsNotEmpty, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
+import {
+    EmploymentType,
+    LocationType,
+    USER_COMPANY_JOB_TITLE_MAX,
+    USER_COMPANY_LOCATION_MAX,
+} from '@repo/constants/user-company';
 
 const URL_OPTIONS = {
     protocols: ['http', 'https'],
@@ -41,6 +47,24 @@ export class CreateUserCompanyDto {
     @IsOptional()
     @MaxLength(255)
     company_site?: string;
+
+    /** The role held there, e.g. "Senior Front-end Developer". */
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(USER_COMPANY_JOB_TITLE_MAX)
+    job_title!: string;
+
+    /** City and/or country, e.g. "Cairo, Egypt". */
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(USER_COMPANY_LOCATION_MAX)
+    location!: string;
+
+    @IsEnum(LocationType)
+    location_type!: LocationType;
+
+    @IsEnum(EmploymentType)
+    employment_type!: EmploymentType;
 
     /** Defaults to true when omitted. */
     @IsBoolean()

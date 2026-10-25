@@ -1,3 +1,7 @@
+import type {
+  EmploymentType,
+  LocationType,
+} from "@repo/constants/user-company";
 import type { MessageResponse } from "./auth";
 import type {
   IsoDateString,
@@ -17,6 +21,13 @@ export interface UserCompanyDetails {
   startWorkTo: IsoDateString | null;
   logo: string | null;
   company_site: string | null;
+  /** Max 100 characters, e.g. "Senior Front-end Developer". */
+  job_title: string;
+  /** Max 100 characters, e.g. "Cairo, Egypt". */
+  location: string;
+  /** The values live in `@repo/constants/user-company`. */
+  location_type: LocationType;
+  employment_type: EmploymentType;
   /** Inactive companies are hidden from GET /user-company/public. */
   isActive: boolean;
   createdAt: IsoDateString;
@@ -40,6 +51,14 @@ export interface CreateUserCompanyRequest {
   /** http(s) URLs, max 255 characters each. */
   logo?: string;
   company_site?: string;
+  /** Required, non-empty, max 100 characters. */
+  job_title: string;
+  /** Required, non-empty, max 100 characters. */
+  location: string;
+  /** Required: `remote`, `onsite` or `hybrid`. */
+  location_type: LocationType;
+  /** Required: `full-time`, `part-time`, `freelance` or `internship`. */
+  employment_type: EmploymentType;
   /** Defaults to `true` when omitted. */
   isActive?: boolean;
 }

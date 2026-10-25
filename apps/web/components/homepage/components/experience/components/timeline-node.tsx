@@ -1,52 +1,32 @@
-import Image from "next/image";
 import { cn } from "@repo/ui/utils";
-import { getInitials } from "../../../../../utils/initials";
-import { isMediaUrl } from "../../../../../libs/media";
 
-/** The dot on the timeline: the company logo (or initials); current jobs pulse. */
+/** The marker on the timeline line; current jobs get a filled, pulsing dot. */
 export function TimelineNode({
-  name,
-  logo,
   isCurrent,
   className,
 }: {
-  name: string;
-  logo: string | null;
   isCurrent: boolean;
   className?: string;
 }) {
   return (
     <span
+      aria-hidden="true"
       className={cn(
-        "absolute top-0 z-10 grid size-10 place-items-center sm:size-12",
+        "absolute top-7 z-10 grid size-10 place-items-center sm:top-8 sm:size-12",
         className,
       )}
     >
       {isCurrent && (
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 animate-ping rounded-full bg-primary/40 motion-reduce:animate-none"
-        />
+        <span className="absolute size-5 animate-ping rounded-full bg-primary/40 motion-reduce:animate-none" />
       )}
       <span
         className={cn(
-          "relative grid size-full place-items-center overflow-hidden rounded-full border-2 bg-card text-xs font-black text-primary shadow-md ring-4 ring-surface",
-          isCurrent ? "border-primary" : "border-border-strong",
+          "relative size-4 rounded-full border-2 ring-4 ring-surface transition-colors duration-300",
+          isCurrent
+            ? "border-primary bg-primary"
+            : "border-primary/60 bg-card group-hover/item:bg-primary/60",
         )}
-      >
-        {logo ? (
-          <Image
-            alt=""
-            className="size-full object-cover"
-            height={48}
-            src={logo}
-            unoptimized={!isMediaUrl(logo)}
-            width={48}
-          />
-        ) : (
-          getInitials(name)
-        )}
-      </span>
+      />
     </span>
   );
 }

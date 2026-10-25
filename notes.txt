@@ -1,5 +1,5 @@
  
--- add job title and emplyment type for user-companies
+-- add entities for educations and language
 -- cv builder in dashboard
 -- upload and get cv from Google drive
 -- make media library dialog when upload image 

@@ -18,6 +18,11 @@
       "types": "./src/hreflang.ts",
       "require": "./dist/hreflang.js",
       "default": "./src/hreflang.ts"
+    },
+    "./user-company": {
+      "types": "./src/user-company.ts",
+      "require": "./dist/user-company.js",
+      "default": "./src/user-company.ts"
     }
   },
   "scripts": {

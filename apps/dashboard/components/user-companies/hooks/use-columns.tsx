@@ -1,15 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import type { UserCompanyDetails } from "@repo/types/user-company";
-import {
-  CircleCheck,
-  CircleOff,
-  Eye,
-  Pencil,
-  Trash2,
-} from "@repo/ui/icons";
+import { CircleCheck, CircleOff, Eye, Pencil, Trash2 } from "@repo/ui/icons";
 import {
   AvatarCell,
   DateCell,
@@ -18,9 +12,9 @@ import {
   TextCell,
 } from "../../ui/cells";
 import type { DynamicColumnDef } from "../../ui/dynamic-table/types/types";
-import { localized } from "../../../utils/format";
 import { CompanySiteCell } from "../components/company-site-cell";
 import { WorkPeriodCell } from "../components/work-period-cell";
+import { employmentColumns } from "../utils/employment-columns";
 
 type UseColumnsOptions = {
   busy?: boolean;
@@ -47,7 +41,6 @@ const useColumns = ({
   canToggleActive = false,
 }: UseColumnsOptions = {}) => {
   const t = useTranslations();
-  const locale = useLocale();
 
   return useMemo<DynamicColumnDef<UserCompanyDetails>[]>(() => {
     const columns: DynamicColumnDef<UserCompanyDetails>[] = [
@@ -73,18 +66,7 @@ const useColumns = ({
         sortable: true,
         header: t("tableColCompany"),
         cell: ({ row }) => (
-          <div className="max-w-sm min-w-55 flex items-start flex-col gap-y-1.5">
-            <TextCell value={row.original.company_name} weight="semibold" />
-            <TextCell
-              value={localized(
-                locale,
-                row.original.description_en,
-                row.original.description_ar,
-              )}
-              tone="muted"
-              size="sm"
-            />
-          </div>
+          <TextCell value={row.original.company_name} weight="semibold" />
         ),
       },
       {
@@ -98,6 +80,7 @@ const useColumns = ({
           />
         ),
       },
+      ...employmentColumns(t),
       {
         id: "site",
         sortable: false,
@@ -188,7 +171,6 @@ const useColumns = ({
     canDelete,
     canUpdate,
     canView,
-    locale,
     onToggleActive,
     onDelete,
     onEdit,
