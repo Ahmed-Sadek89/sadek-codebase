@@ -1,12 +1,22 @@
 import type { MetadataRoute } from "next";
 import { PWA_BACKGROUND_COLOR, PWA_NAME, PWA_SHORT_NAME } from "../libs/pwa/constants";
+import { pwaIconUrl } from "../libs/pwa/icons";
+import { getHomeSeo } from "../libs/seo/seo";
+
+// Built per request: the icons follow the tab icon uploaded in the dashboard,
+// so a new upload reaches installed apps without a rebuild.
+export const dynamic = "force-dynamic";
 
 /**
  * /manifest.webmanifest: makes the website installable (Add to Home Screen /
  * Install app). It opens at "/", which the locale proxy sends to the
- * visitor's language; shortcuts open a language or section directly.
+ * visitor's language; shortcuts open a language or section directly. The
+ * icons are drawn from the uploaded tab icon (app/icons/pwa), or the built-in
+ * ones without an upload.
  */
-export default function manifest(): MetadataRoute.Manifest {
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const favicon = (await getHomeSeo("en"))?.favicon;
+  const icon192 = pwaIconUrl("any-192.png", favicon);
   return {
     id: "/",
     name: PWA_NAME,
@@ -24,10 +34,10 @@ export default function manifest(): MetadataRoute.Manifest {
     dir: "auto",
     categories: ["business", "portfolio"],
     icons: [
-      { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
-      { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
-      { src: "/icons/maskable-192.png", sizes: "192x192", type: "image/png", purpose: "maskable" },
-      { src: "/icons/maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+      { src: icon192, sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: pwaIconUrl("any-512.png", favicon), sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: pwaIconUrl("maskable-192.png", favicon), sizes: "192x192", type: "image/png", purpose: "maskable" },
+      { src: pwaIconUrl("maskable-512.png", favicon), sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
     // Shown in Chrome's richer install dialog on desktop.
     screenshots: [
@@ -41,8 +51,8 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     // Long-press / right-click the app icon.
     shortcuts: [
-      { name: "Projects", url: "/en#work", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
-      { name: "Contact", url: "/en#contact", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
+      { name: "Projects", url: "/en#work", icons: [{ src: icon192, sizes: "192x192" }] },
+      { name: "Contact", url: "/en#contact", icons: [{ src: icon192, sizes: "192x192" }] },
       { name: "English", url: "/en" },
       { name: "العربية", short_name: "عربي", url: "/ar" },
     ],

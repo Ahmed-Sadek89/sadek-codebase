@@ -1,4 +1,5 @@
 import { LOCALES } from "../../i18n/config";
+import { pwaIconUrl } from "../pwa/icons";
 
 /**
  * The website's public origin, e.g. "https://sadek.dev", from `SITE_URL`
@@ -67,11 +68,15 @@ export const DEFAULT_ICONS = {
   apple: [{ url: "/icons/apple-icon-180.png", sizes: "180x180", type: "image/png" }],
 };
 
-/** Icons for an uploaded tab icon (a 512×512 PNG from the dashboard). */
+/**
+ * Icons for an uploaded tab icon (a 512×512 transparent PNG from the
+ * dashboard). The Apple touch icon is drawn from it on a solid background
+ * (app/icons/pwa), because iOS fills transparency with black.
+ */
 export function uploadedIcons(url: string) {
   return {
     icon: [{ url, sizes: "512x512", type: "image/png" }],
     shortcut: [{ url, type: "image/png" }],
-    apple: [{ url, sizes: "512x512", type: "image/png" }],
+    apple: [{ url: pwaIconUrl("apple-180.png", url), sizes: "180x180", type: "image/png" }],
   };
 }
