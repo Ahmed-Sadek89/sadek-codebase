@@ -9,6 +9,12 @@ import { ToastProvider } from "@repo/provider/toast-provider";
 import { DirectionProvider } from "@repo/ui/direction";
 import "../styles.css";
 import { getDirection, isLocale, LOCALES } from "../../i18n/config";
+import {
+  DEFAULT_ICONS,
+  DEFAULT_OG_IMAGE,
+  defaultOgImage,
+  getSiteUrl,
+} from "../../libs/seo/site";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -17,12 +23,21 @@ const poppins = Poppins({
   display: "swap",
 });
 
-// Fallback when the backend has no user info; page.tsx overrides it.
+// Defaults for every page; page.tsx overrides them with the homepage's SEO
+// row or the user info. metadataBase turns relative URLs (the fallback share
+// image) into absolute ones, which Open Graph requires.
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations();
   return {
+    metadataBase: new URL(getSiteUrl()),
     title: t("metaRootTitle"),
     description: t("metaRootDescription"),
+    icons: DEFAULT_ICONS,
+    openGraph: {
+      type: "website",
+      images: [defaultOgImage()],
+    },
+    twitter: { card: "summary_large_image", images: [DEFAULT_OG_IMAGE] },
   };
 }
 

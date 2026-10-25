@@ -28,8 +28,9 @@ export function useDeleteSeoAction() {
   const confirmDelete = async () => {
     if (!seo) return;
     try {
-      // 1. The share image first (only our own uploads; never throws), 2. the row.
-      await deleteFile(seo.ogImage);
+      // 1. The share image and tab icon first (only our own uploads; never
+      // throws), 2. the row.
+      await Promise.all([deleteFile(seo.ogImage), deleteFile(seo.favicon)]);
       await deleteSeo.mutateAsync(seo.id);
       showToast({ status: "success", title: t("seoDeleted"), dir });
     } catch (error) {

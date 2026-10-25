@@ -1,9 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { UseFormReturn } from "react-hook-form";
+import { Controller, type UseFormReturn } from "react-hook-form";
 import { BaseInput } from "../../ui/forms/base-input";
 import { BaseTextarea } from "../../ui/forms/base-textarea";
+import { BaseUpload } from "../../ui/forms/base-upload";
 import {
   SEO_META_DESCRIPTION_MAX,
   SEO_META_TITLE_MAX,
@@ -17,7 +18,7 @@ export type SeoSectionProps = {
   disabled: boolean;
 };
 
-/** Meta title, description and keywords, in English and Arabic. */
+/** Meta title, description and keywords, in English and Arabic, then the browser tab icon. */
 export function SearchSection({ form, disabled }: SeoSectionProps) {
   const t = useTranslations();
   const { errors } = form.formState;
@@ -105,6 +106,24 @@ export function SearchSection({ form, disabled }: SeoSectionProps) {
           {...form.register("keywords_ar")}
         />
       </div>
+      <Controller
+        control={control}
+        name="favicon"
+        render={({ field, fieldState }) => (
+          <BaseUpload
+            id={field.name}
+            label={t("seoFormFaviconLabel")}
+            description={t("seoFormFaviconHint")}
+            uploadType="image"
+            value={field.value}
+            onChange={field.onChange}
+            onBlur={field.onBlur}
+            validate={() => form.trigger("favicon")}
+            disabled={disabled}
+            error={fieldState.error?.message}
+          />
+        )}
+      />
     </FormSection>
   );
 }

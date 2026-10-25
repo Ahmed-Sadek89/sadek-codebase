@@ -22,11 +22,17 @@ export class UploadFileError extends Error {
 /**
  * Stores one file through POST /api/uploads, which compresses images to WebP
  * with sharp (server side: sharp can't run in the browser) and then checks
- * the size. Throws `UploadFileError` on any failure.
+ * the size. `variant: "og"` stores an image as a 1200×630 JPEG share image
+ * instead (for SEO `ogImage`), `variant: "icon"` as a 512×512 PNG tab icon
+ * (for SEO `favicon`). Throws `UploadFileError` on any failure.
  */
-export async function uploadFile(file: File): Promise<UploadedFile> {
+export async function uploadFile(
+  file: File,
+  { variant }: { variant?: "og" | "icon" } = {},
+): Promise<UploadedFile> {
   const body = new FormData();
   body.append("file", file);
+  if (variant) body.append("variant", variant);
   const response = await fetch("/api/uploads", { method: "POST", body }).catch(
     () => null,
   );

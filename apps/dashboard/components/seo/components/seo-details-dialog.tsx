@@ -5,7 +5,7 @@ import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { TwitterCard } from "@repo/constants/twitter-card";
 import type { Seo } from "@repo/types/seo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/tabs";
-import { Globe, ImageIcon, ScanSearch } from "@repo/ui/icons";
+import { ImageIcon, ScanSearch } from "@repo/ui/icons";
 import { cn } from "@repo/ui/utils";
 import { AppDialog } from "../../ui/dialog";
 import { StatusBadgeCell } from "../../ui/cells";
@@ -20,6 +20,9 @@ import {
   twitterCardLabelKey,
   type PreviewLanguage,
 } from "../utils/constants";
+
+/** The website's default tab icon (the dashboard serves the same file). */
+const DEFAULT_SITE_ICON = "/icon.png";
 
 type SeoDetailsDialogProps = {
   /** Kept while closing so the content doesn't vanish during the animation. */
@@ -128,6 +131,8 @@ function PreviewPanels({ seo, language }: { seo: Seo; language: PreviewLanguage 
   const dir = language === "ar" ? "rtl" : "ltr";
   const isLarge = seo.twitterCard === TwitterCard.SUMMARY_LARGE_IMAGE;
   const image = isMediaUrl(seo.ogImage) ? seo.ogImage : null;
+  // The tab icon, as Google shows it beside the site; the site's default otherwise.
+  const favicon = isMediaUrl(seo.favicon) ? seo.favicon : DEFAULT_SITE_ICON;
 
   return (
     <div className="grid gap-4 lg:grid-cols-2">
@@ -135,7 +140,15 @@ function PreviewPanels({ seo, language }: { seo: Seo; language: PreviewLanguage 
         <h3 className="text-sm font-semibold">{t("seoPreviewGoogle")}</h3>
         <div dir={dir} lang={language} className="space-y-1 rounded-xl border border-border bg-card p-4">
           <p className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Globe className="size-3.5 shrink-0" aria-hidden />
+            <span className="grid size-6 shrink-0 place-items-center overflow-hidden rounded-full border border-border bg-background">
+              <Image
+                src={favicon}
+                alt={seo.favicon ? t("seoDetailsFavicon") : t("seoDetailsFaviconDefault")}
+                width={16}
+                height={16}
+                className="size-4 object-contain"
+              />
+            </span>
             <span dir="ltr" className="truncate">{site}</span>
           </p>
           {/* Google cuts titles near 60 characters and snippets near 160. */}

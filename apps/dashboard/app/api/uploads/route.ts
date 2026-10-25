@@ -6,6 +6,7 @@ import { allowedImageTypes, s3, UPLOADS_PREFIX } from "../../../libs/upload/s3";
 import { UPLOAD_MAX_SIZE } from "../../../libs/upload/upload-types";
 import { getMediaUrl } from "../../../libs/media";
 import { auth } from "../../../libs/auth";
+import { toIconImage, toOgImage } from "../../../libs/upload/image-variants";
 
 export const runtime = "nodejs";
 
@@ -20,7 +21,11 @@ const RAW_IMAGE_MAX_SIZE = 25 * 1024 * 1024;
 
 /**
  * POST /api/uploads with a multipart `file`: images are compressed to WebP
- * with sharp, other allowed files (PDF/Word) are stored as they are.
+ * with sharp, other allowed files (PDF/Word) are stored as they are. With
+ * `variant=og`, an image becomes a 1200×630 JPEG share image instead
+ * (`toOgImage`): link previews (LinkedIn, WhatsApp, …) don't reliably read
+ * WebP, and large cards are 1.91:1. With `variant=icon`, it becomes a 512×512
+ * PNG browser-tab icon (`toIconImage`).
  * The stored file must be at most UPLOAD_MAX_SIZE: for images that is the
  * compressed size, so a large photo passes if its WebP fits (413 otherwise).
  * Returns `{ id, key, url }`; DELETE /api/uploads/:id removes it.
@@ -45,6 +50,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Invalid file" }, { status: 400 });
         }
 
+        const variant = form?.get("variant");
         const input = Buffer.from(await file.arrayBuffer());
         const isImage = file.type.startsWith("image/");
         let body = input;
@@ -52,13 +58,23 @@ export async function POST(req: NextRequest) {
         let extension = allowedImageTypes[file.type];
         if (isImage) {
             try {
-                // `animated` keeps every frame of a GIF/WebP animation.
-                body = await sharp(input, { animated: true })
-                    .rotate()
-                    .webp({ quality: WEBP_QUALITY })
-                    .toBuffer();
-                contentType = "image/webp";
-                extension = "webp";
+                if (variant === "og") {
+                    body = await toOgImage(input);
+                    contentType = "image/jpeg";
+                    extension = "jpg";
+                } else if (variant === "icon") {
+                    body = await toIconImage(input);
+                    contentType = "image/png";
+                    extension = "png";
+                } else {
+                    // `animated` keeps every frame of a GIF/WebP animation.
+                    body = await sharp(input, { animated: true })
+                        .rotate()
+                        .webp({ quality: WEBP_QUALITY })
+                        .toBuffer();
+                    contentType = "image/webp";
+                    extension = "webp";
+                }
             } catch {
                 // e.g. ICO or HEIC, which this sharp build can't decode.
                 return NextResponse.json(

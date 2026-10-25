@@ -15,12 +15,13 @@ import { authHeaders } from "./auth-headers";
 
 export const seoEndpoints = {
   collection: "/seo",
-  public: (pageId: number) => `/seo/public/${pageId}`,
+  // Page names may be Arabic or contain spaces, so they are URL-encoded.
+  public: (pageName: string) => `/seo/public/${encodeURIComponent(pageName)}`,
   byId: (id: number) => `/seo/${id}`,
   toggleActive: (id: number) => `/seo/${id}/toggle-active`,
 } as const;
 
-// GET /seo/public/:pageId is public; every other route sits behind JwtAuthGuard.
+// GET /seo/public/:pageName is public; every other route sits behind JwtAuthGuard.
 export const seoService = {
   async create(
     request: CreateSeoRequest,
@@ -43,10 +44,14 @@ export const seoService = {
     );
     return data;
   },
-  /** GET /seo/public/:pageId (no token): the page's active SEO of the default-view user; 404 when none. */
-  async findPublic(pageId: number): Promise<SeoDetails> {
+  /**
+   * GET /seo/public/:pageName (no token): the active SEO of the default-view
+   * user's page whose English or Arabic name is `pageName` (case-insensitive);
+   * 404 when none.
+   */
+  async findPublic(pageName: string): Promise<SeoDetails> {
     const { data } = await apiClient.get<SeoDetails>(
-      seoEndpoints.public(pageId),
+      seoEndpoints.public(pageName),
     );
     return data;
   },

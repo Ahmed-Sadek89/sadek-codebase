@@ -5,6 +5,7 @@ import type { INestApplication } from '@nestjs/common';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { AppModule } from './app.module';
 import { setupSwagger } from '../lib/SwaggerConfig';
+import { setupFavicon } from '../lib/Favicon';
 
 export async function createApp(): Promise<INestApplication> {
   const app = await NestFactory.create(AppModule);
@@ -26,6 +27,7 @@ export async function createApp(): Promise<INestApplication> {
       },
     }),
   );
+  setupFavicon(app);
   setupSwagger(app);
   return app;
 }

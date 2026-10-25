@@ -26,11 +26,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    icons: {
-      icon: APP_LOGO,
-      shortcut: APP_LOGO,
-      apple: APP_LOGO,
-    },
+    // Tab and home-screen icons come from app/favicon.ico, app/icon.png and
+    // app/apple-icon.png (Next.js file conventions), not from APP_LOGO: the
+    // 3:2 logo is unreadable when squeezed into a 16–32px tab icon.
     openGraph: {
       title,
       description,

@@ -52,9 +52,32 @@
       "env": [
         "BACKEND_URL",
         "NEXT_PUBLIC_BACKEND_URL",
+        "NEXT_PUBLIC_CLOUDFRONT_URL",
         "AUTH_SECRET",
         "AUTH_URL",
-        "AUTH_TRUST_HOST"
+        "AUTH_TRUST_HOST",
+        "AWS_REGION",
+        "AWS_S3_BUCKET"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "!.next/dev/**"
+      ]
+    },
+    "web#build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "env": [
+        "BACKEND_URL",
+        "NEXT_PUBLIC_BACKEND_URL",
+        "NEXT_PUBLIC_CLOUDFRONT_URL",
+        "SITE_URL"
       ],
       "outputs": [
         ".next/**",
@@ -68,9 +91,14 @@
       "passThroughEnv": [
         "BACKEND_URL",
         "NEXT_PUBLIC_BACKEND_URL",
+        "NEXT_PUBLIC_CLOUDFRONT_URL",
         "AUTH_SECRET",
         "AUTH_URL",
-        "AUTH_TRUST_HOST"
+        "AUTH_TRUST_HOST",
+        "AWS_REGION",
+        "AWS_S3_BUCKET",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY"
       ]
     },
     "sadek-backend#dev": {

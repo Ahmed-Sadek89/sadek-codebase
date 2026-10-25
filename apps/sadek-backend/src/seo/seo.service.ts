@@ -64,14 +64,29 @@ export class SeoService {
   }
 
   /** Public: the active SEO of a page owned by the user whose `isDefaultView` is true. */
-  async findPublic(pageId: number): Promise<Seo> {
+  /**
+   * The active SEO of the default-view user's page whose English or Arabic
+   * name is `pageName` (exact match, ignoring case and surrounding spaces).
+   */
+  async findPublic(pageName: string): Promise<Seo> {
+    const name = pageName.trim();
+    if (!name) {
+      throw new NotFoundException('No active SEO found for an empty page name');
+    }
+    // ILike without wildcards is a case-insensitive "equals"; escape the
+    // caller's own % and _ so they match literally.
+    const pattern = ILike(name.replace(/[\\%_]/g, (char) => `\\${char}`));
+    const base = { isActive: true, user: { isDefaultView: true } } as const;
     const seo = await this.seoRepository.findOne({
-      where: { pageId, isActive: true, user: { isDefaultView: true } },
+      where: [
+        { ...base, page: { name_en: pattern } },
+        { ...base, page: { name_ar: pattern } },
+      ],
       relations: { page: true },
       select: { page: { id: true, name_en: true, name_ar: true } },
     });
     if (!seo) {
-      throw new NotFoundException(`No active SEO found for page ${pageId}`);
+      throw new NotFoundException(`No active SEO found for page "${name}"`);
     }
     return seo;
   }

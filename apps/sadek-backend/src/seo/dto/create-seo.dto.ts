@@ -114,6 +114,12 @@ export class CreateSeoDto {
     @MaxLength(SEO_OG_DESCRIPTION_MAX)
     ogDescription_ar?: string;
 
+    /** Browser tab icon (favicon) URL; omitted uses the website's default icon. */
+    @IsUrl(URL_OPTIONS)
+    @IsOptional()
+    @MaxLength(URL_MAX)
+    favicon?: string;
+
     @IsUrl(URL_OPTIONS)
     @IsOptional()
     @MaxLength(URL_MAX)

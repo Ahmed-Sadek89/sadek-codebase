@@ -115,7 +115,8 @@ export const createSeoSchema = (t: Translate) =>
     ogTitle_ar: optionalText(t, SEO_OG_TITLE_MAX),
     ogDescription_en: optionalText(t, SEO_OG_DESCRIPTION_MAX),
     ogDescription_ar: optionalText(t, SEO_OG_DESCRIPTION_MAX),
-    // One image (any format; ≤ 2 MB once compressed).
+    // One image each (any format; ≤ 2 MB once processed).
+    favicon: createUploadFieldSchema(t, { uploadType: "image" }),
     ogImage: createUploadFieldSchema(t, { uploadType: "image" }),
     ogImageAlt_en: optionalText(t, SEO_OG_IMAGE_ALT_MAX),
     ogImageAlt_ar: optionalText(t, SEO_OG_IMAGE_ALT_MAX),
@@ -134,10 +135,11 @@ export const createSeoSchema = (t: Translate) =>
     robotsFollow: z.boolean(),
   }) satisfies z.ZodType<SeoFormValues>;
 
-/** What a valid submit produces: the create request body, but the image may
- * still be a File to upload. */
-export type SeoFormValues = Omit<CreateSeoRequest, "ogImage"> & {
+/** What a valid submit produces: the create request body, but the images may
+ * still be Files to upload. */
+export type SeoFormValues = Omit<CreateSeoRequest, "ogImage" | "favicon"> & {
   ogImage?: string | File;
+  favicon?: string | File;
 };
 
 type SeoSchema = ReturnType<typeof createSeoSchema>;

@@ -1,7 +1,8 @@
 import { cache } from "react";
 import type { Metadata } from "next";
 import { userInfoService } from "@repo/services/user-info";
-import { localize } from "./localize";
+import { localize } from "../../utils/localize";
+import { DEFAULT_OG_IMAGE, defaultOgImage } from "./site";
 
 /**
  * GET /user-info/public, once per server request: generateMetadata and the
@@ -31,7 +32,19 @@ export async function getUserInfoMetadata(
     title,
     description,
     authors: profiles.map((url) => ({ url })),
-    openGraph: { type: "profile", locale, title, description },
-    twitter: { card: "summary", title, description },
+    // A page's openGraph/twitter replace the layout's, so repeat the image here.
+    openGraph: {
+      type: "profile",
+      locale,
+      title,
+      description,
+      images: [defaultOgImage(title)],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [DEFAULT_OG_IMAGE],
+    },
   };
 }

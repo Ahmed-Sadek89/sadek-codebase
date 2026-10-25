@@ -37,6 +37,8 @@ export interface SeoDetails {
   /** Max 200 characters. */
   ogDescription_en: string | null;
   ogDescription_ar: string | null;
+  /** Browser tab icon (favicon): a square PNG URL, max 255; null uses the website's default. */
+  favicon: string | null;
   /** http(s) URL, max 255 characters. */
   ogImage: string | null;
   /** Max 150 characters. */
@@ -78,6 +80,8 @@ export interface CreateSeoRequest {
   ogTitle_ar?: string;
   ogDescription_en?: string;
   ogDescription_ar?: string;
+  /** Browser tab icon (favicon) URL. */
+  favicon?: string;
   ogImage?: string;
   ogImageAlt_en?: string;
   ogImageAlt_ar?: string;

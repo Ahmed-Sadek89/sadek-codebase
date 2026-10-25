@@ -72,6 +72,11 @@ export class Seo {
     @Column({ type: 'varchar', length: SEO_OG_DESCRIPTION_MAX, nullable: true })
     ogDescription_ar!: string;
 
+    // The browser tab icon (favicon) for this page: an uploaded square PNG
+    // (512×512); null uses the website's default icon.
+    @Column({ type: 'varchar', length: URL_MAX, nullable: true })
+    favicon!: string | null;
+
     @Column({ type: 'varchar', length: URL_MAX, nullable: true })
     ogImage!: string;
 

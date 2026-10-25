@@ -144,8 +144,8 @@ export const queryKeys = {
     list: (query: SeoListQuery) =>
       [...queryKeys.seo.lists(), query] as const,
     // Under lists(), so every mutation that refreshes lists refreshes it too.
-    public: (pageId: number) =>
-      [...queryKeys.seo.lists(), "public", pageId] as const,
+    public: (pageName: string) =>
+      [...queryKeys.seo.lists(), "public", pageName] as const,
     details: () => [...queryKeys.seo.all, "detail"] as const,
     detail: (id: number) =>
       [...queryKeys.seo.details(), id] as const,

@@ -38,10 +38,12 @@ export class SeoController {
     return await this.seoService.findAll(query, req.user.userId);
   }
 
-  // Public: the website's SEO for one page. Declared before ':id' so "public" is not parsed as an id.
-  @Get('public/:pageId')
-  async findPublic(@Param('pageId', ParseIntPipe) pageId: number) {
-    return await this.seoService.findPublic(pageId);
+  // Public: the website's SEO for one page, found by the page's English or
+  // Arabic name (e.g. "homepage" or "الرئيسية"). Declared before ':id' so
+  // "public" is not parsed as an id.
+  @Get('public/:pageName')
+  async findPublic(@Param('pageName') pageName: string) {
+    return await this.seoService.findPublic(pageName);
   }
 
   @UseGuards(JwtAuthGuard)

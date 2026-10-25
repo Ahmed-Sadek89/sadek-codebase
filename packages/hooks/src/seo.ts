@@ -20,11 +20,11 @@ export function useSeoList(query: SeoListQuery = {}) {
   });
 }
 
-/** GET /seo/public/:pageId: the website's active SEO for one page. No sign-in needed. */
-export function usePublicSeo(pageId: number) {
+/** GET /seo/public/:pageName: the website's active SEO for one page, by its English or Arabic name. No sign-in needed. */
+export function usePublicSeo(pageName: string) {
   return usePublicQuery({
-    queryKey: queryKeys.seo.public(pageId),
-    queryFn: () => seoService.findPublic(pageId),
+    queryKey: queryKeys.seo.public(pageName),
+    queryFn: () => seoService.findPublic(pageName),
   });
 }
 

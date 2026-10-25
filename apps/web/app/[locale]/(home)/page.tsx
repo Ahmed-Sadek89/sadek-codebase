@@ -21,7 +21,10 @@ import {
 import {
   getPublicUserInfo,
   getUserInfoMetadata,
-} from "../../../utils/user-info";
+} from "../../../libs/seo/user-info";
+import { getHomeSeo, seoToMetadata } from "../../../libs/seo/seo";
+import { defaultLanguageAlternates, localeUrl } from "../../../libs/seo/site";
+import { HomeJsonLd } from "../../../components/seo/home-json-ld";
 import { Suspense } from "react";
 import { HomePageSkeleton } from "../../../components/loading";
 
@@ -29,10 +32,24 @@ export async function generateMetadata({
   params,
 }: PageProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;
-  return (await getUserInfoMetadata(locale)) ?? {};
+  const [seo, userInfo] = await Promise.all([
+    getHomeSeo(locale),
+    getUserInfoMetadata(locale),
+  ]);
+  // The SEO row (managed in the dashboard) wins; the user info fills the
+  // gaps (authors) and is the whole fallback when there is no active row.
+  if (seo) return { ...userInfo, ...seoToMetadata(seo, locale) };
+  return {
+    ...userInfo,
+    alternates: {
+      canonical: localeUrl(locale),
+      languages: defaultLanguageAlternates(),
+    },
+  };
 }
 
-export default async function Page() {
+export default async function Page({ params }: PageProps<"/[locale]">) {
+  const { locale } = await params;
   const queryClient = getQueryClient();
   await Promise.all([
     queryClient
@@ -112,10 +129,13 @@ export default async function Page() {
   ]);
 
   return (
-    <Suspense fallback={<HomePageSkeleton />}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <HomePage />
-      </HydrationBoundary>
-    </Suspense>
+    <>
+      <HomeJsonLd locale={locale} />
+      <Suspense fallback={<HomePageSkeleton />}>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <HomePage />
+        </HydrationBoundary>
+      </Suspense>
+    </>
   );
 }

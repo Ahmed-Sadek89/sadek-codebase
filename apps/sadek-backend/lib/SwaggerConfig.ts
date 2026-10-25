@@ -27,6 +27,9 @@ export function setupSwagger(app: INestApplication): void {
   SwaggerModule.setup('api-docs', app, document, {
     jsonDocumentUrl: 'openapi.json',
     swaggerOptions: { persistAuthorization: true },
+    customSiteTitle: 'Sadek Portfolio API',
+    // Served by lib/Favicon.ts.
+    customfavIcon: '/favicon.ico',
   });
 }
 

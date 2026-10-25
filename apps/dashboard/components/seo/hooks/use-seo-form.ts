@@ -51,53 +51,74 @@ export function useSeoForm({
   const createSeo = useCreateSeo();
   const updateSeo = useUpdateSeo();
 
-  const onSubmit = form.handleSubmit(async ({ ogImage, ...rest }) => {
-    const oldUrl = seo?.ogImage || undefined;
-    // The image uploaded by this submit, deleted again if the save fails.
-    let newUrl: string | undefined;
+  const onSubmit = form.handleSubmit(async ({ ogImage, favicon, ...rest }) => {
+    // Each image field: the picked value, its saved URL, and how to upload it.
+    const images = [
+      { field: "ogImage", value: ogImage, oldUrl: seo?.ogImage || undefined, variant: "og" },
+      { field: "favicon", value: favicon, oldUrl: seo?.favicon || undefined, variant: "icon" },
+    ] as const;
+    // Images uploaded by this submit, deleted again if the save fails.
+    const uploaded: string[] = [];
+    let failedField: (typeof images)[number]["field"] = "ogImage";
 
     try {
-      // 1. A newly picked image is compressed (WebP) and uploaded first.
-      if (ogImage instanceof File) {
-        newUrl = (await uploadFile(ogImage)).url;
+      // 1. Newly picked images are uploaded first: the share image becomes a
+      // 1200×630 JPEG (no cropping; JPEG, which every link preview reads), the
+      // tab icon a 512×512 PNG.
+      const urls: Record<(typeof images)[number]["field"], string | undefined> = {
+        ogImage: undefined,
+        favicon: undefined,
+      };
+      for (const image of images) {
+        failedField = image.field;
+        if (image.value instanceof File) {
+          const url = (await uploadFile(image.value, { variant: image.variant })).url;
+          uploaded.push(url);
+          urls[image.field] = url;
+        } else {
+          urls[image.field] = image.value;
+        }
       }
-      const imageUrl = ogImage instanceof File ? newUrl : ogImage;
 
       if (!seo) {
-        await createSeo.mutateAsync({ ...rest, ogImage: imageUrl });
+        await createSeo.mutateAsync({ ...rest, ...urls });
         showToast({ status: "success", title: t("seoCreated"), dir });
       } else {
         // Update: a new image replaces the old one; a removed image or an
         // emptied optional text is cleared with null (omitting it would keep it).
-        const isReplaced = newUrl !== undefined;
-        const isRemoved = !imageUrl && Boolean(oldUrl);
-        const data: UpdateSeoRequest = {
-          ...rest,
-          ogImage: imageUrl ?? (isRemoved ? null : undefined),
-        };
+        const data: UpdateSeoRequest = { ...rest };
+        const replacedUrls: (string | undefined)[] = [];
+        for (const image of images) {
+          const url = urls[image.field];
+          const isReplaced = image.value instanceof File;
+          const isRemoved = !url && Boolean(image.oldUrl);
+          data[image.field] = url ?? (isRemoved ? null : undefined);
+          if (isReplaced || isRemoved) replacedUrls.push(image.oldUrl);
+        }
         for (const field of SEO_CLEARABLE_FIELDS) {
           if (rest[field] === undefined && seo[field]) data[field] = null;
         }
         await updateSeo.mutateAsync({ id: seo.id, data });
-        // 2. The old image is deleted only once the row no longer points to
-        // it, so a failed update never leaves a broken image.
-        if (isReplaced || isRemoved) await deleteFile(oldUrl);
+        // 2. Old images are deleted only once the row no longer points to
+        // them, so a failed update never leaves a broken image.
+        await Promise.all(replacedUrls.map((url) => deleteFile(url)));
         showToast({ status: "success", title: t("seoUpdated"), dir });
       }
       onSuccess?.();
     } catch (error) {
       if (error instanceof UploadFileError) {
-        // Too large is only known after the server compresses the image.
-        form.setError("ogImage", {
+        // Too large is only known after the server processes the image.
+        form.setError(failedField, {
           message:
             error.reason === "tooLarge"
               ? t("uploadTooLarge", { size: bytesToMb(UPLOAD_MAX_SIZE) })
               : t("uploadFailed"),
         });
+        await Promise.all(uploaded.map((url) => deleteFile(url)));
         return;
       }
-      // The save failed: drop the image uploaded for it.
-      await deleteFile(newUrl);
+      // The save failed: drop the images uploaded for it.
+      await Promise.all(uploaded.map((url) => deleteFile(url)));
       toastApiError(error, { dir });
     }
   });
