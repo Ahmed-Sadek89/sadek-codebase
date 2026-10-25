@@ -12,10 +12,7 @@ import type { MessageResponse } from "./auth";
  */
 export interface Skill {
   id: number;
-  nameAr: string;
-  nameEn: string;
-  /** snake_case on the backend; nullable URL. */
-  avatar_url: string | null;
+  name: string;
   isActive: boolean;
   createdAt: IsoDateString;
   user: { id: number };
@@ -25,11 +22,7 @@ export interface Skill {
 /** POST /skills */
 export interface CreateSkillRequest {
   /** Max 50 characters. */
-  nameAr: string;
-  /** Max 50 characters. */
-  nameEn: string;
-  /** Must be a URL. */
-  avatar_url?: string;
+  name: string;
   isActive: boolean;
   /** At least one id; each must be one of the user's own skill categories. */
   categorySkillsIds: number[];
@@ -40,15 +33,26 @@ export interface CreateSkillRequest {
  * attached in that request come back as full category rows, which include
  * the `NamedRef` fields plus descriptions, `isActive`, and `createdAt`.
  */
-export type SavedSkill = Omit<Skill, "avatar_url"> & {
-  avatar_url?: string | null;
-};
+export type SavedSkill = Skill;
 
 export type CreateSkillResponse = SavedSkill;
 
+/**
+ * POST /skills/bulk: one skill per name (1–50, trimmed, unique ignoring
+ * case, max 50 characters each), all with the same `isActive` and categories.
+ * All or nothing.
+ */
+export interface CreateManySkillsRequest
+  extends Omit<CreateSkillRequest, "name"> {
+  names: string[];
+}
+
+/** The saved skills, in the order of `names`. */
+export type CreateManySkillsResponse = SavedSkill[];
+
 /** GET /skills; `order` sorts by `createdAt` (default DESC, newest first). */
 export interface SkillsQuery extends PaginationQuery {
-  /** Matches nameAr or nameEn (case-insensitive). Max 20 characters. */
+  /** Matches name (case-insensitive). Max 20 characters. */
   search?: string;
   isActive?: boolean;
   /** Only skills linked to this skill category. */
@@ -60,15 +64,15 @@ export type SkillsResponse = PaginatedResponse<Skill>;
 /**
  * PATCH /skills/:id: any subset of the create fields. Omit
  * `categorySkillsIds` to keep the current categories; `[]` is rejected.
- * `avatar_url: null` clears the icon (omitting it keeps the current one).
  */
-export type UpdateSkillRequest = Partial<
-  Omit<CreateSkillRequest, "avatar_url">
-> & {
-  avatar_url?: string | null;
-};
+export type UpdateSkillRequest = Partial<CreateSkillRequest>;
 
 /** Unlike other modules, the update returns the saved skill, not a message. */
 export type UpdateSkillResponse = SavedSkill;
+
+/** PATCH /skills/:id/toggle-active: the row's new `isActive`. */
+export type ToggleSkillActiveResponse = MessageResponse & {
+  isActive: boolean;
+};
 
 export type DeleteSkillResponse = MessageResponse;

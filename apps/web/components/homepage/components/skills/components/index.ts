@@ -1,3 +1,2 @@
 export { SkillChip } from "./skill-chip";
-export { SkillStream } from "./skill-stream";
-export { SkillTicker } from "./skill-ticker";
+export { SkillCategoryCard } from "./skill-category-card";

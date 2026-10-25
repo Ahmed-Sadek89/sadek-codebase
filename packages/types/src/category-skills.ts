@@ -13,6 +13,8 @@ export interface CategorySkill {
   /** Nullable column: `null` when it was never set. */
   descriptionAr: string | null;
   descriptionEn: string | null;
+  /** Display order on the website, lowest first. */
+  rank: number;
   isActive: boolean;
   createdAt: IsoDateString;
   /** Only the owner's id is selected. */
@@ -27,6 +29,8 @@ export interface CreateCategorySkillRequest {
   nameEn: string;
   descriptionAr?: string;
   descriptionEn?: string;
+  /** Whole number ≥ 0; 0 when omitted. */
+  rank?: number;
   isActive: boolean;
 }
 
@@ -55,8 +59,7 @@ export type CategorySkillsResponse = PaginatedResponse<CategorySkill>;
 /** A skill embedded in a GET /category-skills/public category (active skills only). */
 export interface PublicCategorySkillItem {
   id: number;
-  nameAr: string;
-  nameEn: string;
+  name: string;
   createdAt: IsoDateString;
 }
 

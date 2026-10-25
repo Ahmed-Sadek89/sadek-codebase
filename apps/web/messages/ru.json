@@ -54,6 +54,8 @@
   "skillsBody": "Я свободно перехожу от макета к коду, поэтому легко нахожу общий язык с продуктовыми, дизайнерскими и инженерными командами.",
   "skillsEmpty": "Пока нет навыков.",
   "skillsCount": "{count, plural, one {# навык} few {# навыка} many {# навыков} other {# навыка}}",
+  "skillsShowAll": "Ещё +{count}",
+  "skillsShowLess": "Свернуть",
   "experienceTitle": "Опыт",
   "experienceCopy": "Роли и этапы, которые сформировали мой подход к работе",
   "experiencePresent": "Сейчас",

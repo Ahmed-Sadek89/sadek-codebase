@@ -12,10 +12,11 @@ export const whatCanDoQuery: Omit<WhatCanDosQuery, "page"> = {
   limit: 5,
   isActive: true,
 };
-/** Skill categories load 10 at a time; "Show more" fetches the next page. */
+/** Skill categories load 5 at a time, lowest rank first; "Show more" fetches the next page. */
 export const categorySkillsQuery: Omit<CategorySkillsQuery, "page"> = {
   limit: 5,
   isActive: true,
+  order: "ASC",
 };
 export const userCompanyQuery: UserCompaniesQuery = {
   limit: 10,

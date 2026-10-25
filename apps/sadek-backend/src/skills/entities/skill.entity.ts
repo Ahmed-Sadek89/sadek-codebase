@@ -12,20 +12,7 @@ export class Skill {
         length: 50,
         nullable: false,
     })
-    nameAr!: string;
-
-    @Column({
-        type: 'varchar',
-        length: 50,
-        nullable: false,
-    })
-    nameEn!: string;
-
-    @Column({
-        type: 'text',
-        nullable: true,
-    })
-    avatar_url?: string;
+    name!: string;
 
     @Column({
         type: 'boolean',

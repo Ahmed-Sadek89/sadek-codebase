@@ -24,6 +24,8 @@ type PaginateOptions<T extends ObjectLiteral> = {
   relations?: FindOptionsRelations<T>;
   select?: FindOptionsSelect<T>;
   order?: SortOrder;
+  /** Column to sort by (default `createdAt`); other columns tie-break by `createdAt` DESC. */
+  sortBy?: string;
 };
 
 export async function paginate<T extends ObjectLiteral>(
@@ -36,6 +38,11 @@ export async function paginate<T extends ObjectLiteral>(
   const page = Math.max(PAGINATION.MIN_PAGE, options.page || PAGINATION.DEFAULT_PAGE);
   const where = options.where ?? {};
   const direction: SortOrder = options.order ?? PAGINATION.DEFAULT_ORDER;
+  const sortBy = options.sortBy ?? 'createdAt';
+  const order =
+    sortBy === 'createdAt'
+      ? { createdAt: direction }
+      : { [sortBy]: direction, createdAt: 'DESC' };
 
   const total = await options.repository.count({ where });
   const totalPage = total === 0 ? 0 : Math.ceil(total / limit);
@@ -44,7 +51,7 @@ export async function paginate<T extends ObjectLiteral>(
     where,
     skip: (page - 1) * limit,
     take: limit,
-    order: { createdAt: direction } as unknown as FindOptionsOrder<T>,
+    order: order as unknown as FindOptionsOrder<T>,
     relations: options.relations,
     select: options.select,
   });

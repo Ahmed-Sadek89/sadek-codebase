@@ -110,6 +110,9 @@ export function CategorySkillDetailsDialog({
             >
               <DetailText value={category.descriptionAr} lang="ar" />
             </DetailRow>
+            <DetailRow label={t("tableColRank")}>
+              <span className="tabular-nums">{category.rank}</span>
+            </DetailRow>
             <DetailRow label={t("tableColCreatedAt")}>
               <DateCell value={category.createdAt} />
             </DetailRow>

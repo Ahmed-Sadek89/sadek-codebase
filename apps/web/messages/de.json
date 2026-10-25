@@ -54,6 +54,8 @@
   "skillsBody": "Ich bewege mich sicher zwischen Entwurf und Codebasis und kann mich daher fließend mit Produkt-, Design- und Entwicklungsteams verständigen.",
   "skillsEmpty": "Noch keine Fähigkeiten.",
   "skillsCount": "{count, plural, one {# Fähigkeit} other {# Fähigkeiten}}",
+  "skillsShowAll": "+{count} weitere",
+  "skillsShowLess": "Weniger anzeigen",
   "experienceTitle": "Erfahrung",
   "experienceCopy": "Die Rollen und Meilensteine, die meine heutige Arbeitsweise geprägt haben",
   "experiencePresent": "Heute",

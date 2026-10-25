@@ -24,6 +24,7 @@ export const CATEGORY_SKILL_FORM_DEFAULT_VALUES = {
   nameAr: "",
   descriptionEn: "",
   descriptionAr: "",
+  rank: "0",
   isActive: true,
 } satisfies CategorySkillFormInput;
 
@@ -37,6 +38,7 @@ export function toCategorySkillFormInput(
     nameAr: category.nameAr,
     descriptionEn: category.descriptionEn ?? "",
     descriptionAr: category.descriptionAr ?? "",
+    rank: String(category.rank),
     isActive: category.isActive,
   };
 }

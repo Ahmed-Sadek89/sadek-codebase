@@ -2,17 +2,15 @@
 
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Controller } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import type { Skill } from "@repo/types/skills";
 import { Button } from "@repo/ui/button";
 import { Eye, type LucideIcon } from "@repo/ui/icons";
 import { AppDialog } from "../../ui/dialog";
-import { BaseInput } from "../../ui/forms/base-input";
 import { BaseSwitch } from "../../ui/forms/base-switch";
-import { BaseUpload } from "../../ui/forms/base-upload";
 import { useSkillForm } from "../hooks/use-skill-form";
 import { toSkillFormInput } from "../utils/constants";
-import { SKILL_NAME_MAX } from "../schema";
+import { SkillNamesField } from "./skill-names-field";
 import { MultiSelectCategorySkills } from "../../ui/forms/base-multi-select/multi-select-category-skills";
 
 export type SkillsFormProps = {
@@ -26,7 +24,10 @@ export type SkillsFormProps = {
   defaultValues?: Skill | null;
 };
 
-/** Create/edit-skill dialog: English/Arabic names, avatar URL, categories, and an active switch. */
+/**
+ * Create/edit-skill dialog. Creating takes one or more names that share the
+ * same categories and active switch; editing changes one skill.
+ */
 export function SkillsForm({
   isOpenDialog,
   handleOpenDialog,
@@ -41,7 +42,8 @@ export function SkillsForm({
     skill: defaultValues,
     onSuccess: () => handleOpenDialog(false),
   });
-  const { errors, isSubmitting } = form.formState;
+  const { isSubmitting } = form.formState;
+  const nameCount = useWatch({ control: form.control, name: "names" }).length;
 
   // Fill the inputs each time the dialog opens: the selected row when
   // editing, blank when creating. Not on close, so fields don't flash empty
@@ -67,47 +69,11 @@ export function SkillsForm({
         className="space-y-5"
         aria-busy={isSubmitting}
       >
-        <Controller
-          control={form.control}
-          name="avatar_url"
-          render={({ field, fieldState }) => (
-            <BaseUpload
-              id={field.name}
-              label={t("skillFormAvatarLabel")}
-              uploadType="image"
-              value={field.value}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
-              validate={() => form.trigger("avatar_url")}
-              disabled={isSubmitting}
-              error={fieldState.error?.message}
-            />
-          )}
+        <SkillNamesField
+          form={form}
+          disabled={isSubmitting}
+          multiple={role === "create"}
         />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <BaseInput
-            id="nameEn"
-            label={t("skillFormNameEnLabel")}
-            placeholder={t("skillFormNameEnPlaceholder")}
-            dir="ltr"
-            maxLength={SKILL_NAME_MAX}
-            required
-            disabled={isSubmitting}
-            error={errors.nameEn?.message}
-            {...form.register("nameEn")}
-          />
-          <BaseInput
-            id="nameAr"
-            label={t("skillFormNameArLabel")}
-            placeholder={t("skillFormNameArPlaceholder")}
-            dir="rtl"
-            maxLength={SKILL_NAME_MAX}
-            required
-            disabled={isSubmitting}
-            error={errors.nameAr?.message}
-            {...form.register("nameAr")}
-          />
-        </div>
         <div className="grid gap-4 sm:grid-cols-2 items-end">
 
           <Controller
@@ -160,7 +126,7 @@ export function SkillsForm({
             disabled={isSubmitting}
           >
             {role === "create"
-              ? t("skillFormSubmit")
+              ? t("skillFormSubmit", { count: nameCount })
               : t("categorySkillFormEditSubmit")}
           </Button>
         </div>

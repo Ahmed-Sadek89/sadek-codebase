@@ -6,7 +6,7 @@ import type { InfiniteQueryState } from "../../utils";
 import { SectionTitle } from "../../../ui/section-title";
 import { SectionStatus } from "../../../ui/section-status";
 import { ShowMoreButton } from "../../../ui/show-more-button";
-import { SkillStream } from "./components";
+import { SkillCategoryCard } from "./components";
 import { useSkillGroups } from "./hooks";
 
 export function Skills({
@@ -37,14 +37,14 @@ export function Skills({
       <div className="app-container py-0">
         <SectionTitle
           id="skills-title"
-          title={`${t("skillsHeadingLine1")} ${""} ${t("skillsHeadingLine2")}`}
+          title={`${t("skillsHeadingLine1")} ${t("skillsHeadingLine2")}`}
           copy={t("skillsBody")}
         />
         {groups.length ? (
-          // One streaming row per category; rows alternate direction.
-          <div className="flex flex-col gap-4 sm:gap-5">
+          // One card per category, 1–3 columns by width.
+          <div className="grid items-start gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
             {groups.map((group, index) => (
-              <SkillStream
+              <SkillCategoryCard
                 group={group}
                 index={index}
                 key={group.category.id}

@@ -117,6 +117,20 @@ export function CategorySkillsForm({
                         error={errors.descriptionAr?.message}
                         {...form.register("descriptionAr")}
                     />
+                    <BaseInput
+                        id="rank"
+                        type="number"
+                        inputMode="numeric"
+                        min={0}
+                        step={1}
+                        label={t("categorySkillFormRankLabel")}
+                        description={t("categorySkillFormRankHint")}
+                        dir="ltr"
+                        required
+                        disabled={isSubmitting}
+                        error={errors.rank?.message}
+                        {...form.register("rank")}
+                    />
                 </div>
                 <Controller
                     control={form.control}

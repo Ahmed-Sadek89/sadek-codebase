@@ -41,6 +41,14 @@ export class CategorySkill {
   })
   descriptionEn!: string;
 
+  // Display order on the website: lowest rank first.
+  @Column({
+    type: "int",
+    default: 0,
+    nullable: false,
+  })
+  rank!: number;
+
   @Column({
     type: "boolean",
     default: false,

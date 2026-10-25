@@ -4,7 +4,6 @@ import { CategorySkill } from '../../category_skills/entities/category_skill.ent
 import { Skill } from '../../skills/entities/skill.entity';
 import {
   faker,
-  fakerAR,
   fit,
   getSeedOwner,
   hasRows,
@@ -35,9 +34,7 @@ export default class SkillsSeeder implements Seeder {
     const repo = dataSource.getRepository(Skill);
     const skills = Array.from({ length: SEED_COUNT }, () =>
       repo.create({
-        nameEn: fit(titleCase(`${faker.hacker.abbreviation()} ${faker.hacker.noun()}`), 50),
-        nameAr: fit(fakerAR.commerce.productName(), 50),
-        avatar_url: faker.image.url({ width: 128, height: 128 }),
+        name: fit(titleCase(`${faker.hacker.abbreviation()} ${faker.hacker.noun()}`), 50),
         isActive: randomIsActive(),
         createdAt: randomCreatedAt(),
         user: { id: owner.id },

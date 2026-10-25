@@ -54,6 +54,8 @@
   "skillsBody": "أتنقّل بسلاسة بين التصميم والكود، ما يتيح لي التواصل بطلاقة مع فرق المنتج والتصميم والهندسة.",
   "skillsEmpty": "لا توجد مهارات بعد.",
   "skillsCount": "{count, plural, zero {لا توجد مهارات} one {مهارة واحدة} two {مهارتان} few {# مهارات} many {# مهارة} other {# مهارة}}",
+  "skillsShowAll": "+{count} أخرى",
+  "skillsShowLess": "عرض أقل",
   "experienceTitle": "الخبرات",
   "experienceCopy": "الأدوار والمحطات التي شكّلت طريقة عملي اليوم",
   "experiencePresent": "حتى الآن",

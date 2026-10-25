@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import type { Skill } from "@repo/types/skills";
 import { Sparkles } from "@repo/ui/icons";
 import { AppDialog } from "../../ui/dialog";
-import { AvatarCell, DateCell, StatusBadgeCell } from "../../ui/cells";
+import { DateCell, StatusBadgeCell } from "../../ui/cells";
 import { localized } from "../../../utils/format";
 
 export type SkillDetailsDialogProps = {
@@ -55,14 +55,9 @@ export function SkillDetailsDialog({
       {skill && (
         <div className="space-y-6">
           <div className="flex items-center gap-4 rounded-lg border border-border bg-muted/30 p-4">
-            <AvatarCell
-              size="lg"
-              src={skill.avatar_url}
-              name={localized(locale, skill.nameEn, skill.nameAr)}
-            />
             <div className="min-w-0 flex-1 space-y-1">
-              <p className="truncate text-base font-semibold">
-                {localized(locale, skill.nameEn, skill.nameAr)}
+              <p className="truncate text-base font-semibold" dir="auto">
+                {skill.name}
               </p>
               <p className="text-xs text-muted-foreground tabular-nums">
                 #{skill.id}
@@ -75,34 +70,6 @@ export function SkillDetailsDialog({
           </div>
 
           <dl className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
-            <DetailRow label={t("tableColSkillEn")}>
-              <span lang="en" dir="ltr" className="font-medium">
-                {skill.nameEn}
-              </span>
-            </DetailRow>
-            <DetailRow label={t("tableColSkillAr")}>
-              <span lang="ar" dir="rtl" className="font-medium">
-                {skill.nameAr}
-              </span>
-            </DetailRow>
-            <DetailRow
-              label={t("skillFormAvatarUrlLabel")}
-              className="sm:col-span-2"
-            >
-              {skill.avatar_url ? (
-                <a
-                  href={skill.avatar_url}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  dir="ltr"
-                  className="break-all text-primary underline-offset-4 hover:underline"
-                >
-                  {skill.avatar_url}
-                </a>
-              ) : (
-                <span className="text-muted-foreground">—</span>
-              )}
-            </DetailRow>
             <DetailRow
               label={`${t("tableColCategories")} (${skill.categorySkills.length})`}
               className="sm:col-span-2"

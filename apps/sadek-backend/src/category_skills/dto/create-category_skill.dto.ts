@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
 export class CreateCategorySkillDto {
   @IsString()
@@ -18,6 +18,12 @@ export class CreateCategorySkillDto {
   @IsString()
   @IsOptional()
   descriptionEn?: string;
+
+  /** Display order (lowest first); 0 when omitted. */
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  rank?: number;
 
   @IsBoolean()
   @IsNotEmpty()

@@ -47,7 +47,17 @@ export class CategorySkillsService {
    * each with up to PUBLIC_SKILLS_PER_CATEGORY of its active skills (newest first).
    */
   async findAllPublic(query: FilterCategorySkillDto) {
-    const page = await this.findAllFor(query, { isDefaultView: true });
+    // Only categories with at least one skill the page would embed (the same
+    // filter as findPublicByCategory), so `total` and `totalPage` count only
+    // categories that have something to show.
+    // Sorted by rank, not createdAt; `order` sets the direction (the DTO
+    // defaults it to DESC, so the website sends ASC for lowest rank first).
+    const page = await this.findAllFor(
+      query,
+      { isDefaultView: true },
+      { skills: { isActive: true, user: { isDefaultView: true } } },
+      'rank',
+    );
     const data = await Promise.all(
       page.data.map(async (category) => ({
         ...category,
@@ -60,8 +70,14 @@ export class CategorySkillsService {
     return { ...page, data };
   }
 
-  private async findAllFor(query: FilterCategorySkillDto, owner: FindOptionsWhere<User>) {
+  private async findAllFor(
+    query: FilterCategorySkillDto,
+    owner: FindOptionsWhere<User>,
+    extra: FindOptionsWhere<CategorySkill> = {},
+    sortBy?: keyof CategorySkill,
+  ) {
     const filters: FindOptionsWhere<CategorySkill> = {
+      ...extra,
       user: owner,
     };
 
@@ -91,6 +107,7 @@ export class CategorySkillsService {
         user: { id: true },
       },
       order: query.order,
+      sortBy,
     });
   }
 

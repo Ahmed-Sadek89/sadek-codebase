@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { SkillsService } from './skills.service';
 import { CreateSkillDto } from './dto/create-skill.dto';
+import { CreateManySkillsDto } from './dto/create-many-skills.dto';
 import { UpdateSkillDto } from './dto/update-skill.dto';
 import { FilterSkillDto } from './dto/filter-skill.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth/jwt-auth.guard';
@@ -29,6 +30,14 @@ export class SkillsController {
   @Post()
   async create(@Body() createSkillDto: CreateSkillDto, @Request() req: RequestUserDto) {
     return await this.skillsService.create(createSkillDto, req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  // All or nothing: one bad name or category id saves none of them.
+  @Post('bulk')
+  async createMany(@Body() createManySkillsDto: CreateManySkillsDto, @Request() req: RequestUserDto) {
+    return await this.skillsService.createMany(createManySkillsDto, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -54,6 +63,18 @@ export class SkillsController {
     @Request() req: RequestUserDto,
   ) {
     return await this.skillsService.update(id, updateSkillDto, req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  // Active ⇄ inactive; the response says which way it went.
+  @Patch(':id/toggle-active')
+  async toggleActive(@Param('id', ParseIntPipe) id: number, @Request() req: RequestUserDto) {
+    const { isActive } = await this.skillsService.toggleActive(id, req.user.userId);
+    return {
+      message: isActive ? 'Skill activated successfully' : 'Skill deactivated successfully',
+      isActive,
+    };
   }
 
   @UseGuards(JwtAuthGuard)

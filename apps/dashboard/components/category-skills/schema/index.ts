@@ -30,6 +30,13 @@ export const createCategorySkillSchema = (t: Translate) =>
       .trim()
       .max(CATEGORY_SKILL_DESCRIPTION_MAX, t("categorySkillFormDescriptionArMax"))
       .transform((value) => value || undefined),
+    // Typed into a number input, so the form keeps text; a valid submit sends a whole number ≥ 0.
+    rank: z
+      .string()
+      .trim()
+      .min(1, t("categorySkillFormRankRequired"))
+      .regex(/^\d+$/, t("categorySkillFormRankInvalid"))
+      .transform(Number),
     isActive: z.boolean(),
   }) satisfies z.ZodType<CreateCategorySkillRequest>;
 

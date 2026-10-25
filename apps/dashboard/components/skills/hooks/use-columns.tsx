@@ -3,9 +3,8 @@
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import type { Skill } from "@repo/types/skills";
-import { Eye, Pencil, Trash2 } from "@repo/ui/icons";
+import { CircleCheck, CircleOff, Eye, Pencil, Trash2 } from "@repo/ui/icons";
 import {
-  AvatarCell,
   ChipsCell,
   DateCell,
   StatusBadgeCell,
@@ -20,10 +19,12 @@ type UseColumnsOptions = {
   onView?: (skill: Skill) => void;
   onEdit?: (skill: Skill) => void;
   onDelete?: (skill: Skill) => void;
+  onToggleActive?: (skill: Skill) => void;
   /** Each flag shows its action; the Action column shows if any is set. */
   canView?: boolean;
   canUpdate?: boolean;
   canDelete?: boolean;
+  canToggleActive?: boolean;
 };
 
 const useColumns = ({
@@ -31,9 +32,11 @@ const useColumns = ({
   onView,
   onEdit,
   onDelete,
+  onToggleActive,
   canView = false,
   canUpdate = false,
   canDelete = false,
+  canToggleActive = false,
 }: UseColumnsOptions = {}) => {
   const t = useTranslations();
   const locale = useLocale();
@@ -47,32 +50,12 @@ const useColumns = ({
         cell: ({ row }) => <TextCell value={row.original.id} tone="muted" />,
       },
       {
-        id: "avatar",
-        sortable: false,
-        header: t("tableColAvatar"),
-        cell: ({ row }) => (
-          <AvatarCell
-            src={row.original.avatar_url}
-            name={localized(locale, row.original.nameEn, row.original.nameAr)}
-          />
-        ),
-      },
-      {
-        accessorKey: "nameAr",
+        accessorKey: "name",
         sortable: true,
-        header: t("tableColSkillAr"),
-        meta: { cellProps: { lang: "ar", dir: "rtl" } },
+        header: t("tableColSkill"),
+        meta: { cellProps: { dir: "auto" } },
         cell: ({ row }) => (
-          <TextCell value={row.original.nameAr} weight="semibold" />
-        ),
-      },
-      {
-        accessorKey: "nameEn",
-        sortable: true,
-        header: t("tableColSkillEn"),
-        meta: { cellProps: { lang: "en", dir: "ltr" } },
-        cell: ({ row }) => (
-          <TextCell value={row.original.nameEn} weight="semibold" />
+          <TextCell value={row.original.name} weight="semibold" />
         ),
       },
       {
@@ -109,7 +92,7 @@ const useColumns = ({
       },
     ];
 
-    if (!canView && !canUpdate && !canDelete) return columns;
+    if (!canView && !canUpdate && !canDelete && !canToggleActive) return columns;
 
     return [
       ...columns,
@@ -134,6 +117,16 @@ const useColumns = ({
                   hidden: !canView,
                 },
                 {
+                  key: "toggle-active",
+                  label: skill.isActive
+                    ? t("tableActionDeactivate")
+                    : t("tableActionActivate"),
+                  icon: skill.isActive ? CircleOff : CircleCheck,
+                  tone: skill.isActive ? "danger" : "success",
+                  onClick: () => onToggleActive?.(skill),
+                  hidden: !canToggleActive,
+                },
+                {
                   key: "edit",
                   label: t("tableActionEdit"),
                   icon: Pencil,
@@ -154,7 +147,19 @@ const useColumns = ({
         },
       },
     ];
-  }, [busy, canDelete, canUpdate, canView, locale, onDelete, onEdit, onView, t]);
+  }, [
+    busy,
+    canToggleActive,
+    canDelete,
+    canUpdate,
+    canView,
+    locale,
+    onToggleActive,
+    onDelete,
+    onEdit,
+    onView,
+    t,
+  ]);
 };
 
 export default useColumns;

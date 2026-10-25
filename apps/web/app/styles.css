@@ -2,18 +2,3 @@
 
 @source "../";
 @source "../../../packages/ui/src";
-
-/* Endless ticker: the track holds two identical copies, so sliding it by
-   half its width loops seamlessly. Speed comes from --marquee-duration. */
-@theme {
-  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
-
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-}

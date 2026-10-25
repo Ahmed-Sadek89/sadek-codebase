@@ -7,6 +7,7 @@ import {
 } from "@repo/libs/query";
 import { skillsService } from "@repo/services/skills";
 import type {
+  CreateManySkillsRequest,
   CreateSkillRequest,
   SkillsQuery,
   UpdateSkillRequest,
@@ -54,6 +55,16 @@ export function useCreateSkill() {
   });
 }
 
+/** POST /skills/bulk: many skills with the same categories. */
+export function useCreateManySkills() {
+  const client = useQueryClient();
+  return useGuardedMutation({
+    mutationFn: (request: CreateManySkillsRequest, auth) =>
+      skillsService.createMany(request, auth),
+    onSuccess: () => invalidateSkillLists(client),
+  });
+}
+
 export function useUpdateSkill() {
   const client = useQueryClient();
   return useGuardedMutation({
@@ -62,6 +73,19 @@ export function useUpdateSkill() {
       auth,
     ) => skillsService.update(id, data, auth),
     onSuccess: (_response, { id }) =>
+      Promise.all([
+        invalidateSkillLists(client),
+        client.invalidateQueries({ queryKey: queryKeys.skills.detail(id) }),
+      ]),
+  });
+}
+
+/** PATCH /skills/:id/toggle-active; refreshes the lists (and public categories) and that skill's detail. */
+export function useToggleSkillActive() {
+  const client = useQueryClient();
+  return useGuardedMutation({
+    mutationFn: (id: number, auth) => skillsService.toggleActive(id, auth),
+    onSuccess: (_response, id) =>
       Promise.all([
         invalidateSkillLists(client),
         client.invalidateQueries({ queryKey: queryKeys.skills.detail(id) }),

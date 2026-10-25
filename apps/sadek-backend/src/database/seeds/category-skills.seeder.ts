@@ -35,6 +35,8 @@ export default class CategorySkillsSeeder implements Seeder {
           descriptionAr: arabicSentence(),
           isActive: randomIsActive(),
         }),
+        // 1..n, the order the website shows them in.
+        rank: index + 1,
         createdAt: randomCreatedAt(),
         user: { id: owner.id },
       }),

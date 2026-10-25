@@ -12,6 +12,7 @@ import useColumns from "./hooks/use-columns";
 import { useStaticFilter } from "./hooks/use-static-filter";
 import { useDynamicFilter } from "./hooks/use-dynamic-filter";
 import { useDeleteSkillAction } from "./hooks/use-delete-skill";
+import { useToggleSkillActiveAction } from "./hooks/use-toggle-skill-active";
 import { SkillsForm } from "./components/skills-form";
 import { SkillDetailsDialog } from "./components/skill-details-dialog";
 import { getSkillsQuery } from "./utils/constants";
@@ -53,14 +54,17 @@ export default function SkillsPage() {
   const staticFilter = useStaticFilter();
   const dynamicFilter = useDynamicFilter();
   const deleteAction = useDeleteSkillAction();
+  const toggleAction = useToggleSkillActiveAction();
   const columns = useColumns({
-    busy: deleteAction.isDeleting,
+    busy: deleteAction.isDeleting || toggleAction.isToggling,
     canView: true,
     canUpdate: true,
     canDelete: true,
+    canToggleActive: true,
     onView: handleView,
     onEdit: handleEdit,
     onDelete: deleteAction.requestDelete,
+    onToggleActive: toggleAction.requestToggle,
   });
 
   return (
@@ -97,6 +101,12 @@ export default function SkillsPage() {
         open={isDetailsOpen}
         onOpenChange={setIsDetailsOpen}
         skill={viewedSkill}
+      />
+      <ConfirmAction
+        open={toggleAction.isOpen}
+        onOpenChange={toggleAction.onOpenChange}
+        question={toggleAction.question}
+        onConfirm={toggleAction.confirmToggle}
       />
       <ConfirmAction
         open={deleteAction.isOpen}

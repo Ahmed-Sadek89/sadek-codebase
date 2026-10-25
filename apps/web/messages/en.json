@@ -54,6 +54,8 @@
   "skillsBody": "I move comfortably between the canvas and the codebase, which means I can speak to product, design and engineering teams fluently.",
   "skillsEmpty": "No skills yet.",
   "skillsCount": "{count, plural, one {# skill} other {# skills}}",
+  "skillsShowAll": "+{count} more",
+  "skillsShowLess": "Show less",
   "experienceTitle": "Experience",
   "experienceCopy": "The roles and milestones that shaped how I work today",
   "experiencePresent": "Present",

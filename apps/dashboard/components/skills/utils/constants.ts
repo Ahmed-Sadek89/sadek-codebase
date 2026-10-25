@@ -27,9 +27,7 @@ export function getSkillsQuery(get: ParamReader): SkillsQuery {
 }
 
 export const SKILL_FORM_DEFAULT_VALUES = {
-  nameEn: "",
-  nameAr: "",
-  avatar_url: "",
+  names: [{ value: "" }],
   isActive: true,
   categorySkills: [],
 } satisfies SkillFormInput;
@@ -38,9 +36,7 @@ export const SKILL_FORM_DEFAULT_VALUES = {
 export function toSkillFormInput(skill?: Skill | null): SkillFormInput {
   if (!skill) return SKILL_FORM_DEFAULT_VALUES;
   return {
-    nameEn: skill.nameEn,
-    nameAr: skill.nameAr,
-    avatar_url: skill.avatar_url ?? "",
+    names: [{ value: skill.name }],
     isActive: skill.isActive,
     categorySkills: skill.categorySkills.map(({ id, nameAr, nameEn }) => ({
       id,

@@ -1,8 +1,7 @@
 import { z } from "zod";
 import type { NamedRef } from "@repo/types/common";
-import type { CreateSkillRequest } from "@repo/types/skills";
+import type { CreateManySkillsRequest } from "@repo/types/skills";
 import type { MessageKey } from "../../../i18n/types";
-import { createUploadFieldSchema } from "../../ui/forms/base-upload/utils/schema";
 
 type Translate = (
   key: MessageKey,
@@ -10,6 +9,8 @@ type Translate = (
 ) => string;
 
 export const SKILL_NAME_MAX = 50;
+/** Max names in one create (POST /skills/bulk accepts up to 50). */
+export const SKILLS_BULK_MAX = 50;
 
 const namedRefSchema = z.object({
   id: z.number().int(),
@@ -17,41 +18,55 @@ const namedRefSchema = z.object({
   nameEn: z.string(),
 }) satisfies z.ZodType<NamedRef>;
 
-// The form keeps whole categories (for the chips' labels); a valid submit
-// sends only their ids. A blank icon is sent as "not set"; a picked one is
-// still a File here (see useSkillForm).
+// Names are rows of `{ value }` because useFieldArray needs objects. The form
+// keeps whole categories (for the chips' labels); a valid submit sends only
+// their ids. Creating sends every name to POST /skills/bulk; editing has one
+// row and sends it as `name` (see useSkillForm).
 export const createSkillSchema = (t: Translate) =>
   z
     .object({
-      nameEn: z
-        .string()
-        .trim()
-        .min(1, t("skillFormNameEnRequired"))
-        .max(SKILL_NAME_MAX, t("skillFormNameEnMax")),
-      nameAr: z
-        .string()
-        .trim()
-        .min(1, t("skillFormNameArRequired"))
-        .max(SKILL_NAME_MAX, t("skillFormNameArMax")),
-      // One image (any format, ≤ 2 MB).
-      avatar_url: createUploadFieldSchema(t, { uploadType: "image" }),
+      names: z
+        .array(
+          z.object({
+            value: z
+              .string()
+              .trim()
+              .min(1, t("skillFormNameRequired"))
+              .max(SKILL_NAME_MAX, t("skillFormNameMax")),
+          }),
+        )
+        .min(1, t("skillFormNameRequired"))
+        .max(SKILLS_BULK_MAX, t("skillFormNamesMax", { max: SKILLS_BULK_MAX }))
+        .superRefine((names, ctx) => {
+          // Marks every repeat after the first, ignoring case (like the backend).
+          const seen = new Set<string>();
+          names.forEach(({ value }, index) => {
+            const key = value.toLowerCase();
+            if (key && seen.has(key)) {
+              ctx.addIssue({
+                code: "custom",
+                path: [index, "value"],
+                message: t("skillFormNameDuplicate"),
+              });
+            }
+            seen.add(key);
+          });
+        }),
       isActive: z.boolean(),
       categorySkills: z
         .array(namedRefSchema)
         .min(1, t("skillFormCategoriesRequired")),
     })
     .transform(
-      ({ categorySkills, ...rest }): SkillFormValues => ({
+      ({ names, categorySkills, ...rest }): SkillFormValues => ({
         ...rest,
+        names: names.map(({ value }) => value),
         categorySkillsIds: categorySkills.map((category) => category.id),
       }),
     );
 
-/** What a valid submit produces: the create request body, but the icon may
- * still be a File to upload. */
-export type SkillFormValues = Omit<CreateSkillRequest, "avatar_url"> & {
-  avatar_url?: string | File;
-};
+/** What a valid submit produces (the POST /skills/bulk body). */
+export type SkillFormValues = CreateManySkillsRequest;
 
 type SkillSchema = ReturnType<typeof createSkillSchema>;
 /** What the form fields hold. */
