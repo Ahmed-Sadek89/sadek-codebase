@@ -16,6 +16,7 @@
     "@repo/hooks": "workspace:*",
     "@repo/libs": "workspace:*",
     "@repo/provider": "workspace:*",
+    "@repo/rich-text": "workspace:*",
     "@repo/services": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/ui": "workspace:*",

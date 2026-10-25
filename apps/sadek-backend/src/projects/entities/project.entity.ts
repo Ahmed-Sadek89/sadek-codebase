@@ -22,6 +22,7 @@ export class Project {
     @Column({ type: 'varchar', length: PROJECT_SHORT_DESCRIPTION_MAX, nullable: false, default: '' })
     shortDescriptionEn!: string;
 
+    // Sanitized HTML (rich text); rows saved earlier may hold plain text.
     @Column({ type: 'text', nullable: false })
     descriptionAr!: string;
 

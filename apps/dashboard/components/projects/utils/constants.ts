@@ -1,4 +1,5 @@
 import type { Project, ProjectsQuery } from "@repo/types/projects";
+import { plainTextToHtml } from "@repo/rich-text";
 import {
   readListQueryParams,
   readPositiveInt,
@@ -51,8 +52,9 @@ export function toProjectFormInput(project?: Project | null): ProjectFormInput {
     nameAr: project.nameAr,
     shortDescriptionEn: project.shortDescriptionEn,
     shortDescriptionAr: project.shortDescriptionAr,
-    descriptionEn: project.descriptionEn,
-    descriptionAr: project.descriptionAr,
+    // Rows saved before descriptions were HTML hold plain text.
+    descriptionEn: plainTextToHtml(project.descriptionEn),
+    descriptionAr: plainTextToHtml(project.descriptionAr),
     mainImageUrl: project.mainImageUrl ?? "",
     liveUrl: project.liveUrl ?? "",
     repoUrl: project.repoUrl ?? "",

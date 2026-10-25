@@ -3,6 +3,8 @@ import { useLocale, useTranslations } from "next-intl";
 import type { Project } from "@repo/types/projects";
 import { ArrowUpRight, CalendarDays, ExternalLink, Star } from "@repo/ui/icons";
 import { cn } from "@repo/ui/utils";
+import { RichTextContent } from "@repo/ui/rich-text";
+import { richTextToPlainText } from "@repo/rich-text";
 import { GithubIcon } from "../../../../ui/brand-icon";
 import { isMediaUrl } from "../../../../../libs/media";
 import { localize } from "../../../../../utils/localize";
@@ -15,9 +17,9 @@ const iconLink =
  * A portfolio card: a large image (zooms on hover, with quick links over it),
  * then categories, title, short description and the live / source links.
  * `featured` is the gallery's lead card: 2×2 on large screens, full width on
- * tablets, with a badge, a bigger title and the full description.
- * Other cards show the short description (or the full one on rows saved
- * before short descriptions existed).
+ * tablets, with a badge, a bigger title and the full description rendered as
+ * sanitized rich text. Other cards show the short description as plain text
+ * (or the description's text on rows saved before short descriptions existed).
  */
 export function ProjectCard({
   project,
@@ -30,10 +32,10 @@ export function ProjectCard({
   const locale = useLocale();
   const name = localize(locale, project.nameEn, project.nameAr);
   const categories = getProjectCategories(project, locale);
-  const description =
-    (!featured &&
-      localize(locale, project.shortDescriptionEn, project.shortDescriptionAr)) ||
-    localize(locale, project.descriptionEn, project.descriptionAr);
+  const descriptionHtml = localize(locale, project.descriptionEn, project.descriptionAr);
+  const summary =
+    localize(locale, project.shortDescriptionEn, project.shortDescriptionAr) ||
+    richTextToPlainText(descriptionHtml);
   return (
     <article
       className={cn(
@@ -128,14 +130,16 @@ export function ProjectCard({
         >
           {name}
         </h3>
-        <p
-          className={cn(
-            "mt-2 text-sm leading-relaxed text-muted-foreground",
-            featured ? "line-clamp-3 sm:text-[15px]" : "line-clamp-2",
-          )}
-        >
-          {description}
-        </p>
+        {featured ? (
+          <RichTextContent
+            html={descriptionHtml}
+            className="mt-2 line-clamp-3 text-muted-foreground sm:text-[15px]"
+          />
+        ) : (
+          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+            {summary}
+          </p>
+        )}
         {(project.liveUrl || project.repoUrl) && (
           <div className="mt-auto flex items-center justify-between gap-3 border-t border-border/70 pt-4 [&:not(:first-child)]:mt-5">
             {project.liveUrl ? (

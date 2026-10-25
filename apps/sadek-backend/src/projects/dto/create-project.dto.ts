@@ -2,6 +2,7 @@ import { IsString, IsNotEmpty, IsBoolean, IsOptional, IsUrl, MaxLength, IsArray,
 import { PROJECT_NAME_MAX, PROJECT_SHORT_DESCRIPTION_MAX } from '@repo/constants/projects';
 import { URL_MAX } from '@repo/constants/url';
 import { URL_OPTIONS } from '../../common/validation/url-options';
+import { ToRichText } from '../../common/transformers/to-rich-text';
 
 export class CreateProjectDto {
     @IsString()
@@ -24,10 +25,13 @@ export class CreateProjectDto {
     @MaxLength(PROJECT_SHORT_DESCRIPTION_MAX)
     shortDescriptionEn!: string;
 
+    /** HTML from the dashboard editor, sanitized on the way in (see ToRichText). */
+    @ToRichText()
     @IsString()
     @IsNotEmpty()
     descriptionAr!: string;
 
+    @ToRichText()
     @IsString()
     @IsNotEmpty()
     descriptionEn!: string;

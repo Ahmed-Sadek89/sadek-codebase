@@ -3,6 +3,7 @@ import type { NamedRef } from "@repo/types/common";
 import type { CreateProjectRequest } from "@repo/types/projects";
 import { PROJECT_NAME_MAX, PROJECT_SHORT_DESCRIPTION_MAX } from "@repo/constants/projects";
 import { URL_MAX } from "@repo/constants/url";
+import { isRichTextEmpty } from "@repo/rich-text";
 import type { MessageKey } from "../../../i18n/types";
 import { isHttpUrl } from "../../../utils/validation";
 import { createUploadFieldSchema } from "../../ui/forms/base-upload/utils/schema";
@@ -58,14 +59,13 @@ export const createProjectSchema = (t: Translate) =>
         .trim()
         .min(1, t("projectFormShortDescriptionArRequired"))
         .max(PROJECT_SHORT_DESCRIPTION_MAX, t("projectFormShortDescriptionArMax", { max: PROJECT_SHORT_DESCRIPTION_MAX })),
+      // Rich-text HTML from the editor; the backend sanitizes it on save.
       descriptionEn: z
         .string()
-        .trim()
-        .min(1, t("projectFormDescriptionEnRequired")),
+        .refine((value) => !isRichTextEmpty(value), t("projectFormDescriptionEnRequired")),
       descriptionAr: z
         .string()
-        .trim()
-        .min(1, t("projectFormDescriptionArRequired")),
+        .refine((value) => !isRichTextEmpty(value), t("projectFormDescriptionArRequired")),
       // One image (any format; ≤ 2 MB once compressed).
       mainImageUrl: createUploadFieldSchema(t, { uploadType: "image" }),
       liveUrl: optionalUrlSchema(t),

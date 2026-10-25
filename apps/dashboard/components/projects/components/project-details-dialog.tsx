@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import type { Project } from "@repo/types/projects";
 import { FolderKanban } from "@repo/ui/icons";
+import { RichTextContent } from "@repo/ui/rich-text";
 import { AppDialog } from "../../ui/dialog";
 import { DateCell, StatusBadgeCell } from "../../ui/cells";
 import { isMediaUrl } from "../../../libs/media";
@@ -128,15 +129,11 @@ export function ProjectDetailsDialog({
                 {project.shortDescriptionAr || "—"}
               </p>
             </DetailRow>
-            <DetailRow label={t("projectFormDescriptionEnLabel")}>
-              <p lang="en" dir="ltr" className="whitespace-pre-line">
-                {project.descriptionEn}
-              </p>
+            <DetailRow label={t("projectFormDescriptionEnLabel")} className="sm:col-span-2">
+              <RichTextContent lang="en" dir="ltr" html={project.descriptionEn} />
             </DetailRow>
-            <DetailRow label={t("projectFormDescriptionArLabel")}>
-              <p lang="ar" dir="rtl" className="whitespace-pre-line">
-                {project.descriptionAr}
-              </p>
+            <DetailRow label={t("projectFormDescriptionArLabel")} className="sm:col-span-2">
+              <RichTextContent lang="ar" dir="rtl" html={project.descriptionAr} />
             </DetailRow>
             <DetailRow label={t("projectLiveLink")} className="sm:col-span-2">
               <ExternalUrl url={project.liveUrl} />
