@@ -12,15 +12,11 @@ export const WHAT_CAN_DOS_LIMIT = 10;
 export const WHAT_CAN_DO_SHORT_DESCRIPTION_PREVIEW_MAX = 60;
 
 /**
- * The list query for the URL's `search`, `page`, `limit`, and `order` (any
- * combination). Shared by the server prefetch and the client hook so both
- * build the same query key. `isActive` is dropped because
- * GET /what-can-do/me rejects it.
+ * The list query for the URL's `search`, `page`, `limit`, `order`, and
+ * `isActive` (any combination). Shared by the server prefetch and the client
+ * hook so both build the same query key.
  */
-export function getWhatCanDosQuery({
-  isActive: _isActive,
-  ...params
-}: ListQueryParams): WhatCanDosQuery {
+export function getWhatCanDosQuery(params: ListQueryParams): WhatCanDosQuery {
   return { limit: WHAT_CAN_DOS_LIMIT, ...params };
 }
 
@@ -32,6 +28,7 @@ export const WHAT_CAN_DO_FORM_DEFAULT_VALUES = {
   description_en: "",
   description_ar: "",
   rank: "",
+  isActive: true,
 } satisfies WhatCanDoFormInput;
 
 /**
@@ -56,5 +53,6 @@ export function toWhatCanDoFormInput(
     description_en: item.description_en ?? "",
     description_ar: item.description_ar ?? "",
     rank: String(item.rank),
+    isActive: item.isActive,
   };
 }

@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import type { WhatCanDoDetails } from "@repo/types/what-can-do";
 import { Sparkles } from "@repo/ui/icons";
 import { AppDialog } from "../../ui/dialog";
-import { DateCell } from "../../ui/cells";
+import { DateCell, StatusBadgeCell } from "../../ui/cells";
 import { localized } from "../../../utils/format";
 
 export type WhatCanDoDetailsDialogProps = {
@@ -86,6 +86,10 @@ export function WhatCanDoDetailsDialog({
             <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary tabular-nums">
               {t("tableColRank")}: {item.rank}
             </span>
+            <StatusBadgeCell
+              value={item.isActive ? t("statusActive") : t("statusInactive")}
+              tone={item.isActive ? "primary" : "danger"}
+            />
           </div>
 
           <dl className="grid gap-x-6 gap-y-5 sm:grid-cols-2">

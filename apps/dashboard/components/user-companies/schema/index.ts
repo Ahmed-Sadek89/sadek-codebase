@@ -28,15 +28,11 @@ export const createUserCompanySchema = (t: Translate) =>
     .object({
       // One image (any format; ≤ 2 MB once compressed).
       logo: createUploadFieldSchema(t, { uploadType: "image" }),
-      name_en: z
+      company_name: z
         .string()
         .trim()
-        .min(1, t("userCompanyFormNameEnRequired"))
-        .max(USER_COMPANY_NAME_MAX, t("userCompanyFormNameEnMax")),
-      name_ar: optionalTextSchema(
-        USER_COMPANY_NAME_MAX,
-        t("userCompanyFormNameArMax"),
-      ),
+        .min(1, t("userCompanyFormCompanyNameRequired"))
+        .max(USER_COMPANY_NAME_MAX, t("userCompanyFormCompanyNameMax")),
       description_en: optionalTextSchema(),
       description_ar: optionalTextSchema(),
       startWorkFrom: z.string().min(1, t("userCompanyFormStartRequired")),

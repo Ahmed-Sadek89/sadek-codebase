@@ -103,6 +103,19 @@ export function useUpdateWhatCanDo() {
   });
 }
 
+/** PATCH /what-can-do/:id/toggle-active; refreshes the lists and that item's detail. */
+export function useToggleWhatCanDoActive() {
+  const client = useQueryClient();
+  return useGuardedMutation({
+    mutationFn: (id: number, auth) => whatCanDoService.toggleActive(id, auth),
+    onSuccess: (_response, id) =>
+      Promise.all([
+        invalidateWhatCanDoLists(client),
+        client.invalidateQueries({ queryKey: queryKeys.whatCanDo.detail(id) }),
+      ]),
+  });
+}
+
 export function useDeleteWhatCanDo() {
   const client = useQueryClient();
   return useGuardedMutation({

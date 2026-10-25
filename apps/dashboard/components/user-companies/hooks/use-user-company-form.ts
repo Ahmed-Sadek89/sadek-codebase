@@ -71,7 +71,6 @@ export function useUserCompanyForm({
           id: company.id,
           data: {
             ...rest,
-            name_ar: clear(rest.name_ar, company.name_ar),
             description_en: clear(rest.description_en, company.description_en),
             description_ar: clear(rest.description_ar, company.description_ar),
             startWorkTo: clear(rest.startWorkTo, company.startWorkTo),

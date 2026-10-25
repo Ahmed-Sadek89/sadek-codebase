@@ -2,12 +2,14 @@
 
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { Controller } from "react-hook-form";
 import type { WhatCanDoDetails } from "@repo/types/what-can-do";
 import { Button } from "@repo/ui/button";
-import type { LucideIcon } from "@repo/ui/icons";
+import { Eye, type LucideIcon } from "@repo/ui/icons";
 import { AppDialog } from "../../ui/dialog";
 import { BaseInput } from "../../ui/forms/base-input";
 import { BaseTextarea } from "../../ui/forms/base-textarea";
+import { BaseSwitch } from "../../ui/forms/base-switch";
 import { useWhatCanDoForm } from "../hooks/use-what-can-do-form";
 import { toWhatCanDoFormInput } from "../utils/constants";
 import {
@@ -45,7 +47,7 @@ export function WhatCanDoForm({
 
   useEffect(() => {
     if (isOpenDialog) form.reset(toWhatCanDoFormInput(defaultValues, nextRank));
-  }, [isOpenDialog, defaultValues, form]);
+  }, [isOpenDialog, defaultValues, nextRank, form]);
 
   return (
     <AppDialog
@@ -147,6 +149,26 @@ export function WhatCanDoForm({
             {t("whatCanDoFormRankHint")}
           </p>
         </div>
+        <Controller
+          control={form.control}
+          name="isActive"
+          render={({ field, fieldState }) => (
+            <BaseSwitch
+              id={field.name}
+              label={t("whatCanDoFormActiveLabel")}
+              description={t("whatCanDoFormActiveHint")}
+              icon={<Eye className="size-4" />}
+              checkedText={t("whatCanDoFormActiveOn")}
+              uncheckedText={t("whatCanDoFormActiveOff")}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              disabled={isSubmitting}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
         <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
           <Button
             type="button"

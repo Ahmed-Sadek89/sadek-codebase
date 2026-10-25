@@ -8,7 +8,10 @@ import type { WhatCanDosQuery } from "@repo/types/what-can-do";
 // objects, so the query keys match and the hydrated cache is reused.
 // 10 is the backend's max limit: a portfolio shows everything on one page.
 /** Services load 5 at a time; "Show more" fetches the next page. */
-export const whatCanDoQuery: Omit<WhatCanDosQuery, "page"> = { limit: 5 };
+export const whatCanDoQuery: Omit<WhatCanDosQuery, "page"> = {
+  limit: 5,
+  isActive: true,
+};
 /** Skill categories load 10 at a time; "Show more" fetches the next page. */
 export const categorySkillsQuery: Omit<CategorySkillsQuery, "page"> = {
   limit: 5,

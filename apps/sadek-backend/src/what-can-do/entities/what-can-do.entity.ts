@@ -28,6 +28,9 @@ export class WhatCanDo {
     @Column({ type: 'int', nullable: false })
     rank!: number;
 
+    @Column({ type: 'boolean', default: true, nullable: false })
+    isActive!: boolean;
+
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: false })
     createdAt!: Date;
 

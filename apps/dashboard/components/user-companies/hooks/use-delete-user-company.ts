@@ -7,7 +7,6 @@ import { showToast, toastApiError } from "@repo/libs/toast";
 import type { UserCompanyDetails } from "@repo/types/user-company";
 import { getDirection } from "../../../i18n/config";
 import { deleteFile } from "../../../libs/upload/delete-file";
-import { localized } from "../../../utils/format";
 
 /**
  * Delete flow for a row: ask in a ConfirmAction, then delete the company's
@@ -42,7 +41,7 @@ export function useDeleteUserCompanyAction() {
 
   const question = company
     ? t("userCompanyDeleteQuestion", {
-        name: localized(locale, company.name_en, company.name_ar),
+        name: company.company_name,
       })
     : "";
 

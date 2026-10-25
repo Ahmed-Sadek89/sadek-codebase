@@ -19,7 +19,7 @@ export function TimelineItem({
 }) {
   const t = useTranslations();
   const locale = useLocale();
-  const name = localize(locale, company.name_en, company.name_ar);
+  const name = company.company_name;
   const description = localize(
     locale,
     company.description_en,

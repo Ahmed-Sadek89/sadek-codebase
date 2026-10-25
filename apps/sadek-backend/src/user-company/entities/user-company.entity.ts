@@ -7,10 +7,7 @@ export class UserCompany {
     id!: number;
 
     @Column({ type: 'varchar', length: 50, nullable: false })
-    name_en!: string;
-
-    @Column({ type: 'varchar', length: 50, nullable: true })
-    name_ar!: string;
+    company_name!: string;
 
     @Column({ type: 'text', nullable: true })
     description_en!: string;

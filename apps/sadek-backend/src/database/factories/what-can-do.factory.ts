@@ -12,5 +12,6 @@ export default setSeederFactory(WhatCanDo, () => {
     whatCanDo.shortDescription_ar = fakerAR.lorem.sentence().slice(0, 200);
     whatCanDo.description_en = faker.lorem.paragraph();
     whatCanDo.description_ar = fakerAR.lorem.paragraph();
+    whatCanDo.isActive = true;
     return whatCanDo;
 });

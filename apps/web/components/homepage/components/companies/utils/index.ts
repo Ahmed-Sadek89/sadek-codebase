@@ -1,6 +1,5 @@
 import type { Settings } from "react-slick";
 import type { UserCompany } from "@repo/types/user-company";
-import { localize } from "../../../../../utils/localize";
 import { getInitials } from "../../../../../utils/initials";
 import { hasText } from "../../../utils";
 
@@ -12,12 +11,9 @@ export type CompanyBadge = {
   site?: string;
 };
 
-/** A company as the strip shows it: its name in the page's language, logo and site. */
-export function toCompanyBadge(
-  company: UserCompany,
-  locale: string,
-): CompanyBadge {
-  const name = localize(locale, company.name_en, company.name_ar);
+/** A company as the strip shows it: its name, logo and site. */
+export function toCompanyBadge(company: UserCompany): CompanyBadge {
+  const name = company.company_name;
   return {
     id: company.id,
     name,

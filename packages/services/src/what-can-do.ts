@@ -5,6 +5,7 @@ import type {
   CreateWhatCanDoResponse,
   DeleteWhatCanDoResponse,
   MyWhatCanDosResponse,
+  ToggleWhatCanDoActiveResponse,
   UpdateWhatCanDoRequest,
   UpdateWhatCanDoResponse,
   WhatCanDoDetails,
@@ -18,6 +19,7 @@ export const whatCanDoEndpoints = {
   public: "/what-can-do/public",
   me: "/what-can-do/me",
   byId: (id: number) => `/what-can-do/${id}`,
+  toggleActive: (id: number) => `/what-can-do/${id}/toggle-active`,
 } as const;
 
 // GET /what-can-do/public is public; every other route sits behind JwtAuthGuard
@@ -80,6 +82,18 @@ export const whatCanDoService = {
     const { data } = await apiClient.patch<UpdateWhatCanDoResponse>(
       whatCanDoEndpoints.byId(id),
       request,
+      { headers: authHeaders(auth) },
+    );
+    return data;
+  },
+  /** Active ⇄ inactive. */
+  async toggleActive(
+    id: number,
+    auth: AuthorizedRequest,
+  ): Promise<ToggleWhatCanDoActiveResponse> {
+    const { data } = await apiClient.patch<ToggleWhatCanDoActiveResponse>(
+      whatCanDoEndpoints.toggleActive(id),
+      undefined,
       { headers: authHeaders(auth) },
     );
     return data;

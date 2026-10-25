@@ -12,12 +12,7 @@ export class CreateUserCompanyDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(50)
-    name_en!: string;
-
-    @IsString()
-    @IsOptional()
-    @MaxLength(50)
-    name_ar?: string;
+    company_name!: string;
 
     @IsString()
     @IsOptional()

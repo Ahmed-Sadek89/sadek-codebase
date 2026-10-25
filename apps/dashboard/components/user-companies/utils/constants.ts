@@ -29,8 +29,7 @@ export const LINK_CLASS_NAME =
 
 export const USER_COMPANY_FORM_DEFAULT_VALUES = {
   logo: "",
-  name_en: "",
-  name_ar: "",
+  company_name: "",
   description_en: "",
   description_ar: "",
   startWorkFrom: "",
@@ -49,8 +48,7 @@ export function toUserCompanyFormInput(
   if (!company) return USER_COMPANY_FORM_DEFAULT_VALUES;
   return {
     logo: company.logo ?? "",
-    name_en: company.name_en,
-    name_ar: company.name_ar ?? "",
+    company_name: company.company_name,
     description_en: company.description_en ?? "",
     description_ar: company.description_ar ?? "",
     startWorkFrom: toMonthValue(company.startWorkFrom),

@@ -11,6 +11,7 @@ import { ConfirmAction } from "../ui/confirm-action";
 import useColumns from "./hooks/use-columns";
 import { useStaticFilter } from "./hooks/use-static-filter";
 import { useDeleteWhatCanDoAction } from "./hooks/use-delete-what-can-do";
+import { useToggleWhatCanDoActiveAction } from "./hooks/use-toggle-what-can-do-active";
 import { WhatCanDoForm } from "./components/what-can-do-form";
 import { WhatCanDoDetailsDialog } from "./components/what-can-do-details-dialog";
 import { readListQueryParams } from "../../utils/list-query";
@@ -54,14 +55,17 @@ export default function WhatCanIDoPage() {
     useMyWhatCanDos(query);
   const staticFilter = useStaticFilter();
   const deleteAction = useDeleteWhatCanDoAction();
+  const toggleAction = useToggleWhatCanDoActiveAction();
   const columns = useColumns({
-    busy: deleteAction.isDeleting,
+    busy: deleteAction.isDeleting || toggleAction.isToggling,
     canView: true,
     canUpdate: true,
     canDelete: true,
+    canToggleActive: true,
     onView: handleView,
     onEdit: handleEdit,
     onDelete: deleteAction.requestDelete,
+    onToggleActive: toggleAction.requestToggle,
   });
 
   return (
@@ -101,6 +105,12 @@ export default function WhatCanIDoPage() {
         open={isDetailsOpen}
         onOpenChange={setIsDetailsOpen}
         item={viewedItem}
+      />
+      <ConfirmAction
+        open={toggleAction.isOpen}
+        onOpenChange={toggleAction.onOpenChange}
+        question={toggleAction.question}
+        onConfirm={toggleAction.confirmToggle}
       />
       <ConfirmAction
         open={deleteAction.isOpen}

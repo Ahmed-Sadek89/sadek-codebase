@@ -45,6 +45,7 @@ export const createWhatCanDoSchema = (t: Translate) =>
       .min(1, t("whatCanDoFormRankRequired"))
       .regex(/^\d+$/, t("whatCanDoFormRankInvalid"))
       .transform(Number),
+    isActive: z.boolean(),
   }) satisfies z.ZodType<CreateWhatCanDoRequest, unknown>;
 
 /** What a valid submit produces: the create request body. */

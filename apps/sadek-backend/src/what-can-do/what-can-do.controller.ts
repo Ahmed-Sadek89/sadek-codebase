@@ -66,6 +66,18 @@ export class WhatCanDoController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  // Active ⇄ inactive; the response says which way it went.
+  @Patch(':id/toggle-active')
+  async toggleActive(@Param('id', ParseIntPipe) id: number, @Request() req: RequestUserDto) {
+    const { isActive } = await this.whatCanDoService.toggleActive(id, req.user.userId);
+    return {
+      message: isActive ? 'What can do activated successfully' : 'What can do deactivated successfully',
+      isActive,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number, @Request() req: RequestUserDto) {
     await this.whatCanDoService.remove(id, req.user.userId);

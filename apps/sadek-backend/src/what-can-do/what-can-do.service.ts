@@ -27,13 +27,13 @@ export class WhatCanDoService {
     return await this.findAllFor(query, { id: userId });
   }
 
-  /** Public list: always the rows of the user whose `isDefaultView` is true. */
+  /** Public list: always the active rows of the user whose `isDefaultView` is true. */
   async findAllPublic(query: FilterWhatCanDoDto) {
-    return await this.findAllFor(query, { isDefaultView: true });
+    return await this.findAllFor({ ...query, isActive: true }, { isDefaultView: true });
   }
 
   private async findAllFor(query: FilterWhatCanDoDto, owner: FindOptionsWhere<User>) {
-    const where = this.ownedWhere(owner, query.search);
+    const where = this.ownedWhere(owner, query.search, query.isActive);
     return await paginate({
       repository: this.whatCanDoRepository,
       where,
@@ -49,7 +49,7 @@ export class WhatCanDoService {
 
   /** The user's items, paginated by `rank`: lowest rank first unless `order` is DESC. */
   async findByUser(query: FilterWhatCanDoDto, userId: number) {
-    const where = this.ownedWhere({ id: userId }, query.search);
+    const where = this.ownedWhere({ id: userId }, query.search, query.isActive);
     return await paginate({
       repository: this.whatCanDoRepository,
       where,
@@ -75,14 +75,31 @@ export class WhatCanDoService {
     return await this.whatCanDoRepository.save(whatCanDo);
   }
 
+  /** Flips `isActive` and returns the row with its new value. */
+  async toggleActive(id: number, userId: number): Promise<WhatCanDo> {
+    const whatCanDo = await this.findOne(id, userId);
+    const isActive = !whatCanDo.isActive;
+    await this.whatCanDoRepository.update({ id: whatCanDo.id }, { isActive });
+    whatCanDo.isActive = isActive;
+    return whatCanDo;
+  }
+
   async remove(id: number, userId: number): Promise<void> {
     const whatCanDo = await this.findOne(id, userId);
     await this.whatCanDoRepository.remove(whatCanDo);
   }
 
-  /** The user's rows, optionally narrowed by `search` on the English or Arabic title, shortDescription or description. */
-  private ownedWhere(user: FindOptionsWhere<User>, search?: string): FindOptionsWhere<WhatCanDo> | FindOptionsWhere<WhatCanDo>[] {
+  /**
+   * The user's rows, optionally narrowed by `isActive` and by `search` on the
+   * English or Arabic title, shortDescription or description.
+   */
+  private ownedWhere(
+    user: FindOptionsWhere<User>,
+    search?: string,
+    isActive?: boolean,
+  ): FindOptionsWhere<WhatCanDo> | FindOptionsWhere<WhatCanDo>[] {
     const owner: FindOptionsWhere<WhatCanDo> = { user };
+    if (isActive !== undefined) owner.isActive = isActive;
     search = search?.trim();
     if (!search) return owner;
     return [

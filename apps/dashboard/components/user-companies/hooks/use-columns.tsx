@@ -53,36 +53,23 @@ const useColumns = ({
         cell: ({ row }) => (
           <AvatarCell
             src={row.original.logo}
-            name={localized(locale, row.original.name_en, row.original.name_ar)}
+            name={row.original.company_name}
           />
         ),
       },
       {
-        accessorKey: "name_ar",
+        accessorKey: "company_name",
         sortable: true,
-        header: t("tableColCompanyAr"),
-        meta: { cellProps: { lang: "ar", dir: "rtl" } },
+        header: t("tableColCompany"),
         cell: ({ row }) => (
           <div className="max-w-sm min-w-55 flex items-start flex-col gap-y-1.5">
-            <TextCell value={row.original.name_ar} weight="semibold" />
+            <TextCell value={row.original.company_name} weight="semibold" />
             <TextCell
-              value={row.original.description_ar}
-              tone="muted"
-              size="sm"
-            />
-          </div>
-        ),
-      },
-      {
-        accessorKey: "name_en",
-        sortable: true,
-        header: t("tableColCompanyEn"),
-        meta: { cellProps: { lang: "en", dir: "ltr" } },
-        cell: ({ row }) => (
-          <div className="max-w-sm min-w-55 flex items-start flex-col gap-y-1.5">
-            <TextCell value={row.original.name_en} weight="semibold" />
-            <TextCell
-              value={row.original.description_en}
+              value={localized(
+                locale,
+                row.original.description_en,
+                row.original.description_ar,
+              )}
               tone="muted"
               size="sm"
             />

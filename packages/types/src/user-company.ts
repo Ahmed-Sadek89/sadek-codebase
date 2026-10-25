@@ -8,9 +8,8 @@ import type {
 /** GET /user-company/:id and the items of GET /user-company/me (no owner). */
 export interface UserCompanyDetails {
   id: number;
-  /** Max 50 characters each. English is always set; Arabic is `null` until added. */
-  name_en: string;
-  name_ar: string | null;
+  /** Max 50 characters. */
+  company_name: string;
   description_en: string | null;
   description_ar: string | null;
   startWorkFrom: IsoDateString;
@@ -28,9 +27,8 @@ export interface UserCompany extends UserCompanyDetails {
 
 /** POST /user-company */
 export interface CreateUserCompanyRequest {
-  /** Max 50 characters each. English is required, Arabic optional. */
-  name_en: string;
-  name_ar?: string;
+  /** Required, max 50 characters. */
+  company_name: string;
   description_en?: string;
   description_ar?: string;
   /** ISO 8601 date or date-time. */
@@ -44,7 +42,6 @@ export interface CreateUserCompanyRequest {
 
 /** Optional fields: omitted from a create response when not sent, cleared with `null` on update. */
 type OptionalUserCompanyField =
-  | "name_ar"
   | "description_en"
   | "description_ar"
   | "startWorkTo"
@@ -67,7 +64,7 @@ export type CreateUserCompanyResponse = Omit<
  * `order` sorts the two lists by `createdAt` and `/me` by `startWorkFrom`; all default to DESC.
  */
 export interface UserCompaniesQuery extends PaginationQuery {
-  /** Matches the English or Arabic name or description (case-insensitive). Max 20 characters. */
+  /** Matches the company name or the English or Arabic description (case-insensitive). Max 20 characters. */
   search?: string;
 }
 

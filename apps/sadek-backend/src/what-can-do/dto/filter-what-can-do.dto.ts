@@ -1,7 +1,8 @@
 import { OmitType } from '@nestjs/swagger';
-import { IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { type SortOrder } from '../../common/pagination.constants';
+import { ToBoolean } from '../../common/transformers/to-boolean';
 
 /**
  * Query for both GET /what-can-do and GET /what-can-do/me.
@@ -21,4 +22,10 @@ export class FilterWhatCanDoDto extends OmitType(PaginationQueryDto, ['order'] a
     message: 'search be at most 20 characters long',
   })
   search?: string;
+
+  /** Ignored by GET /what-can-do/public, which only returns active rows. */
+  @IsOptional()
+  @ToBoolean()
+  @IsBoolean()
+  isActive?: boolean;
 }

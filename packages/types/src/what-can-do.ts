@@ -18,6 +18,8 @@ export interface WhatCanDoDetails {
   description_ar: string | null;
   /** Display order, set by the client. */
   rank: number;
+  /** Inactive items are hidden from GET /what-can-do/public. */
+  isActive: boolean;
   createdAt: IsoDateString;
 }
 
@@ -38,6 +40,8 @@ export interface CreateWhatCanDoRequest {
   description_ar?: string;
   /** Integer, 0 or more. Not unique: equal ranks are ordered by id. */
   rank: number;
+  /** Defaults to `true` when omitted. */
+  isActive?: boolean;
 }
 
 /** Optional fields: omitted from a create response when not sent, cleared with `null` on update. */
@@ -52,7 +56,7 @@ type OptionalWhatCanDoFields = {
   [Field in OptionalWhatCanDoField]?: string | null;
 };
 
-/** The saved row; optional fields are omitted when not sent. */
+/** The saved row (`isActive` is always set); optional fields are omitted when not sent. */
 export type CreateWhatCanDoResponse = Omit<WhatCanDo, OptionalWhatCanDoField> &
   OptionalWhatCanDoFields;
 
@@ -64,6 +68,8 @@ export type CreateWhatCanDoResponse = Omit<WhatCanDo, OptionalWhatCanDoField> &
 export interface WhatCanDosQuery extends PaginationQuery {
   /** Matches the English or Arabic title, shortDescription or description (case-insensitive). Max 20 characters. */
   search?: string;
+  /** Filters by status (unset = all). Ignored by `/public`, which only returns active items. */
+  isActive?: boolean;
 }
 
 export type WhatCanDosResponse = PaginatedResponse<WhatCanDo>;
@@ -81,5 +87,10 @@ export type UpdateWhatCanDoRequest = Partial<
   OptionalWhatCanDoFields;
 
 export type UpdateWhatCanDoResponse = MessageResponse;
+
+/** PATCH /what-can-do/:id/toggle-active: the row's new `isActive`. */
+export type ToggleWhatCanDoActiveResponse = MessageResponse & {
+  isActive: boolean;
+};
 
 export type DeleteWhatCanDoResponse = MessageResponse;
