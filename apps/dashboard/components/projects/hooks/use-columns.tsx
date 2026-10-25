@@ -93,6 +93,14 @@ const useColumns = ({
         ),
       },
       {
+        accessorKey: "rank",
+        sortable: true,
+        header: t("tableColRank"),
+        cell: ({ row }) => (
+          <TextCell value={row.original.rank} weight="medium" />
+        ),
+      },
+      {
         accessorKey: "isActive",
         sortable: true,
         header: t("tableColStatus"),

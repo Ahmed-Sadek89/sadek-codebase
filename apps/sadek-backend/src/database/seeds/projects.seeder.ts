@@ -33,7 +33,7 @@ export default class ProjectsSeeder implements Seeder {
       return;
     }
     const repo = dataSource.getRepository(Project);
-    const projects = Array.from({ length: SEED_COUNT }, () => {
+    const projects = Array.from({ length: SEED_COUNT }, (_, index) => {
       const nameEn = fit(titleCase(faker.company.catchPhrase()), 100);
       return repo.create({
         nameEn,
@@ -42,6 +42,8 @@ export default class ProjectsSeeder implements Seeder {
         shortDescriptionAr: fit(fakerAR.lorem.sentence(), 255),
         descriptionEn: `<p>${faker.lorem.paragraph()}</p><ul><li><p>${faker.lorem.sentence()}</p></li><li><p>${faker.lorem.sentence()}</p></li></ul>`,
         descriptionAr: `<p>${fakerAR.lorem.paragraph()}</p><ul><li><p>${fakerAR.lorem.sentence()}</p></li><li><p>${fakerAR.lorem.sentence()}</p></li></ul>`,
+        // 1..n, the order the website shows them in.
+        rank: index + 1,
         isActive: randomIsActive(),
         mainImageUrl: faker.image.url({ width: 1280, height: 720 }),
         liveUrl: faker.helpers.maybe(() => fit(faker.internet.url(), 255)),

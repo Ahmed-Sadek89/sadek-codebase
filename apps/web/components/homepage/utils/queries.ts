@@ -40,6 +40,6 @@ export const categoryProjectsQuery: Omit<CategoryProjectsQuery, "page"> = {
 export const projectsQuery: Omit<ProjectsQuery, "page"> = {
   limit: 3,
   isActive: true,
+  // Lowest rank first.
   order: "ASC",
-
 };

@@ -11,6 +11,7 @@ import { ProjectLinkFields } from "../../projects/components/project-link-fields
 import {
   ProjectActiveField,
   ProjectCategoriesField,
+  ProjectRankField,
 } from "../../projects/components/project-settings-fields";
 import { localized } from "../../../utils/format";
 import { useRouter } from "../../../i18n/navigation";
@@ -83,6 +84,7 @@ export function ProjectForm({ project }: { project: ProjectDetails | null }) {
             </FormCard>
             <FormCard title={t("projectFormSectionVisibility")}>
               <ProjectActiveField {...fieldProps} />
+              <ProjectRankField {...fieldProps} />
             </FormCard>
             <FormCard title={t("projectFormSectionCategories")}>
               <ProjectCategoriesField {...fieldProps} />

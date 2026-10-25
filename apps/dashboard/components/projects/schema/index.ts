@@ -1,7 +1,11 @@
 import { z } from "zod";
 import type { NamedRef } from "@repo/types/common";
 import type { CreateProjectRequest } from "@repo/types/projects";
-import { PROJECT_NAME_MAX, PROJECT_SHORT_DESCRIPTION_MAX } from "@repo/constants/projects";
+import {
+  PROJECT_NAME_MAX,
+  PROJECT_RANK_MIN,
+  PROJECT_SHORT_DESCRIPTION_MAX,
+} from "@repo/constants/projects";
 import { URL_MAX } from "@repo/constants/url";
 import { isRichTextEmpty } from "@repo/rich-text";
 import type { MessageKey } from "../../../i18n/types";
@@ -13,7 +17,7 @@ type Translate = (
   values?: Record<string, string | number>,
 ) => string;
 
-export { PROJECT_NAME_MAX, PROJECT_SHORT_DESCRIPTION_MAX, URL_MAX };
+export { PROJECT_NAME_MAX, PROJECT_RANK_MIN, PROJECT_SHORT_DESCRIPTION_MAX, URL_MAX };
 
 const namedRefSchema = z.object({
   id: z.number().int(),
@@ -70,6 +74,15 @@ export const createProjectSchema = (t: Translate) =>
       mainImageUrl: createUploadFieldSchema(t, { uploadType: "image" }),
       liveUrl: optionalUrlSchema(t),
       repoUrl: optionalUrlSchema(t),
+      // Typed into a number input, so the form keeps text; a valid submit sends
+      // a whole number ≥ PROJECT_RANK_MIN.
+      rank: z
+        .string()
+        .trim()
+        .min(1, t("projectFormRankRequired"))
+        .regex(/^\d+$/, t("projectFormRankInvalid"))
+        .transform(Number)
+        .pipe(z.number().min(PROJECT_RANK_MIN, t("projectFormRankInvalid"))),
       isActive: z.boolean(),
       categoryProjects: z
         .array(namedRefSchema)

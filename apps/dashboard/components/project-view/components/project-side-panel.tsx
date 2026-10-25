@@ -73,6 +73,9 @@ export function ProjectSidePanel({ project }: { project: ProjectDetails }) {
               tone={project.isActive ? "primary" : "danger"}
             />
           </DetailRow>
+          <DetailRow label={t("tableColRank")}>
+            <span className="tabular-nums">{project.rank}</span>
+          </DetailRow>
           <DetailRow label={t("tableColId")}>
             <span className="tabular-nums">{project.id}</span>
           </DetailRow>

@@ -1,5 +1,5 @@
-import { IsString, IsNotEmpty, IsBoolean, IsOptional, IsUrl, MaxLength, IsArray, ArrayNotEmpty, ArrayUnique, IsInt } from 'class-validator';
-import { PROJECT_NAME_MAX, PROJECT_SHORT_DESCRIPTION_MAX } from '@repo/constants/projects';
+import { IsString, IsNotEmpty, IsBoolean, IsOptional, IsUrl, MaxLength, IsArray, ArrayNotEmpty, ArrayUnique, IsInt, Min } from 'class-validator';
+import { PROJECT_NAME_MAX, PROJECT_RANK_MIN, PROJECT_SHORT_DESCRIPTION_MAX } from '@repo/constants/projects';
 import { URL_MAX } from '@repo/constants/url';
 import { URL_OPTIONS } from '../../common/validation/url-options';
 import { ToRichText } from '../../common/transformers/to-rich-text';
@@ -35,6 +35,12 @@ export class CreateProjectDto {
     @IsString()
     @IsNotEmpty()
     descriptionEn!: string;
+
+    /** Display order on the website (lowest first); 0 when omitted. */
+    @IsOptional()
+    @IsInt()
+    @Min(PROJECT_RANK_MIN)
+    rank?: number;
 
     @IsBoolean()
     @IsNotEmpty()

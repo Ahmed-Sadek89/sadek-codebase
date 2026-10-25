@@ -40,6 +40,7 @@ export const PROJECT_FORM_DEFAULT_VALUES = {
   mainImageUrl: "",
   liveUrl: "",
   repoUrl: "",
+  rank: "0",
   isActive: true,
   categoryProjects: [],
 } satisfies ProjectFormInput;
@@ -60,6 +61,7 @@ export function toProjectFormInput(
     mainImageUrl: project.mainImageUrl ?? "",
     liveUrl: project.liveUrl ?? "",
     repoUrl: project.repoUrl ?? "",
+    rank: String(project.rank),
     isActive: project.isActive,
     categoryProjects: project.categoryProjects.map(({ id, nameAr, nameEn }) => ({
       id,

@@ -19,6 +19,8 @@ interface ProjectBase {
   shortDescriptionEn: string;
   descriptionAr: string;
   descriptionEn: string;
+  /** Display order on the website: lowest first. */
+  rank: number;
   isActive: boolean;
   mainImageUrl: string | null;
   liveUrl: string | null;
@@ -46,6 +48,8 @@ export interface CreateProjectRequest {
   shortDescriptionEn: string;
   descriptionAr: string;
   descriptionEn: string;
+  /** Whole number ≥ 0; 0 when omitted. */
+  rank?: number;
   isActive: boolean;
   /** Max 255 characters each. */
   mainImageUrl?: string;
@@ -65,7 +69,10 @@ export type CreateProjectResponse = Omit<
   repoUrl?: string | null;
 };
 
-/** GET /projects and GET /projects/public; `order` sorts by `createdAt` (default DESC, newest first). */
+/**
+ * GET /projects and GET /projects/public. `order` (default DESC) sorts the
+ * private list by `createdAt` and the public list by `rank` (ties newest first).
+ */
 export interface ProjectsQuery extends PaginationQuery {
   /** Matches nameAr or nameEn (case-insensitive). Max 20 characters. */
   search?: string;
