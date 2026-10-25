@@ -8,13 +8,12 @@ import { Button } from "@repo/ui/button";
 import { Eye } from "@repo/ui/icons";
 import { AppDialog } from "../../ui/dialog";
 import { BaseInput } from "../../ui/forms/base-input";
-import { BaseTextarea } from "../../ui/forms/base-textarea";
 import { BaseSwitch } from "../../ui/forms/base-switch";
 import { useCategoryProjectForm } from "../hooks/use-category-project-form";
 import { toCategoryProjectFormInput } from "../utils/constants";
 import {
-    CATEGORY_PROJECT_DESCRIPTION_MAX,
     CATEGORY_PROJECT_NAME_MAX,
+    CATEGORY_PROJECT_RANK_MIN,
 } from "../schema";
 import { LucideIcon } from "@repo/ui/icons";
 
@@ -31,7 +30,7 @@ export type CategoryProjectsFormProps = {
 
 };
 
-/** Create/edit-category dialog: English/Arabic names and descriptions plus an active switch. */
+/** Create/edit-category dialog: English/Arabic names, rank and an active switch. */
 export function CategoryProjectsForm({
     isOpenDialog,
     handleOpenDialog,
@@ -95,27 +94,19 @@ export function CategoryProjectsForm({
                         error={errors.nameAr?.message}
                         {...form.register("nameAr")}
                     />
-                    <BaseTextarea
-                        id="descriptionEn"
-                        label={t("categoryProjectFormDescriptionEnLabel")}
-                        placeholder={t("categoryProjectFormDescriptionEnPlaceholder")}
+                    <BaseInput
+                        id="rank"
+                        type="number"
+                        inputMode="numeric"
+                        min={CATEGORY_PROJECT_RANK_MIN}
+                        step={1}
+                        label={t("categoryProjectFormRankLabel")}
+                        description={t("categoryProjectFormRankHint")}
                         dir="ltr"
-                        rows={3}
-                        maxLength={CATEGORY_PROJECT_DESCRIPTION_MAX}
+                        required
                         disabled={isSubmitting}
-                        error={errors.descriptionEn?.message}
-                        {...form.register("descriptionEn")}
-                    />
-                    <BaseTextarea
-                        id="descriptionAr"
-                        label={t("categoryProjectFormDescriptionArLabel")}
-                        placeholder={t("categoryProjectFormDescriptionArPlaceholder")}
-                        dir="rtl"
-                        rows={3}
-                        maxLength={CATEGORY_PROJECT_DESCRIPTION_MAX}
-                        disabled={isSubmitting}
-                        error={errors.descriptionAr?.message}
-                        {...form.register("descriptionAr")}
+                        error={errors.rank?.message}
+                        {...form.register("rank")}
                     />
                 </div>
                 <Controller

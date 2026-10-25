@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import type { Project } from "@repo/types/projects";
-import { Code, Eye, Globe, Pencil, Trash2 } from "@repo/ui/icons";
+import { Eye, Pencil, Trash2 } from "@repo/ui/icons";
 import {
   AvatarCell,
   ChipsCell,
@@ -14,7 +14,6 @@ import {
 } from "../../ui/cells";
 import type { DynamicColumnDef } from "../../ui/dynamic-table/types/types";
 import { localized } from "../../../utils/format";
-import { PROJECT_DESCRIPTION_PREVIEW_MAX } from "../utils/constants";
 
 type UseColumnsOptions = {
   busy?: boolean;
@@ -26,9 +25,6 @@ type UseColumnsOptions = {
   canUpdate?: boolean;
   canDelete?: boolean;
 };
-
-const LINK_CLASS_NAME =
-  "inline-flex size-8 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-primary/60 hover:text-primary";
 
 const useColumns = ({
   busy = false,
@@ -67,15 +63,7 @@ const useColumns = ({
         header: t("tableColProjectAr"),
         meta: { cellProps: { lang: "ar", dir: "rtl" } },
         cell: ({ row }) => (
-          <div className="flex max-w-sm min-w-55 flex-col items-start gap-y-1.5">
-            <TextCell value={row.original.nameAr} weight="semibold" />
-            <TextCell
-              value={row.original.descriptionAr}
-              tone="muted"
-              size="sm"
-              maxLength={PROJECT_DESCRIPTION_PREVIEW_MAX}
-            />
-          </div>
+          <TextCell value={row.original.nameAr} weight="semibold" />
         ),
       },
       {
@@ -84,15 +72,7 @@ const useColumns = ({
         header: t("tableColProjectEn"),
         meta: { cellProps: { lang: "en", dir: "ltr" } },
         cell: ({ row }) => (
-          <div className="flex max-w-sm min-w-55 flex-col items-start gap-y-1.5">
-            <TextCell value={row.original.nameEn} weight="semibold" />
-            <TextCell
-              value={row.original.descriptionEn}
-              tone="muted"
-              size="sm"
-              maxLength={PROJECT_DESCRIPTION_PREVIEW_MAX}
-            />
-          </div>
+          <TextCell value={row.original.nameEn} weight="semibold" />
         ),
       },
       {
@@ -107,45 +87,6 @@ const useColumns = ({
             )}
           />
         ),
-      },
-      {
-        id: "links",
-        sortable: false,
-        header: t("tableColLinks"),
-        cell: ({ row }) => {
-          const { liveUrl, repoUrl } = row.original;
-          if (!liveUrl && !repoUrl) {
-            return <span className="text-muted-foreground">—</span>;
-          }
-          return (
-            <div className="flex items-center gap-1.5">
-              {liveUrl && (
-                <a
-                  href={liveUrl}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label={t("projectLiveLink")}
-                  title={t("projectLiveLink")}
-                  className={LINK_CLASS_NAME}
-                >
-                  <Globe className="size-4" aria-hidden />
-                </a>
-              )}
-              {repoUrl && (
-                <a
-                  href={repoUrl}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label={t("projectRepoLink")}
-                  title={t("projectRepoLink")}
-                  className={LINK_CLASS_NAME}
-                >
-                  <Code className="size-4" aria-hidden />
-                </a>
-              )}
-            </div>
-          );
-        },
       },
       {
         accessorKey: "isActive",

@@ -1,5 +1,5 @@
-import { IsString, IsNotEmpty, IsOptional, IsBoolean, MaxLength } from 'class-validator';
-import { CATEGORY_PROJECT_DESCRIPTION_MAX, CATEGORY_PROJECT_NAME_MAX } from '@repo/constants/category-projects';
+import { IsString, IsNotEmpty, IsOptional, IsBoolean, IsInt, MaxLength, Min } from 'class-validator';
+import { CATEGORY_PROJECT_NAME_MAX, CATEGORY_PROJECT_RANK_MIN } from '@repo/constants/category-projects';
 
 export class CreateCategoryProjectDto {
     @IsString()
@@ -12,15 +12,11 @@ export class CreateCategoryProjectDto {
     @MaxLength(CATEGORY_PROJECT_NAME_MAX)
     nameEn!: string;
 
-    @IsString()
+    /** Display order (lowest first); 0 when omitted. */
     @IsOptional()
-    @MaxLength(CATEGORY_PROJECT_DESCRIPTION_MAX)
-    descriptionAr?: string;
-
-    @IsString()
-    @IsOptional()
-    @MaxLength(CATEGORY_PROJECT_DESCRIPTION_MAX)
-    descriptionEn?: string;
+    @IsInt()
+    @Min(CATEGORY_PROJECT_RANK_MIN)
+    rank?: number;
 
     @IsBoolean()
     @IsNotEmpty()

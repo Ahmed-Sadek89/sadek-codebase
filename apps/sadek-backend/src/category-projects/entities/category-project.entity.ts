@@ -1,7 +1,7 @@
 import { Project } from '../../projects/entities/project.entity';
 import { User } from '../../user/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, ManyToMany } from 'typeorm';
-import { CATEGORY_PROJECT_NAME_MAX } from '@repo/constants/category-projects';
+import { CATEGORY_PROJECT_NAME_MAX, CATEGORY_PROJECT_RANK_MIN } from '@repo/constants/category-projects';
 
 @Entity('category_projects')
 export class CategoryProject {
@@ -14,11 +14,9 @@ export class CategoryProject {
     @Column({ type: 'varchar', length: CATEGORY_PROJECT_NAME_MAX, nullable: false })
     nameEn!: string;
 
-    @Column({ type: 'text', nullable: true })
-    descriptionAr!: string;
-
-    @Column({ type: 'text', nullable: true })
-    descriptionEn!: string;
+    // Display order on the website: lowest rank first.
+    @Column({ type: 'int', default: CATEGORY_PROJECT_RANK_MIN, nullable: false })
+    rank!: number;
 
     @Column({ type: 'boolean', nullable: false })
     isActive!: boolean;

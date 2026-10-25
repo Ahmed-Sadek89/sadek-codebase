@@ -154,7 +154,7 @@ Source: `apps/sadek-backend/src/category-projects`. Types in `@repo/types/catego
 
 | Backend endpoint                         | Request                                                             | Response                                               |
 | ---------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------ |
-| `POST /category-projects`                | JSON `{ nameAr, nameEn, descriptionAr?, descriptionEn?, isActive }` | Saved category                                         |
+| `POST /category-projects`                | JSON `{ nameAr, nameEn, rank?, isActive }`                          | Saved category                                         |
 | `GET /category-projects`                 | Query pagination plus `search`, `isActive`                          | Paginated categories with `user: { id }`               |
 | `GET /category-projects/public` (Public) | Same query as `GET /category-projects`                              | Paginated categories of the default-view user          |
 | `GET /category-projects/:id`             | –                                                                   | Category, without `user`                               |
@@ -163,7 +163,8 @@ Source: `apps/sadek-backend/src/category-projects`. Types in `@repo/types/catego
 | `DELETE /category-projects/:id`          | –                                                                   | `{ message: "Category project deleted successfully" }` |
 
 - Client: `categoryProjectsService.create/findAll/findAllPublic/findOne/update/toggleActive/remove`; hooks `useCreateCategoryProject`, `useCategoryProjects(query)`, `usePublicCategoryProjects(query)` (infinite: `useInfiniteQuery` pages via `fetchNextPage`, key `publicList(query)` without `page`), `useCategoryProject(id)` (`CategoryProjectDetails`, no `user`), `useUpdateCategoryProject` (`{ id, data }`), `useToggleCategoryProjectActive` (`id`), `useDeleteCategoryProject` (`id`). Update, toggle-active and delete also invalidate `queryKeys.projects.all`, because projects embed category names.
-- Same fields and rules as category skills: `nameAr`/`nameEn` max 50, nullable descriptions, `isActive`, `createdAt`. Unlike category skills, the list is at the collection root, and `DELETE` does not check for linked projects.
+- Fields: `id`, `nameAr`/`nameEn` (max 50), `rank` (int ≥ 0, default 0, `CATEGORY_PROJECT_RANK_MIN`), `isActive`, `createdAt`, `user: { id }`. No descriptions. Unlike category skills, the list is at the collection root, and `DELETE` does not check for linked projects.
+- `GET /category-projects/public` is sorted by `rank` in the `order` direction (the DTO defaults to DESC; the website sends `ASC`, lowest rank first); the private list stays sorted by `createdAt`.
 - `GET`, `PATCH`, and `DELETE /:id` have no owner check; `PATCH /:id/toggle-active` returns 404 for another user's category.
 
 ### Projects (`/projects`)
@@ -172,14 +173,14 @@ Source: `apps/sadek-backend/src/projects`. Types in `@repo/types/projects` (`Pro
 
 | Backend endpoint                | Request                                                                                                                   | Response                                              |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| `POST /projects`                | JSON `{ nameAr, nameEn, descriptionAr, descriptionEn, isActive, mainImageUrl?, liveUrl?, repoUrl?, categoryProjectsIds }` | Saved project                                         |
+| `POST /projects`                | JSON `{ nameAr, nameEn, shortDescriptionAr, shortDescriptionEn, descriptionAr, descriptionEn, isActive, mainImageUrl?, liveUrl?, repoUrl?, categoryProjectsIds }` | Saved project                                         |
 | `GET /projects`                 | Query pagination plus `search`, `isActive`, `categoryId`                                                                  | `PaginatedResponse<Project>`                          |
 | `GET /projects/public` (Public) | Same query as `GET /projects`                                                                                             | `PaginatedResponse<Project>` of the default-view user |
 | `GET /projects/:id`             | –                                                                                                                         | Project with full `categoryProjects`                  |
 | `PATCH /projects/:id`           | JSON partial of the create body                                                                                           | `{ message: "project updated successfully" }`         |
 | `DELETE /projects/:id`          | –                                                                                                                         | `{ message: "project removed successfully" }`         |
 
-- Project fields: `id`, `nameAr`, `nameEn` (max 100), `descriptionAr`, `descriptionEn` (required), `isActive`, `mainImageUrl`, `liveUrl`, `repoUrl` (nullable, max 255), `createdAt`, `user: { id }`, `categoryProjects` (`[{ id, nameAr, nameEn }]` in the list).
+- Project fields: `id`, `nameAr`, `nameEn` (max 100), `shortDescriptionAr`, `shortDescriptionEn` (required, max 255 `PROJECT_SHORT_DESCRIPTION_MAX`; the column defaults to `''` for rows saved before it existed), `descriptionAr`, `descriptionEn` (required), `isActive`, `mainImageUrl`, `liveUrl`, `repoUrl` (nullable, max 255), `createdAt`, `user: { id }`, `categoryProjects` (`[{ id, nameAr, nameEn }]` in the list).
 - `categoryProjectsIds` must be a non-empty array of unique integers, all owned by the signed-in user, or the request returns 400.
 - `GET /projects` returns only the signed-in user's projects. `search` matches `nameAr`/`nameEn`, `isActive` and `categoryId` filter, and `order` sorts by `createdAt`.
 - Client: `projectsService.create/findAll/findAllPublic/findOne/update/remove`; hooks `useCreateProject`, `useProjects(query)`, `usePublicProjects(query)` (infinite: `useInfiniteQuery` pages via `fetchNextPage`, key `publicList(query)` without `page`; keeps the previous pages while filters change), `useProject(id)`, `useUpdateProject` (`{ id, data }`), `useDeleteProject` (`id`).

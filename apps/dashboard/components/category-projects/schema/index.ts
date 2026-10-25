@@ -2,8 +2,8 @@ import { z } from "zod";
 import type { CreateCategoryProjectRequest } from "@repo/types/category-projects";
 import type { MessageKey } from "../../../i18n/types";
 import {
-  CATEGORY_PROJECT_DESCRIPTION_MAX,
   CATEGORY_PROJECT_NAME_MAX,
+  CATEGORY_PROJECT_RANK_MIN,
 } from "@repo/constants/category-projects";
 
 type Translate = (
@@ -11,9 +11,8 @@ type Translate = (
   values?: Record<string, string | number>,
 ) => string;
 
-export { CATEGORY_PROJECT_DESCRIPTION_MAX, CATEGORY_PROJECT_NAME_MAX };
+export { CATEGORY_PROJECT_NAME_MAX, CATEGORY_PROJECT_RANK_MIN };
 
-// Descriptions are optional: a blank box is sent as "not set".
 export const createCategoryProjectSchema = (t: Translate) =>
   z.object({
     nameEn: z
@@ -26,16 +25,15 @@ export const createCategoryProjectSchema = (t: Translate) =>
       .trim()
       .min(1, t("categoryProjectFormNameArRequired"))
       .max(CATEGORY_PROJECT_NAME_MAX, t("categoryProjectFormNameArMax", { max: CATEGORY_PROJECT_NAME_MAX })),
-    descriptionEn: z
+    // Typed into a number input, so the form keeps text; a valid submit sends
+    // a whole number ≥ CATEGORY_PROJECT_RANK_MIN.
+    rank: z
       .string()
       .trim()
-      .max(CATEGORY_PROJECT_DESCRIPTION_MAX, t("categoryProjectFormDescriptionEnMax", { max: CATEGORY_PROJECT_DESCRIPTION_MAX }))
-      .transform((value) => value || undefined),
-    descriptionAr: z
-      .string()
-      .trim()
-      .max(CATEGORY_PROJECT_DESCRIPTION_MAX, t("categoryProjectFormDescriptionArMax", { max: CATEGORY_PROJECT_DESCRIPTION_MAX }))
-      .transform((value) => value || undefined),
+      .min(1, t("categoryProjectFormRankRequired"))
+      .regex(/^\d+$/, t("categoryProjectFormRankInvalid"))
+      .transform(Number)
+      .pipe(z.number().min(CATEGORY_PROJECT_RANK_MIN, t("categoryProjectFormRankInvalid"))),
     isActive: z.boolean(),
   }) satisfies z.ZodType<CreateCategoryProjectRequest>;
 

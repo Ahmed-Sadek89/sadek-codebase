@@ -30,10 +30,12 @@ export const experienceQuery: Omit<UserCompaniesQuery, "page"> = {
 /**
  * Work: 10 category chips and 6 projects per page; each has its own "show
  * more". 6 = the featured card (2×2) + 5 cards, which fills 3 rows of 3.
+ * Category chips come lowest rank first.
  */
 export const categoryProjectsQuery: Omit<CategoryProjectsQuery, "page"> = {
   limit: 10,
   isActive: true,
+  order: "ASC",
 };
 export const projectsQuery: Omit<ProjectsQuery, "page"> = {
   limit: 6,

@@ -34,10 +34,16 @@ export class CategoryProjectsService {
 
   /** Public list: always the rows of the user whose `isDefaultView` is true. */
   async findAllPublic(query: FilterCategoryProjectDto) {
-    return await this.findAllFor(query, { isDefaultView: true });
+    // Sorted by rank, not createdAt; `order` sets the direction (the DTO
+    // defaults it to DESC, so the website sends ASC for lowest rank first).
+    return await this.findAllFor(query, { isDefaultView: true }, 'rank');
   }
 
-  private async findAllFor(query: FilterCategoryProjectDto, owner: FindOptionsWhere<User>) {
+  private async findAllFor(
+    query: FilterCategoryProjectDto,
+    owner: FindOptionsWhere<User>,
+    sortBy?: keyof CategoryProject,
+  ) {
     const filters: FindOptionsWhere<CategoryProject> = {
       user: owner,
     };
@@ -68,6 +74,7 @@ export class CategoryProjectsService {
         user: { id: true },
       },
       order: query.order,
+      sortBy,
     });
   }
 

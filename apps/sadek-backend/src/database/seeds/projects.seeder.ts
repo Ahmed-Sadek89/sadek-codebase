@@ -38,6 +38,8 @@ export default class ProjectsSeeder implements Seeder {
       return repo.create({
         nameEn,
         nameAr: fit(fakerAR.commerce.productName(), 100),
+        shortDescriptionEn: fit(faker.company.catchPhrase(), 255),
+        shortDescriptionAr: fit(fakerAR.lorem.sentence(), 255),
         descriptionEn: faker.lorem.paragraph(),
         descriptionAr: fakerAR.lorem.paragraph(),
         isActive: randomIsActive(),

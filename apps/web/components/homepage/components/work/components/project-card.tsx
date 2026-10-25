@@ -15,7 +15,9 @@ const iconLink =
  * A portfolio card: a large image (zooms on hover, with quick links over it),
  * then categories, title, short description and the live / source links.
  * `featured` is the gallery's lead card: 2×2 on large screens, full width on
- * tablets, with a badge, a bigger title and a longer description.
+ * tablets, with a badge, a bigger title and the full description.
+ * Other cards show the short description (or the full one on rows saved
+ * before short descriptions existed).
  */
 export function ProjectCard({
   project,
@@ -28,6 +30,10 @@ export function ProjectCard({
   const locale = useLocale();
   const name = localize(locale, project.nameEn, project.nameAr);
   const categories = getProjectCategories(project, locale);
+  const description =
+    (!featured &&
+      localize(locale, project.shortDescriptionEn, project.shortDescriptionAr)) ||
+    localize(locale, project.descriptionEn, project.descriptionAr);
   return (
     <article
       className={cn(
@@ -128,7 +134,7 @@ export function ProjectCard({
             featured ? "line-clamp-3 sm:text-[15px]" : "line-clamp-2",
           )}
         >
-          {localize(locale, project.descriptionEn, project.descriptionAr)}
+          {description}
         </p>
         {(project.liveUrl || project.repoUrl) && (
           <div className="mt-auto flex items-center justify-between gap-3 border-t border-border/70 pt-4 [&:not(:first-child)]:mt-5">

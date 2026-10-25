@@ -2,7 +2,6 @@ import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
 import { CategoryProject } from '../../category-projects/entities/category-project.entity';
 import {
-  arabicSentence,
   faker,
   fakerAR,
   fit,
@@ -22,12 +21,12 @@ export default class CategoryProjectsSeeder implements Seeder {
     if (!owner) return;
 
     const repo = dataSource.getRepository(CategoryProject);
-    const categories = Array.from({ length: SEED_COUNT }, () =>
+    const categories = Array.from({ length: SEED_COUNT }, (_, index) =>
       repo.create({
         nameEn: fit(titleCase(`${faker.commerce.department()} ${faker.word.noun()}`), 50),
         nameAr: fit(fakerAR.commerce.department(), 50),
-        descriptionEn: faker.company.catchPhrase(),
-        descriptionAr: arabicSentence(),
+        // 1..n, the order the website shows them in.
+        rank: index + 1,
         isActive: randomIsActive(),
         createdAt: randomCreatedAt(),
         user: { id: owner.id },

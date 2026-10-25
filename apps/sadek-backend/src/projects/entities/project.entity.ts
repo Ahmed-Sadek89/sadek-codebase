@@ -1,7 +1,7 @@
 import { CategoryProject } from '../../category-projects/entities/category-project.entity';
 import { User } from '../../user/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
-import { PROJECT_NAME_MAX } from '@repo/constants/projects';
+import { PROJECT_NAME_MAX, PROJECT_SHORT_DESCRIPTION_MAX } from '@repo/constants/projects';
 import { URL_MAX } from '@repo/constants/url';
 
 @Entity('projects')
@@ -14,6 +14,13 @@ export class Project {
 
     @Column({ type: 'varchar', length: PROJECT_NAME_MAX, nullable: false })
     nameEn!: string;
+
+    // Default '' only so rows saved before this column can be migrated; the DTO requires it.
+    @Column({ type: 'varchar', length: PROJECT_SHORT_DESCRIPTION_MAX, nullable: false, default: '' })
+    shortDescriptionAr!: string;
+
+    @Column({ type: 'varchar', length: PROJECT_SHORT_DESCRIPTION_MAX, nullable: false, default: '' })
+    shortDescriptionEn!: string;
 
     @Column({ type: 'text', nullable: false })
     descriptionAr!: string;

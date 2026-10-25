@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { NamedRef } from "@repo/types/common";
 import type { CreateProjectRequest } from "@repo/types/projects";
-import { PROJECT_NAME_MAX } from "@repo/constants/projects";
+import { PROJECT_NAME_MAX, PROJECT_SHORT_DESCRIPTION_MAX } from "@repo/constants/projects";
 import { URL_MAX } from "@repo/constants/url";
 import type { MessageKey } from "../../../i18n/types";
 import { isHttpUrl } from "../../../utils/validation";
@@ -12,7 +12,7 @@ type Translate = (
   values?: Record<string, string | number>,
 ) => string;
 
-export { PROJECT_NAME_MAX, URL_MAX };
+export { PROJECT_NAME_MAX, PROJECT_SHORT_DESCRIPTION_MAX, URL_MAX };
 
 const namedRefSchema = z.object({
   id: z.number().int(),
@@ -48,6 +48,16 @@ export const createProjectSchema = (t: Translate) =>
         .trim()
         .min(1, t("projectFormNameArRequired"))
         .max(PROJECT_NAME_MAX, t("projectFormNameArMax", { max: PROJECT_NAME_MAX })),
+      shortDescriptionEn: z
+        .string()
+        .trim()
+        .min(1, t("projectFormShortDescriptionEnRequired"))
+        .max(PROJECT_SHORT_DESCRIPTION_MAX, t("projectFormShortDescriptionEnMax", { max: PROJECT_SHORT_DESCRIPTION_MAX })),
+      shortDescriptionAr: z
+        .string()
+        .trim()
+        .min(1, t("projectFormShortDescriptionArRequired"))
+        .max(PROJECT_SHORT_DESCRIPTION_MAX, t("projectFormShortDescriptionArMax", { max: PROJECT_SHORT_DESCRIPTION_MAX })),
       descriptionEn: z
         .string()
         .trim()

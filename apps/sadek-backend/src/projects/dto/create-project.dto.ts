@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, IsBoolean, IsOptional, IsUrl, MaxLength, IsArray, ArrayNotEmpty, ArrayUnique, IsInt } from 'class-validator';
-import { PROJECT_NAME_MAX } from '@repo/constants/projects';
+import { PROJECT_NAME_MAX, PROJECT_SHORT_DESCRIPTION_MAX } from '@repo/constants/projects';
 import { URL_MAX } from '@repo/constants/url';
 import { URL_OPTIONS } from '../../common/validation/url-options';
 
@@ -13,6 +13,16 @@ export class CreateProjectDto {
     @IsNotEmpty()
     @MaxLength(PROJECT_NAME_MAX)
     nameEn!: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(PROJECT_SHORT_DESCRIPTION_MAX)
+    shortDescriptionAr!: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(PROJECT_SHORT_DESCRIPTION_MAX)
+    shortDescriptionEn!: string;
 
     @IsString()
     @IsNotEmpty()

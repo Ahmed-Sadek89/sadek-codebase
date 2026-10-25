@@ -14,6 +14,9 @@ interface ProjectBase {
   nameAr: string;
   /** Max 100 characters. */
   nameEn: string;
+  /** Max 255 characters; `''` on rows saved before the column existed. */
+  shortDescriptionAr: string;
+  shortDescriptionEn: string;
   descriptionAr: string;
   descriptionEn: string;
   isActive: boolean;
@@ -38,6 +41,9 @@ export interface ProjectDetails extends ProjectBase {
 export interface CreateProjectRequest {
   nameAr: string;
   nameEn: string;
+  /** Max 255 characters each. */
+  shortDescriptionAr: string;
+  shortDescriptionEn: string;
   descriptionAr: string;
   descriptionEn: string;
   isActive: boolean;

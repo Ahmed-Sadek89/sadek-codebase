@@ -3,10 +3,10 @@
 import { useTranslations } from "next-intl";
 import { BaseInput } from "../../ui/forms/base-input";
 import { BaseTextarea } from "../../ui/forms/base-textarea";
-import { PROJECT_NAME_MAX } from "../schema";
+import { PROJECT_NAME_MAX, PROJECT_SHORT_DESCRIPTION_MAX } from "../schema";
 import type { ProjectFieldsProps } from "./project-image-field";
 
-/** English/Arabic names, then descriptions; render inside the form's 2-column grid. */
+/** English/Arabic names, then short descriptions and descriptions; render inside the form's 2-column grid. */
 export function ProjectTextFields({ form, disabled }: ProjectFieldsProps) {
   const t = useTranslations();
   const { errors } = form.formState;
@@ -34,6 +34,30 @@ export function ProjectTextFields({ form, disabled }: ProjectFieldsProps) {
         disabled={disabled}
         error={errors.nameAr?.message}
         {...form.register("nameAr")}
+      />
+      <BaseTextarea
+        id="shortDescriptionEn"
+        label={t("projectFormShortDescriptionEnLabel")}
+        placeholder={t("projectFormShortDescriptionEnPlaceholder")}
+        dir="ltr"
+        rows={2}
+        maxLength={PROJECT_SHORT_DESCRIPTION_MAX}
+        required
+        disabled={disabled}
+        error={errors.shortDescriptionEn?.message}
+        {...form.register("shortDescriptionEn")}
+      />
+      <BaseTextarea
+        id="shortDescriptionAr"
+        label={t("projectFormShortDescriptionArLabel")}
+        placeholder={t("projectFormShortDescriptionArPlaceholder")}
+        dir="rtl"
+        rows={2}
+        maxLength={PROJECT_SHORT_DESCRIPTION_MAX}
+        required
+        disabled={disabled}
+        error={errors.shortDescriptionAr?.message}
+        {...form.register("shortDescriptionAr")}
       />
       <BaseTextarea
         id="descriptionEn"

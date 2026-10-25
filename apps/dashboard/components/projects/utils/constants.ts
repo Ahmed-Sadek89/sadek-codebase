@@ -7,7 +7,7 @@ import {
 import { CATEGORY_ID_PARAM } from "../../../utils/constants";
 import type { ProjectFormInput } from "../schema";
 
-/** Characters of a description shown in a table row (full text on hover). */
+/** Characters of a short description shown in a table row (full text on hover). */
 export const PROJECT_DESCRIPTION_PREVIEW_MAX = 60;
 
 /** Page size when the URL has no `?limit=`. */
@@ -32,6 +32,8 @@ export function getProjectsQuery(get: ParamReader): ProjectsQuery {
 export const PROJECT_FORM_DEFAULT_VALUES = {
   nameEn: "",
   nameAr: "",
+  shortDescriptionEn: "",
+  shortDescriptionAr: "",
   descriptionEn: "",
   descriptionAr: "",
   mainImageUrl: "",
@@ -47,6 +49,8 @@ export function toProjectFormInput(project?: Project | null): ProjectFormInput {
   return {
     nameEn: project.nameEn,
     nameAr: project.nameAr,
+    shortDescriptionEn: project.shortDescriptionEn,
+    shortDescriptionAr: project.shortDescriptionAr,
     descriptionEn: project.descriptionEn,
     descriptionAr: project.descriptionAr,
     mainImageUrl: project.mainImageUrl ?? "",

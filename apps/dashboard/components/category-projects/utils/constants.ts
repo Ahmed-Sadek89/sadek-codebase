@@ -22,8 +22,7 @@ export function getCategoryProjectsQuery(
 export const CATEGORY_PROJECT_FORM_DEFAULT_VALUES = {
   nameEn: "",
   nameAr: "",
-  descriptionEn: "",
-  descriptionAr: "",
+  rank: "0",
   isActive: true,
 } satisfies CategoryProjectFormInput;
 
@@ -35,8 +34,7 @@ export function toCategoryProjectFormInput(
   return {
     nameEn: category.nameEn,
     nameAr: category.nameAr,
-    descriptionEn: category.descriptionEn ?? "",
-    descriptionAr: category.descriptionAr ?? "",
+    rank: String(category.rank),
     isActive: category.isActive,
   };
 }

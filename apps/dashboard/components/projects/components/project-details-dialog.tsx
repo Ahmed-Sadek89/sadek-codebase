@@ -118,6 +118,16 @@ export function ProjectDetailsDialog({
                 {project.nameAr}
               </span>
             </DetailRow>
+            <DetailRow label={t("projectFormShortDescriptionEnLabel")}>
+              <p lang="en" dir="ltr" className="whitespace-pre-line">
+                {project.shortDescriptionEn || "—"}
+              </p>
+            </DetailRow>
+            <DetailRow label={t("projectFormShortDescriptionArLabel")}>
+              <p lang="ar" dir="rtl" className="whitespace-pre-line">
+                {project.shortDescriptionAr || "—"}
+              </p>
+            </DetailRow>
             <DetailRow label={t("projectFormDescriptionEnLabel")}>
               <p lang="en" dir="ltr" className="whitespace-pre-line">
                 {project.descriptionEn}

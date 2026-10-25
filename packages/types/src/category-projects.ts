@@ -10,8 +10,8 @@ export interface CategoryProject {
   id: number;
   nameAr: string;
   nameEn: string;
-  descriptionAr: string | null;
-  descriptionEn: string | null;
+  /** Display order on the website: lowest first. */
+  rank: number;
   isActive: boolean;
   createdAt: IsoDateString;
   user: { id: number };
@@ -23,19 +23,13 @@ export interface CreateCategoryProjectRequest {
   nameAr: string;
   /** Max 50 characters. */
   nameEn: string;
-  descriptionAr?: string;
-  descriptionEn?: string;
+  /** Whole number ≥ 0; 0 when omitted. */
+  rank?: number;
   isActive: boolean;
 }
 
-/** The saved entity; optional descriptions are omitted when not sent. */
-export type CreateCategoryProjectResponse = Omit<
-  CategoryProject,
-  "descriptionAr" | "descriptionEn"
-> & {
-  descriptionAr?: string | null;
-  descriptionEn?: string | null;
-};
+/** The saved entity. */
+export type CreateCategoryProjectResponse = CategoryProject;
 
 /**
  * GET /category-projects: the signed-in user's categories.

@@ -98,17 +98,8 @@ export function CategoryProjectDetailsDialog({
             <DetailRow label={t("tableColCategoryAr")}>
               <DetailText value={category.nameAr} lang="ar" />
             </DetailRow>
-            <DetailRow
-              label={t("categoryProjectFormDescriptionEnLabel")}
-              className="sm:col-span-2"
-            >
-              <DetailText value={category.descriptionEn} lang="en" />
-            </DetailRow>
-            <DetailRow
-              label={t("categoryProjectFormDescriptionArLabel")}
-              className="sm:col-span-2"
-            >
-              <DetailText value={category.descriptionAr} lang="ar" />
+            <DetailRow label={t("tableColRank")}>
+              <span className="tabular-nums">{category.rank}</span>
             </DetailRow>
             <DetailRow label={t("tableColCreatedAt")}>
               <DateCell value={category.createdAt} />
