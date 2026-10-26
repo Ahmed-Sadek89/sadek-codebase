@@ -3,8 +3,10 @@ import { createAuth } from "@repo/libs/auth";
 import { authService } from "@repo/services/auth";
 
 // Server-side auth calls prefer the private URL; the public one remains a fallback.
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL!;
-if (!backendUrl) throw new Error("BACKEND_URL is not configured");
+const backendUrl =
+  process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL;
+if (!backendUrl)
+  throw new Error("BACKEND_URL (or NEXT_PUBLIC_BACKEND_URL) is not configured");
 
 const authentication: NextAuthResult = createAuth(
   backendUrl,

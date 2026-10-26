@@ -80,6 +80,25 @@ test("failed refresh, malformed token, or expired replacement discards session",
     mock.restoreAll();
   }
 });
+test("refreshes when exactly 30 s are left", async () => {
+  const expires = future * 1000;
+  const valid = { ...session, accessTokenExpires: expires };
+  const accessToken = jwt(future + 900);
+  const refresh = mock.method(authService, "refresh", async () => ({
+    access_token: accessToken,
+  }));
+  const result = await refreshTokens(valid, requestConfig, authService, expires - 30_000);
+  assert.equal(refresh.mock.callCount(), 1);
+  assert.equal(result?.accessToken, accessToken);
+});
+test("keeps the token when just over 30 s are left", async () => {
+  const expires = future * 1000;
+  const valid = { ...session, accessTokenExpires: expires };
+  const refresh = mock.method(authService, "refresh");
+  const result = await refreshTokens(valid, requestConfig, authService, expires - 30_001);
+  assert.equal(result, valid);
+  assert.equal(refresh.mock.callCount(), 0);
+});
 test("rejects missing expiry", () => {
   assert.throws(() => tokenExpiresAt("invalid"));
 });
