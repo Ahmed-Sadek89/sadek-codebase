@@ -1,6 +1,7 @@
 import {
   FileText,
   FolderKanban,
+  GraduationCap,
   IdCard,
   LayoutDashboard,
   MessageSquare,
@@ -81,6 +82,12 @@ export const SIDEBAR_NAV_GROUPS: SidebarNavGroup[] = [
           },
           { titleKey: "navCategories", href: "/dashboard/projects/category" },
         ],
+      },
+      {
+        titleKey: "navInstructorExperience",
+        // Includes its view and form pages (nested routes).
+        href: "/dashboard/instructor-experience",
+        icon: GraduationCap,
       },
     ],
   },

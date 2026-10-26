@@ -83,14 +83,22 @@ export interface InstructorExperiencesQuery extends PaginationQuery {
   search?: string;
   /** Ignored by the public list. */
   isActive?: boolean;
+  /** Only rows linked to this skill. */
+  skillId?: number;
 }
 
 export type InstructorExperiencesResponse =
   PaginatedResponse<InstructorExperience>;
 
-/** PATCH /instructor-experience/:id: any subset of the create fields. */
-export type UpdateInstructorExperienceRequest =
-  Partial<CreateInstructorExperienceRequest>;
+/**
+ * PATCH /instructor-experience/:id: any subset of the create fields. `null`
+ * clears the cover photo (omitting it keeps the current one).
+ */
+export type UpdateInstructorExperienceRequest = Partial<
+  Omit<CreateInstructorExperienceRequest, "coverPhotoUrl">
+> & {
+  coverPhotoUrl?: string | null;
+};
 
 export type UpdateInstructorExperienceResponse = MessageResponse;
 

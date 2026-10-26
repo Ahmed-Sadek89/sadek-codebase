@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, ILike, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Raw, Repository } from 'typeorm';
 import { InstructorExperience } from './entities/instructor-experience.entity';
 import { CreateInstructorExperienceDto } from './dto/create-instructor-experience.dto';
 import { UpdateInstructorExperienceDto } from './dto/update-instructor-experience.dto';
@@ -69,6 +69,15 @@ export class InstructorExperienceService {
   ) {
     const filters: FindOptionsWhere<InstructorExperience> = { user: owner };
     if (query.isActive !== undefined) filters.isActive = query.isActive;
+    // A subquery rather than `skills: { id }`, which would also trim each row's
+    // loaded skills down to the matching one.
+    if (query.skillId !== undefined) {
+      filters.id = Raw(
+        (alias) =>
+          `${alias} IN (SELECT "instructor_experience_id" FROM "instructor_experience_skills" WHERE "skill_id" = :skillId)`,
+        { skillId: query.skillId },
+      );
+    }
 
     const search = query.search?.trim();
     const where: FindOptionsWhere<InstructorExperience> | FindOptionsWhere<InstructorExperience>[] = search

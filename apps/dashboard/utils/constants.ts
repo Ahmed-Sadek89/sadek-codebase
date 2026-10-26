@@ -39,6 +39,9 @@ export const SEO_PAGE_ID_PARAM = "pageId";
 /** URL query param for the skill-category filter (a category id), sent as `categoryId`. */
 export const CATEGORY_ID_PARAM = "categoryId";
 
+/** URL query param for the skill filter (a skill id), sent as `skillId`. */
+export const SKILL_ID_PARAM = "skillId";
+
 /** Options a table's category filter loads per search. */
 export const CATEGORY_FILTER_LIMIT = 10;
 
@@ -49,6 +52,7 @@ export const FILTER_PARAMS = [
   IS_ACTIVE_PARAM,
   CATEGORY_ID_PARAM,
   SEO_PAGE_ID_PARAM,
+  SKILL_ID_PARAM,
 ];
 
 /** Delay between the last keystroke and updating the URL. */

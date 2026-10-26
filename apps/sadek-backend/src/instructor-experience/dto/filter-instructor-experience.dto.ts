@@ -1,5 +1,6 @@
 import { OmitType } from '@nestjs/swagger';
-import { IsBoolean, IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsBoolean, IsIn, IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { SORT_ORDERS, SEARCH_MAX, type SortOrder } from '../../common/pagination.constants';
 import { ToBoolean } from '../../common/transformers/to-boolean';
@@ -28,4 +29,11 @@ export class FilterInstructorExperienceDto extends OmitType(PaginationQueryDto, 
   @ToBoolean()
   @IsBoolean()
   isActive?: boolean;
+
+  /** Only rows linked to this skill. */
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  skillId?: number;
 }

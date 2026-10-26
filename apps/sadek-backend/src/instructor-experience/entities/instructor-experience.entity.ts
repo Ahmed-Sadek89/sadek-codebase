@@ -1,6 +1,6 @@
 import { User } from '../../user/entities/user.entity';
 import { Skill } from '../../skills/entities/skill.entity';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, ManyToMany, JoinTable, Index } from 'typeorm';
 import {
     INSTRUCTOR_EXPERIENCE_NAME_MAX,
     INSTRUCTOR_EXPERIENCE_PLATFORM_NAME_MAX,
@@ -13,6 +13,7 @@ export class InstructorExperience {
     @PrimaryGeneratedColumn()
     id!: number;
 
+    @Index('IDX_instructor_experience_name')
     @Column({ type: 'varchar', length: INSTRUCTOR_EXPERIENCE_NAME_MAX, nullable: false })
     name!: string;
 

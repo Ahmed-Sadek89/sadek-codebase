@@ -30,10 +30,14 @@ function invalidateSkillLists(client: QueryClient) {
 }
 
 /** GET /skills: the signed-in user's skills, paginated. */
-export function useSkills(query: SkillsQuery = {}) {
+export function useSkills(
+  query: SkillsQuery = {},
+  { enabled = true }: { enabled?: boolean } = {},
+) {
   return useGuardedQuery({
     queryKey: queryKeys.skills.list(query),
     queryFn: (auth) => skillsService.findAll(query, auth),
+    enabled,
     // Keep the current rows on screen while a new search loads.
     placeholderData: keepPreviousData,
   });
