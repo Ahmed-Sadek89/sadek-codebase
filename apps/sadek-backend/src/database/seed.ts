@@ -10,6 +10,7 @@ import UserCompanySeeder from "./seeds/user-company.seeder";
 import WhatCanDoSeeder from "./seeds/what-can-do.seeder";
 import PagesSeeder from "./seeds/pages.seeder";
 import SeoSeeder from "./seeds/seo.seeder";
+import InstructorExperienceSeeder from "./seeds/instructor-experience.seeder";
 
 // `pnpm seed` runs every seeder; `pnpm seed <name>` runs only that one.
 // Each seeder skips its table when it already has rows.
@@ -24,6 +25,7 @@ const SEEDERS_BY_NAME = {
     "what-can-do": WhatCanDoSeeder,
     pages: PagesSeeder,
     "seo": SeoSeeder,
+    "instructor-experience": InstructorExperienceSeeder,
 } as const;
 
 type SeederName = keyof typeof SEEDERS_BY_NAME;

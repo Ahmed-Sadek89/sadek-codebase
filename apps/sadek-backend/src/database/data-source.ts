@@ -10,6 +10,7 @@ import { WhatCanDo } from "../what-can-do/entities/what-can-do.entity";
 import { Contact } from "../contacts/entities/contact.entity";
 import { Seo } from "../seo/entities/seo.entity";
 import { Page } from "../pages/entities/page.entity";
+import { InstructorExperience } from "../instructor-experience/entities/instructor-experience.entity";
 import "reflect-metadata";
 import { SeederOptions } from 'typeorm-extension';
 import { DataSource, DataSourceOptions } from 'typeorm';
@@ -18,6 +19,7 @@ import userInfoFactory from './factories/user-info.factory';
 import userCompanyFactory from './factories/user-company.factory';
 import whatCanDoFactory from './factories/what-can-do.factory';
 import seoFactory from './factories/seo.factory';
+import instructorExperienceFactory from './factories/instructor-experience.factory';
 import MainSeeder from './seeds/main-seeder';
 import CategorySkillsSeeder from './seeds/category-skills.seeder';
 import SkillsSeeder from './seeds/skills.seeder';
@@ -28,13 +30,14 @@ import UserCompanySeeder from './seeds/user-company.seeder';
 import WhatCanDoSeeder from './seeds/what-can-do.seeder';
 import PagesSeeder from './seeds/pages.seeder';
 import SeoSeeder from './seeds/seo.seeder';
+import InstructorExperienceSeeder from './seeds/instructor-experience.seeder';
 
 const options: SeederOptions & DataSourceOptions = {
     ...dbConnectionOptions,
     // Every entity reachable through relations must be registered, or TypeORM
     // cannot build metadata for User (which relates to all of them).
-    entities: [User, CategorySkill, Skill, CategoryProject, Project, UserInfo, UserCompany, WhatCanDo, Contact, Seo, Page],
-    factories: [userFactory, userInfoFactory, userCompanyFactory, whatCanDoFactory, seoFactory],
+    entities: [User, CategorySkill, Skill, CategoryProject, Project, UserInfo, UserCompany, WhatCanDo, Contact, Seo, Page, InstructorExperience],
+    factories: [userFactory, userInfoFactory, userCompanyFactory, whatCanDoFactory, seoFactory, instructorExperienceFactory],
     // Order matters: users own everything; both category tables come before
     // the skills and projects that link to random category ids.
     seeds: [
@@ -48,6 +51,7 @@ const options: SeederOptions & DataSourceOptions = {
         WhatCanDoSeeder,
         PagesSeeder,
         SeoSeeder,
+        InstructorExperienceSeeder,
     ],
 }
 

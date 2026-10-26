@@ -3,6 +3,7 @@ export * from "./category-projects.js";
 export * from "./category-skills.js";
 export * from "./contacts.js";
 export * from "./hreflang.js";
+export * from "./instructor-experience.js";
 export * from "./pages.js";
 export * from "./pagination.js";
 export * from "./projects.js";

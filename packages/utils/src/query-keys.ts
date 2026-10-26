@@ -1,5 +1,6 @@
 import type { CategoryProjectsQuery } from "@repo/types/category-projects";
 import type { ContactsQuery } from "@repo/types/contacts";
+import type { InstructorExperiencesQuery } from "@repo/types/instructor-experience";
 import type { CategorySkillsQuery } from "@repo/types/category-skills";
 import type { ProjectsQuery } from "@repo/types/projects";
 import type { PagesQuery } from "@repo/types/pages";
@@ -73,6 +74,20 @@ export const queryKeys = {
       [...queryKeys.projects.publicLists(), query] as const,
     details: () => [...queryKeys.projects.all, "detail"] as const,
     detail: (id: number) => [...queryKeys.projects.details(), id] as const,
+  },
+  instructorExperience: {
+    all: ["instructor-experience"] as const,
+    lists: () => [...queryKeys.instructorExperience.all, "list"] as const,
+    list: (query: InstructorExperiencesQuery) =>
+      [...queryKeys.instructorExperience.lists(), query] as const,
+    // Under lists(), so every mutation that refreshes lists refreshes these too.
+    publicLists: () =>
+      [...queryKeys.instructorExperience.lists(), "public"] as const,
+    publicList: (query: InstructorExperiencesQuery) =>
+      [...queryKeys.instructorExperience.publicLists(), query] as const,
+    details: () => [...queryKeys.instructorExperience.all, "detail"] as const,
+    detail: (id: number) =>
+      [...queryKeys.instructorExperience.details(), id] as const,
   },
   userInfo: {
     all: ["user-info"] as const,

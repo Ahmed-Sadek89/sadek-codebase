@@ -15,10 +15,12 @@ import type {
 import { queryKeys } from "@repo/utils/query-keys";
 import { useGuardedMutation, useGuardedQuery } from "./api";
 
-// Category details count their skills and public categories embed them, so refresh both.
+// Category details count their skills, and public categories and instructor
+// experiences embed them, so refresh those too.
 function invalidateSkillLists(client: QueryClient) {
   return Promise.all([
     client.invalidateQueries({ queryKey: queryKeys.skills.lists() }),
+    client.invalidateQueries({ queryKey: queryKeys.instructorExperience.all }),
     client.invalidateQueries({ queryKey: queryKeys.categorySkills.details() }),
     // Public categories embed their skills.
     client.invalidateQueries({

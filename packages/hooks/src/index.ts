@@ -126,3 +126,13 @@ export {
   usePages,
   useUpdatePage,
 } from "./pages";
+
+export {
+  useCreateInstructorExperience,
+  useDeleteInstructorExperience,
+  useInstructorExperience,
+  useInstructorExperiences,
+  usePublicInstructorExperiences,
+  useToggleInstructorExperienceActive,
+  useUpdateInstructorExperience,
+} from "./instructor-experience";

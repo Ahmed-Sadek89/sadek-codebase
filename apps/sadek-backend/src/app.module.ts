@@ -16,6 +16,7 @@ import { WhatCanDoModule } from './what-can-do/what-can-do.module';
 import { ContactModule } from './contacts/contact.module';
 import { SeoModule } from './seo/seo.module';
 import { PagesModule } from './pages/pages.module';
+import { InstructorExperienceModule } from './instructor-experience/instructor-experience.module';
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import { PagesModule } from './pages/pages.module';
     WhatCanDoModule,
     ContactModule,
     SeoModule,
-    PagesModule
+    PagesModule,
+    InstructorExperienceModule
   ],
   controllers: [AppController],
   providers: [AppService],

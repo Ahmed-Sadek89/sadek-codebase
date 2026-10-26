@@ -16,7 +16,8 @@
     "./users": "./src/users.ts",
     "./contacts": "./src/contacts.ts",
     "./seo": "./src/seo.ts",
-    "./pages": "./src/pages.ts"
+    "./pages": "./src/pages.ts",
+    "./instructor-experience": "./src/instructor-experience.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

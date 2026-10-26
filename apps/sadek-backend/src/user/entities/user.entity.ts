@@ -9,6 +9,7 @@ import { WhatCanDo } from "../../what-can-do/entities/what-can-do.entity";
 import { Contact } from "../../contacts/entities/contact.entity";
 import { Seo } from "../../seo/entities/seo.entity";
 import { Page } from "../../pages/entities/page.entity";
+import { InstructorExperience } from "../../instructor-experience/entities/instructor-experience.entity";
 import { BeforeInsert, BeforeUpdate, Column, Entity, Index, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { USER_EMAIL_MAX, USERNAME_MAX } from "@repo/constants/auth";
 import { URL_MAX } from "@repo/constants/url";
@@ -152,4 +153,10 @@ export class User {
         (page) => page.user
     )
     pages!: Page[];
+
+    @OneToMany(
+        () => InstructorExperience,
+        (instructorExperience) => instructorExperience.user
+    )
+    instructorExperiences!: InstructorExperience[];
 }

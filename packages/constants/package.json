@@ -34,6 +34,11 @@
       "require": "./dist/hreflang.js",
       "default": "./src/hreflang.ts"
     },
+    "./instructor-experience": {
+      "types": "./src/instructor-experience.ts",
+      "require": "./dist/instructor-experience.js",
+      "default": "./src/instructor-experience.ts"
+    },
     "./pages": {
       "types": "./src/pages.ts",
       "require": "./dist/pages.js",

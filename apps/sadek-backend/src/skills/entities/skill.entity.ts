@@ -1,6 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
 import { CategorySkill } from '../../category_skills/entities/category_skill.entity';
 import { User } from '../../user/entities/user.entity';
+import { InstructorExperience } from '../../instructor-experience/entities/instructor-experience.entity';
 import { SKILL_NAME_MAX } from '@repo/constants/skills';
 
 @Entity('skills')
@@ -58,4 +59,10 @@ export class Skill {
         },
     })
     categorySkills!: CategorySkill[];
+
+    @ManyToMany(
+        () => InstructorExperience,
+        (instructorExperience) => instructorExperience.skills,
+    )
+    instructorExperiences!: InstructorExperience[];
 }

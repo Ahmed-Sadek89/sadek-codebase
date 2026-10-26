@@ -1,6 +1,6 @@
-import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, ILike, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, In, Repository } from 'typeorm';
 import { Skill } from './entities/skill.entity';
 import { CreateSkillDto } from './dto/create-skill.dto';
 import { CreateManySkillsDto } from './dto/create-many-skills.dto';
@@ -151,6 +151,21 @@ export class SkillsService {
       },
     });
     return skillsCount
+  }
+
+  /** The user's skills with these ids; throws when any id is missing or another user's. */
+  async findMoreById(skillsIds: number[], userId: number): Promise<Skill[]> {
+    const ids = [...new Set(skillsIds)];
+    const foundSkills = await this.skillRepository.findBy({
+      id: In(ids),
+      user: { id: userId },
+    });
+
+    if (foundSkills.length !== ids.length) {
+      throw new BadRequestException('One or more skillsIds are invalid');
+    }
+
+    return foundSkills;
   }
 
   async findOne(id: number, userId: number) {

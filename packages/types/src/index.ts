@@ -11,3 +11,4 @@ export type * from "./users";
 export type * from "./contacts";
 export type * from "./seo";
 export type * from "./pages";
+export type * from "./instructor-experience";

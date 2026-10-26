@@ -19,3 +19,7 @@ export {
   seoService,
 } from "./seo";
 export { pagesEndpoints, pagesService } from "./pages";
+export {
+  instructorExperienceEndpoints,
+  instructorExperienceService,
+} from "./instructor-experience";

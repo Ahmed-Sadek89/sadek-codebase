@@ -91,6 +91,7 @@ export function useUpdateUserDefaultView() {
           queryKeys.projects,
           queryKeys.userCompany,
           queryKeys.whatCanDo,
+          queryKeys.instructorExperience,
         ].map((keys) =>
           client.invalidateQueries({ queryKey: keys.publicLists() }),
         ),
