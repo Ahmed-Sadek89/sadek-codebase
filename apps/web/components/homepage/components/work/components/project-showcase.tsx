@@ -2,9 +2,9 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import type { Project } from "@repo/types/projects";
 import { Layers } from "@repo/ui/icons";
-import { RichTextContent } from "@repo/ui/rich-text";
 import { cn } from "@repo/ui/utils";
 import { isMediaUrl } from "../../../../../libs/media";
+import { CollapsibleRichText } from "../../../../ui/collapsible-rich-text";
 import { localize } from "../../../../../utils/localize";
 import { getProjectCategories } from "../utils";
 import { ProjectLinks } from "./project-links";
@@ -102,7 +102,11 @@ export function ProjectShowcase({
           )}
         </header>
 
-        <RichTextContent className="text-[15px] leading-7" html={descriptionHtml} />
+        <CollapsibleRichText
+          className="text-[15px] leading-7"
+          fadeClassName="from-background"
+          html={descriptionHtml}
+        />
 
         <dl className="grid grid-cols-1 gap-4 rounded-2xl border border-border bg-card/70 p-4 text-sm shadow-sm backdrop-blur">
 

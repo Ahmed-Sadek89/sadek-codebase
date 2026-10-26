@@ -5,7 +5,6 @@ import type { PublicCategorySkill } from "@repo/types/category-skills";
 import type { InfiniteQueryState } from "../../utils";
 import { SectionTitle } from "../../../ui/section-title";
 import { SectionStatus } from "../../../ui/section-status";
-import { Layers, Sparkles } from "@repo/ui/icons";
 import { SkillsExplorer } from "./components";
 import { useSkillGroups } from "./hooks";
 
@@ -20,12 +19,11 @@ export function Skills({
 }) {
   const t = useTranslations();
   const groups = useSkillGroups(categories.data);
-  const skillCount = groups.reduce((total, group) => total + group.skills.length, 0);
   return (
     <section
       id="skills"
       aria-labelledby="skills-title"
-      className="relative isolate overflow-hidden bg-muted py-[76px] max-[700px]:py-[54px]"
+      className="relative isolate overflow-hidden bg-muted py-14 sm:py-16"
     >
       <div
         aria-hidden="true"
@@ -40,27 +38,15 @@ export function Skills({
           id="skills-title"
           title={`${t("skillsHeadingLine1")} ${t("skillsHeadingLine2")}`}
           copy={t("skillsBody")}
+          className="mb-8 sm:mb-10"
         />
         {groups.length ? (
-          <>
-            {/* What's loaded so far: categories and skills. */}
-            <ul className="mx-auto -mt-4 mb-10 flex flex-wrap justify-center gap-3">
-              <li className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-sm font-semibold text-foreground shadow-sm backdrop-blur">
-                <Layers aria-hidden="true" className="size-4 text-primary" />
-                {t("skillsSummaryCategories", { count: groups.length })}
-              </li>
-              <li className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-sm font-semibold text-foreground shadow-sm backdrop-blur">
-                <Sparkles aria-hidden="true" className="size-4 text-primary" />
-                {t("skillsCount", { count: skillCount })}
-              </li>
-            </ul>
-            <SkillsExplorer
-              groups={groups}
-              hasMore={categories.hasMore}
-              isLoadingMore={categories.isLoadingMore}
-              onLoadMore={categories.loadMore}
-            />
-          </>
+          <SkillsExplorer
+            groups={groups}
+            hasMore={categories.hasMore}
+            isLoadingMore={categories.isLoadingMore}
+            onLoadMore={categories.loadMore}
+          />
         ) : (
           <SectionStatus
             isLoading={categories.isLoading}

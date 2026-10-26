@@ -3,6 +3,7 @@ import { dehydrate, getQueryClient, HydrationBoundary } from "@repo/libs/query";
 import {
   categoryProjectsService,
   categorySkillsService,
+  instructorExperienceService,
   projectsService,
   userCompanyService,
   whatCanDoService,
@@ -15,6 +16,7 @@ import {
   categorySkillsQuery,
   projectsQuery,
   experienceQuery,
+  instructorExperienceQuery,
   userCompanyQuery,
   whatCanDoQuery,
 } from "../../../components/homepage/utils";
@@ -122,6 +124,19 @@ export default async function Page({ params }: PageProps<"/[locale]">) {
         queryKey: queryKeys.projects.publicList(projectsQuery),
         queryFn: ({ pageParam }: { pageParam: number }) =>
           projectsService.findAllPublic({ ...projectsQuery, page: pageParam }),
+        initialPageParam: 1,
+        getNextPageParam,
+      })
+      .catch(() => {}),
+    // Teaching is an infinite list: prefetch its first page only.
+    queryClient
+      .infiniteQuery({
+        queryKey: queryKeys.instructorExperience.publicList(instructorExperienceQuery),
+        queryFn: ({ pageParam }: { pageParam: number }) =>
+          instructorExperienceService.findAllPublic({
+            ...instructorExperienceQuery,
+            page: pageParam,
+          }),
         initialPageParam: 1,
         getNextPageParam,
       })

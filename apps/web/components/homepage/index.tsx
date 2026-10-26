@@ -9,6 +9,7 @@ import {
   HowItWorks,
   Services,
   Skills,
+  Teaching,
   Work,
 } from "./components";
 import { useHomePageData } from "./hooks";
@@ -24,6 +25,7 @@ export function HomePage() {
     projects,
     projectCategories,
     projectsFilter,
+    courses,
   } = useHomePageData();
 
   return (
@@ -40,6 +42,7 @@ export function HomePage() {
         categoryId={projectsFilter.categoryId}
         onCategoryChange={projectsFilter.setCategoryId}
       />
+      <Teaching courses={courses} />
       <HowItWorks userInfo={userInfo} />
       <Contact userInfo={userInfo} />
     </>

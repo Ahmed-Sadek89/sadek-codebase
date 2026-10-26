@@ -3,6 +3,7 @@ export {
   categorySkillsQuery,
   projectsQuery,
   experienceQuery,
+  instructorExperienceQuery,
   userCompanyQuery,
   whatCanDoQuery,
 } from "./queries";

@@ -7,6 +7,7 @@ export const navItems: { labelKey: MessageKey; href: string }[] = [
   { labelKey: "navSkills", href: "#skills" },
   { labelKey: "navExperience", href: "#experience" },
   { labelKey: "navPortfolio", href: "#work" },
+  { labelKey: "navTeaching", href: "#teaching" },
   { labelKey: "navContact", href: "#contact" },
 ];
 

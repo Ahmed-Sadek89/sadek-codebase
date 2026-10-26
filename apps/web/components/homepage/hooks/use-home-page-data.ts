@@ -2,6 +2,7 @@
 
 import { usePublicCategoryProjects } from "@repo/hooks/category-projects";
 import { useInfinitePublicCategorySkills } from "@repo/hooks/category-skills";
+import { usePublicInstructorExperiences } from "@repo/hooks/instructor-experience";
 import { usePublicProjects } from "@repo/hooks/projects";
 import {
   useInfinitePublicUserCompanies,
@@ -15,6 +16,7 @@ import {
   toInfiniteState,
   toQueryState,
   experienceQuery,
+  instructorExperienceQuery,
   userCompanyQuery,
   whatCanDoQuery,
 } from "../utils";
@@ -34,6 +36,7 @@ export function useHomePageData() {
   const categorySkills = useInfinitePublicCategorySkills(categorySkillsQuery);
   const projects = usePublicProjects(projectsFilter.query);
   const categoryProjects = usePublicCategoryProjects(categoryProjectsQuery);
+  const courses = usePublicInstructorExperiences(instructorExperienceQuery);
 
   return {
     // GET /user-info/public: the default-view user's row (404 when there is none).
@@ -51,6 +54,8 @@ export function useHomePageData() {
       isSwitching: projects.isPlaceholderData,
     },
     projectCategories: toInfiniteState(categoryProjects),
+    // GET /instructor-experience/public: 3 courses per page plus "show more".
+    courses: toInfiniteState(courses),
     projectsFilter,
   };
 }

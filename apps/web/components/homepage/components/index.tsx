@@ -6,4 +6,5 @@ export { Hero } from "./hero";
 export { HowItWorks } from "./how-it-works";
 export { Services } from "./services";
 export { Skills } from "./skills";
+export { Teaching } from "./teaching";
 export { Work } from "./work";

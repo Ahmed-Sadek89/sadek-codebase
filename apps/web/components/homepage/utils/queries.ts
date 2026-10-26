@@ -1,5 +1,6 @@
 import type { CategoryProjectsQuery } from "@repo/types/category-projects";
 import type { CategorySkillsQuery } from "@repo/types/category-skills";
+import type { InstructorExperiencesQuery } from "@repo/types/instructor-experience";
 import type { ProjectsQuery } from "@repo/types/projects";
 import type { UserCompaniesQuery } from "@repo/types/user-company";
 import type { WhatCanDosQuery } from "@repo/types/what-can-do";
@@ -42,4 +43,14 @@ export const projectsQuery: Omit<ProjectsQuery, "page"> = {
   isActive: true,
   // Lowest rank first.
   order: "ASC",
+};
+/**
+ * Teaching: 3 courses per page, lowest rank first (the public route's default
+ * order); "Show more" fetches the next page. Only active courses are returned.
+ */
+export const instructorExperienceQuery: Omit<
+  InstructorExperiencesQuery,
+  "page" | "isActive"
+> = {
+  limit: 3,
 };

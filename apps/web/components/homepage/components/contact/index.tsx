@@ -30,7 +30,8 @@ export function Contact({
           title={t("contactTitle")}
           copy={t("contactCopy")}
         />
-        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-8">
+        {/* One card: the info on the gradient beside the form (stacked below lg). */}
+        <div className="mx-auto grid max-w-6xl overflow-hidden rounded-3xl border border-border bg-card shadow-2xl shadow-primary/10 sm:rounded-[2rem] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
           <ContactInfoPanel details={details} />
           <ContactForm />
         </div>
