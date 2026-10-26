@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { getSession, signOut, useSession } from "next-auth/react";
 import {
   useMutation,
   useQuery,
@@ -11,8 +11,22 @@ import {
 import type { AuthorizedRequest } from "@repo/types/auth";
 // Type-only: brings in the Session.accessToken augmentation without server code.
 import type {} from "@repo/libs/auth";
+import { withAuthRetry } from "./auth-retry";
 
 const SIGNED_OUT_ERROR = "Sign in before making an authenticated request.";
+
+/**
+ * Re-reads the session for a retry after a 401: the server's jwt callback
+ * refreshes an expired access token, saves the cookie and updates useSession.
+ */
+async function getFreshToken() {
+  return (await getSession())?.accessToken;
+}
+
+/** No usable token after a 401 (refresh token expired or revoked): back to sign-in. */
+function signOutToLogin() {
+  return signOut({ redirectTo: "/" });
+}
 
 // ---------------------------------------------------------------------------
 // Guarded endpoints: the NextAuth session's access token is injected for you.
@@ -40,7 +54,10 @@ function useAccessToken() {
   return useSession().data?.accessToken;
 }
 
-/** Waits for a session, then calls `queryFn` with `{ accessToken }`. */
+/**
+ * Waits for a session, then calls `queryFn` with `{ accessToken }`. A 401 is
+ * retried once with a refreshed token (see withAuthRetry).
+ */
 export function useGuardedQuery<TData, TQueryKey extends QueryKey = QueryKey>({
   queryFn,
   enabled,
@@ -53,7 +70,12 @@ export function useGuardedQuery<TData, TQueryKey extends QueryKey = QueryKey>({
     // The token is left out of the key so a refresh does not refetch everything.
     queryFn: () => {
       if (!accessToken) throw new Error(SIGNED_OUT_ERROR);
-      return queryFn({ accessToken });
+      return withAuthRetry(
+        (token) => queryFn({ accessToken: token }),
+        accessToken,
+        getFreshToken,
+        signOutToLogin,
+      );
     },
     enabled: (query) =>
       Boolean(accessToken) &&
@@ -61,7 +83,10 @@ export function useGuardedQuery<TData, TQueryKey extends QueryKey = QueryKey>({
   });
 }
 
-/** Calls `mutationFn` with the variables and `{ accessToken }`; rejects when signed out. */
+/**
+ * Calls `mutationFn` with the variables and `{ accessToken }`; rejects when
+ * signed out. A 401 is retried once with a refreshed token.
+ */
 export function useGuardedMutation<TData, TVariables = void>({
   mutationFn,
   ...options
@@ -72,7 +97,12 @@ export function useGuardedMutation<TData, TVariables = void>({
     ...options,
     mutationFn: (variables: TVariables) => {
       if (!accessToken) return Promise.reject(new Error(SIGNED_OUT_ERROR));
-      return mutationFn(variables, { accessToken });
+      return withAuthRetry(
+        (token) => mutationFn(variables, { accessToken: token }),
+        accessToken,
+        getFreshToken,
+        signOutToLogin,
+      );
     },
   });
 }

@@ -66,16 +66,9 @@ export class AuthService {
   }
 
   async logout(user: { userId: number; email: string }) {
+    // Revokes every token issued before now: both JWT strategies reject a
+    // token whose `iat` is before `lastLogoutAt`.
     await this.userService.logout(user.userId);
-
-    const payload = { sub: user.userId };
-    const expiredIn = '1s';
-
-    const accessOptions: JwtSignOptions = { expiresIn: expiredIn };
-    const refreshOptions: JwtSignOptions = { ...this.refreshJwt, expiresIn: expiredIn };
-
-    this.jwtService.sign(payload, accessOptions);
-    this.jwtService.sign(payload, refreshOptions);
 
     return {
       message: 'Logout successfully',
